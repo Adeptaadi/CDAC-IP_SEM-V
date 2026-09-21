@@ -1,0 +1,137 @@
+[
+  {
+    "timestamp": "2026-09-01T10:00:00Z",
+    "source": "winevent_auth",
+    "event_type": "auth_failure",
+    "host": "UBUNTU-SRV-01",
+    "user": "user_0",
+    "src_ip": "18.218.115.60",
+    "dest_ip": "192.168.1.10",
+    "process_name": "sshd",
+    "command_line": null,
+    "raw_log": {
+      "EventID": 4625,
+      "FailureReason": "Unknown user or bad password"
+    }
+  },
+  {
+    "timestamp": "2026-09-01T10:00:02Z",
+    "source": "winevent_auth",
+    "event_type": "auth_failure",
+    "host": "UBUNTU-SRV-01",
+    "user": "user_1",
+    "src_ip": "18.218.115.60",
+    "dest_ip": "192.168.1.10",
+    "process_name": "sshd",
+    "command_line": null,
+    "raw_log": {
+      "EventID": 4625,
+      "FailureReason": "Unknown user or bad password"
+    }
+  },
+  {
+    "timestamp": "2026-09-01T10:00:04Z",
+    "source": "winevent_auth",
+    "event_type": "auth_failure",
+    "host": "UBUNTU-SRV-01",
+    "user": "user_2",
+    "src_ip": "18.218.115.60",
+    "dest_ip": "192.168.1.10",
+    "process_name": "sshd",
+    "command_line": null,
+    "raw_log": {
+      "EventID": 4625,
+      "FailureReason": "Unknown user or bad password"
+    }
+  },
+  {
+    "timestamp": "2026-09-01T10:00:06Z",
+    "source": "winevent_auth",
+    "event_type": "auth_failure",
+    "host": "UBUNTU-SRV-01",
+    "user": "user_3",
+    "src_ip": "18.218.115.60",
+    "dest_ip": "192.168.1.10",
+    "process_name": "sshd",
+    "command_line": null,
+    "raw_log": {
+      "EventID": 4625,
+      "FailureReason": "Unknown user or bad password"
+    }
+  },
+  {
+    "timestamp": "2026-09-01T10:00:08Z",
+    "source": "winevent_auth",
+    "event_type": "auth_failure",
+    "host": "UBUNTU-SRV-01",
+    "user": "user_4",
+    "src_ip": "18.218.115.60",
+    "dest_ip": "192.168.1.10",
+    "process_name": "sshd",
+    "command_line": null,
+    "raw_log": {
+      "EventID": 4625,
+      "FailureReason": "Unknown user or bad password"
+    }
+  },
+  {
+    "timestamp": "2026-09-01T10:00:10Z",
+    "source": "winevent_auth",
+    "event_type": "auth_failure",
+    "host": "UBUNTU-SRV-01",
+    "user": "user_5",
+    "src_ip": "18.218.115.60",
+    "dest_ip": "192.168.1.10",
+    "process_name": "sshd",
+    "command_line": null,
+    "raw_log": {
+      "EventID": 4625,
+      "FailureReason": "Unknown user or bad password"
+    }
+  },
+  {
+    "timestamp": "2026-09-01T10:00:12Z",
+    "source": "winevent_auth",
+    "event_type": "auth_failure",
+    "host": "UBUNTU-SRV-01",
+    "user": "user_6",
+    "src_ip": "18.218.115.60",
+    "dest_ip": "192.168.1.10",
+    "process_name": "sshd",
+    "command_line": null,
+    "raw_log": {
+      "EventID": 4625,
+      "FailureReason": "Unknown user or bad password"
+    }
+  },
+  {
+    "timestamp": "2026-09-01T10:00:14Z",
+    "source": "winevent_auth",
+    "event_type": "auth_failure",
+    "host": "UBUNTU-SRV-01",
+    "user": "user_7",
+    "src_ip": "18.218.115.60",
+    "dest_ip": "192.168.1.10",
+    "process_name": "sshd",
+    "command_line": null,
+    "raw_log": {
+      "EventID": 4625,
+      "FailureReason": "Unknown user or bad password"
+    }
+  },
+  {
+    "timestamp": "2026-09-01T10:00:20Z",
+    "source": "winevent_auth",
+    "event_type": "auth_success",
+    "host": "UBUNTU-SRV-01",
+    "user": "admin",
+    "src_ip": "18.218.115.60",
+    "dest_ip": "192.168.1.10",
+    "process_name": "sshd",
+    "command_line": null,
+    "raw_log": {
+      "EventID": 4624,
+      "LogonType": 10
+    }
+  }
+]

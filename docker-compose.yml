@@ -1,0 +1,107 @@
+services:
+  # ============================================================================
+  # Relational Database: PostgreSQL 15
+  # ============================================================================
+  db:
+    image: postgres:15-alpine
+    container_name: sentinel-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sentinel_dev}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sentinel_secure_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-sentinel}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sentinel_dev} -d ${POSTGRES_DB:-sentinel}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sentinel-net
+
+  # ============================================================================
+  # In-Memory Cache & Task Queue: Redis 7
+  # ============================================================================
+  cache:
+    image: redis:7-alpine
+    container_name: sentinel-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sentinel-net
+
+  # ============================================================================
+  # Backend API & Agent Runtime: FastAPI / Python 3.12
+  # ============================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sentinel-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - DATABASE_URL=${DATABASE_URL:-postgresql://sentinel_dev:sentinel_secure_pass@db:5432/sentinel}
+      - REDIS_URL=${REDIS_URL:-redis://cache:6379/0}
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://host.docker.internal:11434}
+      - CHROMA_PERSIST_DIR=/app/chroma_data
+      - SECRET_KEY=${SECRET_KEY:-sentinel_dev_secret_key_change_in_production_32bytes!}
+    volumes:
+      - ./backend:/app
+      - chroma_data:/app/chroma_data
+      - ./datasets:/app/datasets
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - sentinel-net
+
+  # ============================================================================
+  # Frontend Web Interface: React / Vite
+  # ============================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sentinel-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - sentinel-net
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  chroma_data:
+    driver: local
+
+networks:
+  sentinel-net:
+    driver: bridge

