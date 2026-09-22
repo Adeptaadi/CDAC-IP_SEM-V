@@ -14,7 +14,10 @@ import {
   Radio,
   Clock,
   Flame,
-  FileCode2
+  FileCode2,
+  BookOpen,
+  Search,
+  Sparkles
 } from 'lucide-react';
 
 interface Investigation {
@@ -49,6 +52,13 @@ interface ReplayStatus {
   latest_event: any | null;
 }
 
+interface KnowledgeStats {
+  mitre_techniques_count: number;
+  playbooks_count: number;
+  historical_cases_count: number;
+  total_vectors: number;
+}
+
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export default function App() {
@@ -72,10 +82,18 @@ export default function App() {
     latest_event: null,
   });
 
+  // Stage 1: RAG & Knowledge State
+  const [knowledgeStats, setKnowledgeStats] = useState<KnowledgeStats | null>(null);
+  const [knowledgeQuery, setKnowledgeQuery] = useState('');
+  const [retrievedContext, setRetrievedContext] = useState<any | null>(null);
+  const [isQueryingKnowledge, setIsQueryingKnowledge] = useState(false);
+  const [isSeedingKnowledge, setIsSeedingKnowledge] = useState(false);
+
   useEffect(() => {
     fetchHealth();
     fetchInvestigations();
     fetchScenarios();
+    fetchKnowledgeStats();
 
     const interval = setInterval(() => {
       fetchReplayStatus();
@@ -116,6 +134,44 @@ export default function App() {
       setReplayStatus(res.data);
     } catch (e) {
       // ignore offline polling errors
+    }
+  };
+
+  const fetchKnowledgeStats = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/knowledge/stats`);
+      setKnowledgeStats(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleSeedKnowledge = async () => {
+    setIsSeedingKnowledge(true);
+    try {
+      await axios.post(`${API_BASE}/api/knowledge/seed`);
+      fetchKnowledgeStats();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsSeedingKnowledge(false);
+    }
+  };
+
+  const handleQueryKnowledge = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!knowledgeQuery) return;
+    setIsQueryingKnowledge(true);
+    try {
+      const res = await axios.post(`${API_BASE}/api/knowledge/query`, {
+        query: knowledgeQuery,
+        top_k: 4,
+      });
+      setRetrievedContext(res.data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsQueryingKnowledge(false);
     }
   };
 
@@ -382,10 +438,12 @@ export default function App() {
             </div>
             <div className="bg-[#111827] border border-gray-800 p-4 rounded-xl">
               <div className="flex items-center justify-between text-gray-400 text-xs font-semibold uppercase">
-                <span>Dataset Scenarios</span>
-                <Layers className="w-4 h-4 text-purple-400" />
+                <span>MITRE Vectors</span>
+                <Database className="w-4 h-4 text-purple-400" />
               </div>
-              <p className="text-2xl font-bold text-white mt-2">5 Loaded</p>
+              <p className="text-2xl font-bold text-white mt-2">
+                {knowledgeStats ? `${knowledgeStats.total_vectors} Chunks` : 'ChromaDB'}
+              </p>
             </div>
           </div>
 
@@ -459,8 +517,76 @@ export default function App() {
           </div>
         </section>
 
-        {/* Right Col: Planner Utility Engine & System Status */}
+        {/* Right Col: Stage 1 RAG Knowledge Explorer & Planner Utility Inspector */}
         <section className="space-y-6">
+          {/* Stage 1: RAG & Knowledge Base Explorer */}
+          <div className="bg-[#111827] border border-gray-800 p-5 rounded-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-gray-800 pb-3">
+              <div className="flex items-center space-x-2 text-purple-400">
+                <BookOpen className="w-5 h-5 text-purple-400" />
+                <h3 className="font-semibold text-sm text-gray-200">RAG Knowledge Explorer (Stage 1)</h3>
+              </div>
+              <button
+                onClick={handleSeedKnowledge}
+                disabled={isSeedingKnowledge}
+                className="text-xs bg-purple-950 text-purple-300 border border-purple-800 hover:bg-purple-900 px-2.5 py-1 rounded transition disabled:opacity-50 flex items-center gap-1"
+              >
+                <Sparkles className="w-3 h-3" />
+                <span>{isSeedingKnowledge ? 'Seeding...' : 'Seed MITRE'}</span>
+              </button>
+            </div>
+
+            {/* Semantic Search Query Form */}
+            <form onSubmit={handleQueryKnowledge} className="space-y-2">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Semantic search (e.g. PowerShell base64 command)..."
+                  value={knowledgeQuery}
+                  onChange={(e) => setKnowledgeQuery(e.target.value)}
+                  className="w-full bg-gray-900 border border-gray-700 text-xs rounded-lg pl-8 pr-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                />
+                <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-2.5" />
+              </div>
+              <button
+                type="submit"
+                disabled={isQueryingKnowledge}
+                className="w-full bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold py-2 rounded-lg transition disabled:opacity-50"
+              >
+                {isQueryingKnowledge ? 'Retrieving Knowledge...' : 'Query MITRE & Playbooks'}
+              </button>
+            </form>
+
+            {/* Retrieved Context Results */}
+            {retrievedContext && (
+              <div className="space-y-2 pt-2">
+                <span className="text-[11px] font-mono text-gray-400 uppercase tracking-wider block">
+                  Top Ranked Chunks (w_rel weighted):
+                </span>
+                <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                  {retrievedContext.chunks.map((chunk: any, i: number) => (
+                    <div
+                      key={i}
+                      className="p-2.5 bg-gray-900 border border-gray-800 rounded-lg text-xs space-y-1"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="bg-purple-950 text-purple-300 border border-purple-800 px-1.5 py-0.5 rounded font-mono text-[10px] uppercase">
+                          {chunk.category}
+                        </span>
+                        <span className="text-[10px] font-mono text-emerald-400 font-semibold">
+                          Score: {chunk.similarity_score.toFixed(3)}
+                        </span>
+                      </div>
+                      <p className="text-gray-300 text-[11px] line-clamp-3 leading-relaxed">
+                        {chunk.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Planner Decision Utility Test */}
           <div className="bg-[#111827] border border-gray-800 p-5 rounded-xl">
             <div className="flex items-center space-x-2 text-blue-400 mb-3">

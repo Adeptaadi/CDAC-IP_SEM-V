@@ -21,11 +21,15 @@ class RetrievedContext(BaseModel):
 
 
 class WorkerTask(BaseModel):
+    model_config = ConfigDict(extra="allow", from_attributes=True)
+
     task_id: UUID = Field(default_factory=uuid4)
     investigation_id: UUID
     worker_type: WorkerType
     objective: str  # e.g., "assess PowerShell events for T1059"
     evidence_refs: List[UUID] = Field(default_factory=list)
+    events: List[Any] = Field(default_factory=list)
+    findings: List[Any] = Field(default_factory=list)
     context: Optional[RetrievedContext] = None
     priority: int = 1
 

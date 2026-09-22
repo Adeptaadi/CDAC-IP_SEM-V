@@ -1,9 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base
 from app.api.routers import router
 from app.api.dataset_router import dataset_router
+from app.api.knowledge_router import knowledge_router
+from app.api.worker_router import worker_router
+from app.api.planner_router import planner_router
+from app.api.ws import ws_manager
 
 # Initialize tables if not using Alembic migrations in dev
 Base.metadata.create_all(bind=engine)
@@ -25,6 +29,20 @@ app.add_middleware(
 
 app.include_router(router)
 app.include_router(dataset_router)
+app.include_router(knowledge_router)
+app.include_router(worker_router)
+app.include_router(planner_router)
+
+
+@app.websocket("/ws/investigations/{investigation_id}")
+async def websocket_investigation_endpoint(websocket: WebSocket, investigation_id: str):
+    await ws_manager.connect(websocket, investigation_id)
+    try:
+        while True:
+            # Keep connection alive receiving ping/messages
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        ws_manager.disconnect(websocket, investigation_id)
 
 
 @app.get("/")
