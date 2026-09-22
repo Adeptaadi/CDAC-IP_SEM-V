@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-09-22T10:51:56.928286",
+  "total_scenarios": 5,
+  "summary_metrics": {
+    "planner_accuracy": 1.0,
+    "evidence_coverage": 1.0,
+    "hallucination_rate": 0.0,
+    "expected_calibration_error": 0.235,
+    "mean_cycles_to_converge": 6.0
+  },
+  "scenario_breakdown": [
+    {
+      "scenario_id": "infiltration",
+      "name": "Infiltration & Lateral Movement",
+      "accuracy": 1.0,
+      "evidence_coverage": 1.0,
+      "hallucination_rate": 0.0,
+      "expected_calibration_error": 0.235,
+      "cycles_to_converge": 6,
+      "final_confidence": 0.5325,
+      "elapsed_seconds": 0.17,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "brute_force",
+      "name": "SSH & FTP Credential Brute Force",
+      "accuracy": 1.0,
+      "evidence_coverage": 1.0,
+      "hallucination_rate": 0.0,
+      "expected_calibration_error": 0.235,
+      "cycles_to_converge": 6,
+      "final_confidence": 0.5325,
+      "elapsed_seconds": 0.06,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "web_attacks",
+      "name": "Web Application Exploitation (SQLi / XSS)",
+      "accuracy": 1.0,
+      "evidence_coverage": 1.0,
+      "hallucination_rate": 0.0,
+      "expected_calibration_error": 0.235,
+      "cycles_to_converge": 6,
+      "final_confidence": 0.5673,
+      "elapsed_seconds": 0.04,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "botnet_c2",
+      "name": "Botnet Command & Control (Ares C2)",
+      "accuracy": 1.0,
+      "evidence_coverage": 1.0,
+      "hallucination_rate": 0.0,
+      "expected_calibration_error": 0.235,
+      "cycles_to_converge": 6,
+      "final_confidence": 0.5325,
+      "elapsed_seconds": 0.05,
+      "status": "passed"
+    },
+    {
+      "scenario_id": "dos_goldeneye",
+      "name": "Denial of Service (GoldenEye & Slowloris)",
+      "accuracy": 1.0,
+      "evidence_coverage": 1.0,
+      "hallucination_rate": 0.0,
+      "expected_calibration_error": 0.235,
+      "cycles_to_converge": 6,
+      "final_confidence": 0.5325,
+      "elapsed_seconds": 0.04,
+      "status": "passed"
+    }
+  ],
+  "all_passed": true
+}
