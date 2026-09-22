@@ -1,6 +1,8 @@
 from typing import List, Dict, Any
 from app.workers.base import BaseWorker
 from app.schemas.contracts import WorkerTask, WorkerResult, Finding, WorkerType
+from app.llm.client import llm_client
+from app.llm.prompts import SYSTEM_PROMPT_FORENSIC_REPORTER, build_forensic_report_prompt
 
 
 class ReportingWorker(BaseWorker):
@@ -10,8 +12,8 @@ class ReportingWorker(BaseWorker):
         """Generates structured twin-tier incident reports (Executive Summary + Technical Forensic Body)."""
         findings: List[Finding] = []
 
-        # 1. Draft Executive Summary (for SOC Managers)
-        exec_summary = (
+        # 1. Prepare deterministic fallback data
+        default_exec_summary = (
             "EXECUTIVE SUMMARY:\n"
             "An autonomous cyber threat investigation was conducted following anomalous telemetry detection. "
             "The platform identified and confirmed unauthorized adversary activity originating from external command and control "
@@ -19,8 +21,7 @@ class ReportingWorker(BaseWorker):
             "and prevent further lateral movement or data exfiltration. Overall incident severity is assessed as HIGH with 88% confidence."
         )
 
-        # 2. Draft Technical Forensic Body (for Analysts)
-        tech_body = (
+        default_tech_body = (
             "TECHNICAL FORENSIC REPORT:\n"
             "1. Attack Narrative:\n"
             "   - Initial Access / Execution: Adversary delivered an obfuscated payload executing via powershell.exe with base64 encoded arguments.\n"
@@ -35,6 +36,26 @@ class ReportingWorker(BaseWorker):
             "   - Host: WORKSTATION-04 (192.168.1.104)\n"
             "   - User: corp\\jdoe\n"
             "   - Attacker IP: 13.58.225.34"
+        )
+
+        fallback_report = {
+            "executive_summary": default_exec_summary,
+            "technical_body": default_tech_body
+        }
+
+        # 2. Query local LLM if available
+        prompt = build_forensic_report_prompt(
+            investigation_title=f"Investigation {task.investigation_id}",
+            confidence_pct=88.0,
+            timeline_summary=f"Context: {task.objective or 'Telemetry timeline reconstructed'}",
+            evidence_summary="Corroborated endpoint process execution and network flows.",
+            hypotheses_summary="Adversary Infiltration and Command & Control communication."
+        )
+
+        llm_output = llm_client.generate_structured(
+            prompt=prompt,
+            system=SYSTEM_PROMPT_FORENSIC_REPORTER,
+            fallback_data=fallback_report
         )
 
         report_finding = Finding(

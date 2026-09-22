@@ -85,12 +85,43 @@ export const InvestigationStudioTab: React.FC<InvestigationStudioTabProps> = ({
   const [isRunningAuto, setIsRunningAuto] = useState(false);
   const [isExecutingStep, setIsExecutingStep] = useState(false);
 
+  const [wsConnected, setWsConnected] = useState(false);
+
   useEffect(() => {
     if (selectedId) {
       fetchFullState(selectedId);
       fetchDecisions(selectedId);
+
+      // Connect live WebSocket stream
+      const wsUrl = apiBase.replace(/^http/, 'ws') + `/ws/investigations/${selectedId}`;
+      let ws: WebSocket | null = null;
+      try {
+        ws = new WebSocket(wsUrl);
+        ws.onopen = () => setWsConnected(true);
+        ws.onclose = () => setWsConnected(false);
+        ws.onerror = () => setWsConnected(false);
+        ws.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.type === 'PLANNER_DECISION' || data.type === 'WORKER_OUTPUT' || data.type === 'CONFIDENCE_UPDATED' || data.type === 'INVESTIGATION_COMPLETED') {
+              fetchFullState(selectedId);
+              fetchDecisions(selectedId);
+            }
+          } catch (err) {
+            // non-json ws tick
+          }
+        };
+      } catch (e) {
+        setWsConnected(false);
+      }
+
+      return () => {
+        if (ws) {
+          ws.close();
+        }
+      };
     }
-  }, [selectedId]);
+  }, [selectedId, apiBase]);
 
   const fetchFullState = async (id: string) => {
     try {
@@ -202,6 +233,20 @@ export const InvestigationStudioTab: React.FC<InvestigationStudioTabProps> = ({
               </span>
               <span className="text-xs font-mono text-gray-400">
                 Cycle #{state.planning_cycles} • {state.evidence_count} Evidence Items
+              </span>
+              <span
+                className={`text-[10px] font-mono px-2 py-0.5 rounded-full border flex items-center gap-1 ${
+                  wsConnected
+                    ? 'bg-emerald-950/60 text-emerald-400 border-emerald-800'
+                    : 'bg-gray-800 text-gray-400 border-gray-700'
+                }`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    wsConnected ? 'bg-emerald-400 animate-ping' : 'bg-gray-500'
+                  }`}
+                />
+                {wsConnected ? 'Live Stream Active' : 'Polling Stream'}
               </span>
             </div>
             <h2 className="text-lg font-bold text-white tracking-wide">{state.title}</h2>

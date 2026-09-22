@@ -41,7 +41,6 @@ class InvestigationWorker(BaseWorker):
 
         # 2. Formulate / Strengthen Hypothesis
         hypo_id = str(uuid4())
-        evidence_id = str(uuid4())
 
         hypothesis_label = f"Confirmed Adversary Activity mapped to {matched_mitre_id}"
         if matched_mitre_id == "T1566.001" or matched_mitre_id == "T1059.001":
@@ -53,12 +52,37 @@ class InvestigationWorker(BaseWorker):
         elif matched_mitre_id == "T1071.001":
             hypothesis_label = "Botnet Command & Control Active Beaconing"
 
-        hypothesis_updates.append({
-            "hypothesis_id": hypo_id,
+        fallback_hypo = {
             "label": hypothesis_label,
-            "status": "confirmed",
             "confidence": 0.88,
             "mitre_technique_ids": [matched_mitre_id],
+            "rationale": f"Corroborated telemetry mapped to {matched_mitre_id}"
+        }
+
+        # Query local LLM if active
+        from app.llm.client import llm_client
+        from app.llm.prompts import SYSTEM_PROMPT_THREAT_HUNTER, build_hypothesis_prompt
+        
+        prompt = build_hypothesis_prompt(
+            telemetry_summary=task.objective,
+            rag_context="\n".join(c.text for c in retrieved_chunks[:2])
+        )
+        llm_res = llm_client.generate_structured(
+            prompt=prompt,
+            system=SYSTEM_PROMPT_THREAT_HUNTER,
+            fallback_data=fallback_hypo
+        )
+
+        final_label = llm_res.get("label") or hypothesis_label
+        final_techniques = llm_res.get("mitre_technique_ids") or [matched_mitre_id]
+        final_conf = float(llm_res.get("confidence", 0.88))
+
+        hypothesis_updates.append({
+            "hypothesis_id": hypo_id,
+            "label": final_label,
+            "status": "confirmed",
+            "confidence": final_conf,
+            "mitre_technique_ids": final_techniques,
             "stance": "supports",
             "weight": 1.0,
         })

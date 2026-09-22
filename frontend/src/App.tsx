@@ -196,6 +196,42 @@ export default function App() {
     }
   };
 
+  const [isAutoHunting, setIsAutoHunting] = useState(false);
+
+  const handleAutoHuntScenario = async () => {
+    setIsAutoHunting(true);
+    try {
+      // 1. Prepare & load scenario
+      await axios.post(`${API_BASE}/api/dataset/prepare/${selectedScenarioId}`);
+      await axios.post(`${API_BASE}/api/dataset/replay/load/${selectedScenarioId}`, null, {
+        params: { speed: 10 },
+      });
+      await axios.post(`${API_BASE}/api/dataset/replay/start`);
+
+      // 2. Create investigation
+      const scenarioName = scenarios.find((s) => s.scenario_id === selectedScenarioId)?.name || selectedScenarioId;
+      const res = await axios.post(`${API_BASE}/api/investigations`, {
+        title: `Autonomous Hunt: ${scenarioName}`,
+        initial_goal: `Investigate telemetry signals and neutralize ${scenarioName}`,
+      });
+
+      const invId = res.data.investigation_id;
+      setSelectedInvestigationId(invId);
+      await fetchInvestigations();
+
+      // 3. Switch to Investigation Studio and kickoff autonomous cycle
+      setActiveMainTab('studio');
+      await axios.post(`${API_BASE}/api/planner/investigations/${invId}/run`, null, {
+        params: { max_steps: 6 },
+      });
+      await fetchInvestigations();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsAutoHunting(false);
+    }
+  };
+
   const createInvestigation = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle) return;
@@ -407,6 +443,15 @@ export default function App() {
                       className="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold px-3 py-2 rounded-lg border border-gray-700 transition"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
+                    </button>
+
+                    <button
+                      onClick={handleAutoHuntScenario}
+                      disabled={isAutoHunting}
+                      className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center space-x-1.5 transition disabled:opacity-50 shadow-lg shadow-purple-950 ml-2"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>{isAutoHunting ? 'Launching Auto-Hunt...' : 'Auto-Hunt Scenario'}</span>
                     </button>
                   </div>
 

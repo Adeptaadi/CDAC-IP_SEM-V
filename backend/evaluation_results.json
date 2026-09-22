@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-22T10:51:56.928286",
+  "timestamp": "2026-09-22T11:44:52.069056",
   "total_scenarios": 5,
   "summary_metrics": {
     "planner_accuracy": 1.0,
@@ -18,7 +18,7 @@
       "expected_calibration_error": 0.235,
       "cycles_to_converge": 6,
       "final_confidence": 0.5325,
-      "elapsed_seconds": 0.17,
+      "elapsed_seconds": 0.29,
       "status": "passed"
     },
     {
@@ -30,7 +30,7 @@
       "expected_calibration_error": 0.235,
       "cycles_to_converge": 6,
       "final_confidence": 0.5325,
-      "elapsed_seconds": 0.06,
+      "elapsed_seconds": 0.02,
       "status": "passed"
     },
     {
@@ -42,7 +42,7 @@
       "expected_calibration_error": 0.235,
       "cycles_to_converge": 6,
       "final_confidence": 0.5673,
-      "elapsed_seconds": 0.04,
+      "elapsed_seconds": 0.02,
       "status": "passed"
     },
     {
@@ -54,7 +54,7 @@
       "expected_calibration_error": 0.235,
       "cycles_to_converge": 6,
       "final_confidence": 0.5325,
-      "elapsed_seconds": 0.05,
+      "elapsed_seconds": 0.02,
       "status": "passed"
     },
     {
@@ -66,7 +66,7 @@
       "expected_calibration_error": 0.235,
       "cycles_to_converge": 6,
       "final_confidence": 0.5325,
-      "elapsed_seconds": 0.04,
+      "elapsed_seconds": 0.02,
       "status": "passed"
     }
   ],
