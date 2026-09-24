@@ -652,7 +652,7 @@ export default function App() {
           </div>
         )}
 
-        {activeMainTab === 'benchmark' && <BenchmarkTab />}
+        {activeMainTab === 'benchmark' && <BenchmarkTab apiBase={API_BASE} />}
       </main>
     </div>
   );
