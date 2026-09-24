@@ -3567,6 +3567,20 @@ Prevent unsafe autonomous actions.
 
 ---
 
+---
+
+# 40.5 SOC Workstation Observability & Real-Time Visualization UI Subsystem
+
+To provide human analysts with real-time insight into the multi-agent cognitive loop:
+
+1. **`TelemetryTicker` (`frontend/src/components/TelemetryTicker.tsx`):** Rolling telemetry status ribbon showing live packet throughput and flagging suspicious ports/flags from Redis streams.
+2. **`AgentOrbitalMap` (`frontend/src/components/AgentOrbitalMap.tsx`):** Interactive SVG node-link canvas rendering the Central Planner and 5 specialist worker nodes with real-time data flow particle animations and latency badges.
+3. **`AgentThoughtStream` (`frontend/src/components/AgentThoughtStream.tsx`):** Real-time command terminal streaming categorized agent logs (`[PLANNER]`, `[UTILITY]`, `[RAG]`, `[WORKER]`, `[BAYESIAN]`, `[CONTAINMENT]`) with search, filter, and auto-scroll controls.
+4. **`UtilityBreakdownView` & `FactorDecompositionView`:** Renders mathematical worker selection competition ($U_w$) and the 6-factor Bayesian posterior confidence delta ($\sum w_i \cdot \delta_i$) for every planning cycle.
+5. **Paced Simulation Engine:** Allows analysts to execute investigations in paced steps (e.g., 0.8s, 1.5s, 2.5s) to observe real-time graph evolution.
+
+---
+
 # 41 Future Scaling Strategy
 
 Future enterprise deployment may introduce

@@ -68,20 +68,27 @@ def get_planner_decisions(investigation_id: UUID, db: Session = Depends(get_db))
         .order_by(PlannerDecision.cycle_number.asc())
         .all()
     )
-    return [
-        {
+    res = []
+    for d in decisions:
+        exec_record = d.executions[0] if d.executions else None
+        raw_out = exec_record.raw_output if (exec_record and isinstance(exec_record.raw_output, dict)) else {}
+        res.append({
             "decision_id": str(d.decision_id),
             "cycle_number": d.cycle_number,
             "selected_worker": d.selected_worker,
             "selection_score": float(d.selection_score) if d.selection_score else None,
+            "utility_scores": raw_out.get("utility_scores", {}),
+            "factor_contributions": raw_out.get("factor_contributions", {}),
+            "rag_citations": raw_out.get("rag_citations", []),
+            "confidence_delta": raw_out.get("delta", None),
+            "latency_ms": exec_record.latency_ms if exec_record else None,
             "knowledge_need": d.knowledge_need,
             "confidence_before": float(d.confidence_before),
             "confidence_after": float(d.confidence_after),
             "explanation_summary": d.explanation_summary,
             "created_at": d.created_at.isoformat(),
-        }
-        for d in decisions
-    ]
+        })
+    return res
 
 
 @planner_router.get("/investigations/{investigation_id}/state")

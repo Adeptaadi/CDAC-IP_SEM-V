@@ -17,6 +17,7 @@ import {
 
 import { InvestigationStudioTab } from './components/InvestigationStudioTab';
 import { BenchmarkTab } from './components/BenchmarkTab';
+import { TelemetryTicker } from './components/TelemetryTicker';
 
 interface Investigation {
   investigation_id: string;
@@ -323,6 +324,16 @@ export default function App() {
           </div>
         </div>
       </header>
+
+      {/* Real-time Telemetry Ingestion Ticker */}
+      <TelemetryTicker
+        latestEvent={replayStatus.latest_event}
+        totalEvents={replayStatus.total_events}
+        dispatchedEvents={replayStatus.dispatched_events_count}
+        replayState={replayStatus.state}
+        scenarioName={currentScenarioDetails?.name || selectedScenarioId}
+        speed={replayStatus.speed}
+      />
 
       {/* Main Content Area */}
       <main className="flex-1 p-6 max-w-7xl w-full mx-auto">

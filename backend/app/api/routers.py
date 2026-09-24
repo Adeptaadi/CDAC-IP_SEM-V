@@ -83,8 +83,9 @@ def dry_run_worker_selection(
         graph_density=graph_density,
         hypotheses_confidences=confs,
     )
-    worker, score = select_worker(state)
+    worker, score, all_scores = select_worker(state)
     return {
         "selected_worker": worker,
-        "utility_score": score
+        "utility_score": score,
+        "utility_scores": all_scores,
     }

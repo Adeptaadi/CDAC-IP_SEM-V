@@ -3247,6 +3247,19 @@ Planner
 
 ---
 
+---
+
+# 41.5 Multi-Agent Cognitive Observability & Visual Thought Stream
+
+To ensure that the autonomous multi-agent reasoning process is completely transparent and inspectable by human analysts:
+
+1. **Agent Orbital Topology (`AgentOrbitalMap`):** An interactive visual canvas that models the central Planner Engine and the 5 specialized worker agents (Detection, Correlation, Investigation, Reporting, Response). Dynamic glowing data packet beams animate along the dispatch vectors during active execution.
+2. **Real-Time Agent Thought Stream (`AgentThoughtStream`):** A high-throughput terminal console that streams structured, timestamped logs categorized into `[PLANNER]`, `[UTILITY]`, `[RAG]`, `[WORKER]`, `[BAYESIAN]`, and `[CONTAINMENT]`.
+3. **Paced Multi-Cycle Simulation Engine:** Enables step-by-step or throttled autonomous execution (e.g., 0.8s, 1.5s, 2.5s per cycle) so human reviewers can watch hypotheses form, entity relationships link, and confidence evolve in real-time.
+4. **Argmax Utility Inspection (`UtilityBreakdownView`):** Renders the competitive utility scores ($U_{\text{det}}, U_{\text{corr}}, U_{\text{inv}}, U_{\text{rep}}, U_{\text{res}}$) for each cycle, mathematically explaining worker dispatch decisions.
+
+---
+
 # 42. Architecture Summary
 
 Project Sentinel adopts a **goal-driven, planner-centric, multi-agent architecture** designed for autonomous cybersecurity investigations.

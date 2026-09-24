@@ -609,6 +609,73 @@ All of the above should be one offline script (`eval_harness.py`) that takes a l
 
 ---
 
+# 6. Visual Explainability & Cognitive Observability Subsystem
+
+## 6.1 Cognitive Transparency Architecture
+
+To eliminate the "black-box" nature of autonomous planning, the platform exposes real-time cognitive state transitions over WebSockets and renders them via dedicated observability components.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Telemetry Ticker (Live Redis Packet Stream)              │
+│    Highlights anomalous ports (4444), flags, protocols      │
+├─────────────────────────────────────────────────────────────┤
+│ 2. Multi-Agent Orbital Map (SVG Dynamic Topology)           │
+│    Central Planner + 5 Orbiting Workers with live beams     │
+├─────────────────────────────────────────────────────────────┤
+│ 3. Agent Thought Stream (Real-Time SOC Command Console)     │
+│    [PLANNER] [UTILITY] [RAG] [WORKER] [BAYESIAN] logs       │
+├─────────────────────────────────────────────────────────────┤
+│ 4. Mathematical Explainability Cards                        │
+│    - Worker Utility Competition: Argmax(U_w) comparison     │
+│    - 6-Factor Bayesian Decomposition: Σ (w_i · δ_i)         │
+├─────────────────────────────────────────────────────────────┤
+│ 5. Paced Simulation Engine                                  │
+│    Configurable playback interval (0.8s, 1.5s, 2.5s)        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## 6.2 Granular Telemetry WebSocket Schema
+
+Every planning cycle emits a rich `PLANNER_DECISION` event:
+
+```json
+{
+  "type": "PLANNER_DECISION",
+  "investigation_id": "uuid",
+  "cycle_number": 2,
+  "selected_worker": "correlation",
+  "utility_score": 0.8200,
+  "utility_scores": {
+    "detection": 0.0,
+    "correlation": 0.82,
+    "investigation": 0.35,
+    "reporting": 0.0,
+    "response": 0.0
+  },
+  "factor_contributions": {
+    "detection": { "raw_delta": 0.35, "weight": 0.15, "weighted_contribution": 0.0525 },
+    "evidence": { "raw_delta": 0.60, "weight": 0.20, "weighted_contribution": 0.1200 },
+    "correlation": { "raw_delta": 0.20, "weight": 0.15, "weighted_contribution": 0.0300 },
+    "knowledge": { "raw_delta": 0.45, "weight": 0.15, "weighted_contribution": 0.0675 },
+    "agreement": { "raw_delta": 0.10, "weight": 0.15, "weighted_contribution": 0.0150 },
+    "historical": { "raw_delta": 0.25, "weight": 0.20, "weighted_contribution": 0.0500 }
+  },
+  "rag_citations": [
+    { "category": "mitre", "text": "T1059.001 PowerShell execution", "similarity_score": 0.912, "reliability_weight": 1.0 }
+  ],
+  "confidence_before": 0.3000,
+  "confidence_after": 0.5850,
+  "confidence_delta": 0.2850,
+  "confidence_state": "moderate",
+  "explanation": "CorrelationWorker identified 3 pivot IP nodes.",
+  "latency_ms": 78,
+  "status": "active"
+}
+```
+
+---
+
 # Summary of what changed vs. TDD/AIDD
 
 | Gap identified | Resolved by |
@@ -619,5 +686,7 @@ All of the above should be one offline script (`eval_harness.py`) that takes a l
 | No termination condition | §3.3: three concrete stop conditions including a stagnation guard |
 | Worker I/O shape unspecified | §4: Pydantic contracts for Task/Result/Finding |
 | Metrics were names with no protocol | §5: dataset requirements + exact computation for all 8 metrics |
+| Cognitive reasoning was invisible to users | §6: Agent Thought Stream, Orbital Topology, and Mathematical Factor Decomposition |
 
 This document should sit alongside the TDD as the thing you'd actually hand to someone implementing the system — or defend to a technical panel asking "how does this actually work."
+

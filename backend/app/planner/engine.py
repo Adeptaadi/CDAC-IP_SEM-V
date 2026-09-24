@@ -124,9 +124,18 @@ class PlannerEngine:
         # 2. Determine Knowledge Need & Retrieve RAG Context
         query_text = investigation.current_goal or investigation.title
         retrieved_ctx = self.retriever.retrieve(query=query_text, top_k=3)
+        rag_citations = [
+            {
+                "category": c.category,
+                "text": c.text,
+                "similarity_score": round(float(c.similarity_score), 4),
+                "reliability_weight": round(float(c.reliability_weight), 2),
+            }
+            for c in retrieved_ctx.chunks
+        ]
 
         # 3. Dynamic Worker Selection (IS §3.2 Utility Function)
-        worker_type, utility_score = select_worker(state_snapshot)
+        worker_type, utility_score, utility_scores = select_worker(state_snapshot)
 
         # 4. Construct Task & Execute Worker (IS §4 BaseWorker contract)
         existing_evidence_ids = [
@@ -205,6 +214,7 @@ class PlannerEngine:
             historical_sim_score=0.4,
         )
         delta = self.confidence_engine.compute_delta(factors)
+        factor_contributions = self.confidence_engine.compute_factor_contributions(factors)
 
         conf_before = float(investigation.current_confidence)
         conf_after = self.confidence_engine.update(current_confidence=conf_before, delta=delta)
@@ -232,11 +242,17 @@ class PlannerEngine:
         db.add(decision)
         db.flush()
 
+        raw_output_payload = worker_result.model_dump(mode="json")
+        raw_output_payload["utility_scores"] = utility_scores
+        raw_output_payload["factor_contributions"] = factor_contributions
+        raw_output_payload["rag_citations"] = rag_citations
+        raw_output_payload["delta"] = round(float(delta), 4)
+
         execution = WorkerExecution(
             decision_id=decision.decision_id,
             worker_type=worker_type,
             status=worker_result.status,
-            raw_output=worker_result.model_dump(mode="json"),
+            raw_output=raw_output_payload,
             latency_ms=latency_ms,
             llm_token_usage=120,
         )
@@ -252,6 +268,8 @@ class PlannerEngine:
                 "confidence_before": conf_before,
                 "confidence_after": conf_after,
                 "delta": delta,
+                "utility_scores": utility_scores,
+                "factor_contributions": factor_contributions,
             },
         )
         db.add(audit)
@@ -291,11 +309,17 @@ class PlannerEngine:
             "cycle_number": next_cycle,
             "selected_worker": worker_type,
             "utility_score": utility_score,
+            "utility_scores": utility_scores,
+            "factor_contributions": factor_contributions,
+            "rag_citations": rag_citations,
             "confidence_before": conf_before,
             "confidence_after": conf_after,
+            "confidence_delta": round(float(delta), 4),
             "confidence_state": conf_state,
             "explanation": worker_result.reasoning_summary,
+            "latency_ms": latency_ms,
             "status": investigation.status,
+            "findings_count": len(worker_result.new_evidence),
         }
         try:
             loop = asyncio.get_event_loop()
@@ -310,10 +334,15 @@ class PlannerEngine:
             "cycle_number": next_cycle,
             "selected_worker": worker_type,
             "utility_score": utility_score,
+            "utility_scores": utility_scores,
+            "factor_contributions": factor_contributions,
+            "rag_citations": rag_citations,
             "confidence_before": conf_before,
             "confidence_after": conf_after,
+            "confidence_delta": round(float(delta), 4),
             "confidence_state": conf_state,
             "reasoning_summary": worker_result.reasoning_summary,
+            "latency_ms": latency_ms,
             "status": investigation.status,
         }
 

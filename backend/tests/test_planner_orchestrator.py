@@ -130,3 +130,38 @@ def test_planner_stagnation_guard():
         assert result.get("requires_analyst_review") is True
     finally:
         db.close()
+
+
+def test_observability_factor_and_utility_telemetry():
+    db = TestSessionLocal()
+    try:
+        inv = Investigation(
+            investigation_id=uuid4(),
+            title="Observability Telemetry Test Case",
+            status="active",
+            current_confidence=0.15,
+            confidence_state="very_low",
+            current_goal="Detect malicious lateral movement",
+        )
+        db.add(inv)
+        db.commit()
+
+        planner = PlannerEngine()
+        result = planner.run_cycle(inv.investigation_id, db)
+
+        # Check that utility_scores and factor_contributions are populated
+        assert "utility_scores" in result
+        assert "detection" in result["utility_scores"]
+        assert "factor_contributions" in result
+        assert "evidence" in result["factor_contributions"]
+        assert "weighted_contribution" in result["factor_contributions"]["evidence"]
+        assert "rag_citations" in result
+
+        # Check DB WorkerExecution raw_output
+        exec_record = db.query(WorkerExecution).first()
+        assert exec_record is not None
+        assert "utility_scores" in exec_record.raw_output
+        assert "factor_contributions" in exec_record.raw_output
+    finally:
+        db.close()
+

@@ -86,6 +86,17 @@ class ConfidenceEngine:
         """Compute the weighted delta sum Σ w_i · δ_i."""
         return sum(self.weights.get(k, 0.0) * factors.get(k, 0.0) for k in self.weights)
 
+    def compute_factor_contributions(self, factors: Dict[str, float]) -> Dict[str, Dict[str, float]]:
+        """Returns individual weighted factor contributions for visual observability."""
+        return {
+            k: {
+                "raw_delta": round(float(factors.get(k, 0.0)), 4),
+                "weight": round(float(self.weights.get(k, 0.0)), 3),
+                "weighted_contribution": round(float(self.weights.get(k, 0.0) * factors.get(k, 0.0)), 4),
+            }
+            for k in self.weights
+        }
+
     def update(self, current_confidence: float, delta: float) -> float:
         """Apply bounded logit-space update: sigmoid(logit(C) + delta)."""
         current_logit = logit(current_confidence)

@@ -35,7 +35,7 @@ class InvestigationStateSnapshot:
         self.requires_analyst_review: bool = False
 
 
-def select_worker(state: InvestigationStateSnapshot) -> Tuple[str, float]:
+def select_worker(state: InvestigationStateSnapshot) -> Tuple[str, float, Dict[str, float]]:
     """Scores each of the 5 worker types against current investigation gaps (IS §3.2)."""
     scores: Dict[str, float] = {}
 
@@ -69,8 +69,10 @@ def select_worker(state: InvestigationStateSnapshot) -> Tuple[str, float]:
     else:
         scores["response"] = 0.0
 
+    # Clean rounding for presentation
+    rounded_scores = {k: round(float(v), 4) for k, v in scores.items()}
     best_worker = max(scores, key=scores.get)
-    return best_worker, scores[best_worker]
+    return best_worker, float(scores[best_worker]), rounded_scores
 
 
 def should_terminate(state: InvestigationStateSnapshot) -> bool:

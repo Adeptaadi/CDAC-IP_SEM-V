@@ -1103,6 +1103,21 @@ The planner shall never fabricate conclusions.
 
 ---
 
+# 15.5 6-Factor Bayesian Explainability & Cognitive Streaming
+
+To guarantee complete cognitive transparency, the AI subsystem decomposes every posterior confidence shift into 6 weighted factor deltas ($\sum_{i=1}^6 w_i \cdot \delta_i$) and streams real-time execution tokens:
+
+1. **Detection Quality ($w_1 = 0.15$):** Reflects detector raw confidence $\times$ severity tier ($0.8 - 1.4$).
+2. **Evidence Corroboration ($w_2 = 0.20$):** Multi-source diversity ratio and corroboration bonus ($1.2\times$).
+3. **Correlation Graph Density ($w_3 = 0.15$):** Entity graph expansion ratio ($\text{edges} / \max(1, \text{nodes})$).
+4. **Knowledge Retrieval Match ($w_4 = 0.15$):** RAG cosine similarity $\times$ source reliability weight (MITRE ATT&CK = $1.0$).
+5. **Worker Agreement ($w_5 = 0.15$):** Inverse variance across independent worker confidence estimates.
+6. **Historical Similarity ($w_6 = 0.20$):** Semantic proximity to validated historical cases in episodic memory.
+
+Every cycle emits structured telemetry over WebSockets, updating the visual `FactorDecompositionView` and `AgentThoughtStream` in real time.
+
+---
+
 # 16 Future AI Improvements
 
 Future versions may include
