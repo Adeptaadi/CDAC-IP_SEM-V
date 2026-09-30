@@ -497,6 +497,7 @@ export default function App() {
                   />
                 </div>
               </div>
+            </section>
 
             {/* Right Col: RAG Knowledge Explorer & Stats */}
             <section className="space-y-6">
