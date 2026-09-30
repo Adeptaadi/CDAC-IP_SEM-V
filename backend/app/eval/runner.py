@@ -111,24 +111,21 @@ class BenchmarkRunner:
         labels = [1 if c >= 0.50 else 0 for c in confidences]
         ece = compute_expected_calibration_error(confidences, labels)
 
-        # Differentiated real-world benchmark metrics based on scenario telemetry complexity
-        scenario_benchmarks = {
-            "infiltration": {"accuracy": 0.94, "evidence_coverage": 0.91, "hallucination_rate": 0.01, "ece": 0.042, "cycles": 4},
-            "brute_force": {"accuracy": 0.98, "evidence_coverage": 0.96, "hallucination_rate": 0.00, "ece": 0.028, "cycles": 3},
-            "web_attacks": {"accuracy": 0.92, "evidence_coverage": 0.88, "hallucination_rate": 0.02, "ece": 0.051, "cycles": 4},
-            "botnet_c2": {"accuracy": 0.96, "evidence_coverage": 0.93, "hallucination_rate": 0.01, "ece": 0.034, "cycles": 3},
-            "dos_goldeneye": {"accuracy": 0.97, "evidence_coverage": 0.95, "hallucination_rate": 0.00, "ece": 0.025, "cycles": 3},
-        }
-        sb = scenario_benchmarks.get(scenario_id, {"accuracy": 0.95, "evidence_coverage": 0.92, "hallucination_rate": 0.01, "ece": 0.035, "cycles": 3})
+        # Compute real empirical accuracy & metric values per scenario execution
+        real_accuracy = round(accuracy, 4)
+        real_coverage = round(coverage, 4)
+        real_hallucination = round(hallucination_rate, 4)
+        real_ece = round(ece, 4)
+        real_cycles = max(1, inv.planning_cycle_count)
 
         return {
             "scenario_id": scenario_id,
             "name": scenario.name,
-            "accuracy": sb["accuracy"],
-            "evidence_coverage": sb["evidence_coverage"],
-            "hallucination_rate": sb["hallucination_rate"],
-            "expected_calibration_error": sb["ece"],
-            "cycles_to_converge": sb["cycles"],
+            "accuracy": real_accuracy,
+            "evidence_coverage": real_coverage,
+            "hallucination_rate": real_hallucination,
+            "expected_calibration_error": real_ece,
+            "cycles_to_converge": real_cycles,
             "final_confidence": float(inv.current_confidence),
             "elapsed_seconds": elapsed_sec,
             "status": "passed",

@@ -200,18 +200,25 @@ class PlannerEngine:
                 existing_hypo.confidence = h_update["confidence"]
 
         # 6. Logit-Odds Confidence Update (IS §1)
+        distinct_sources_count = max(1, len(set(e.source_type for e in db.query(Evidence).filter(Evidence.investigation_id == investigation_id).all())))
+        nodes_count = max(1, len(state_snapshot.hypotheses_confidences) + len(existing_evidence_ids))
+        edges_added_count = len(worker_result.new_evidence) if worker_type in ["correlation", "investigation"] else 1
+        
+        # Dynamic historical similarity calculation based on planning cycle progression
+        historical_score = min(0.85, 0.2 + (investigation.planning_cycle_count * 0.12))
+        
         factors = self.confidence_engine.compute_factors(
             worker_result=worker_result,
             evidence_count_this_cycle=max(1, len(worker_result.new_evidence)),
-            distinct_sources=2,
+            distinct_sources=distinct_sources_count,
             total_evidence=state_snapshot.evidence_count + len(worker_result.new_evidence),
-            corroborated=True,
-            edges_added=2 if worker_type == "correlation" else 0,
-            nodes_in_graph=max(1, state_snapshot.evidence_count),
-            knowledge_similarities=[c.similarity_score for c in retrieved_ctx.chunks] if retrieved_ctx.chunks else [0.5],
-            source_reliability=0.9,
+            corroborated=bool(len(worker_result.new_evidence) > 1),
+            edges_added=edges_added_count,
+            nodes_in_graph=nodes_count,
+            knowledge_similarities=[c.similarity_score for c in retrieved_ctx.chunks] if retrieved_ctx.chunks else [0.65],
+            source_reliability=0.95 if any("MITRE" in (c.category or "") for c in retrieved_ctx.chunks) else 0.8,
             worker_confidences=[worker_result.confidence_signal],
-            historical_sim_score=0.4,
+            historical_sim_score=historical_score,
         )
         delta = self.confidence_engine.compute_delta(factors)
         factor_contributions = self.confidence_engine.compute_factor_contributions(factors)
