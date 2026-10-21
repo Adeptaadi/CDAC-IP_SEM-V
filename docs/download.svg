@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2174.953 838.45" width="2174.953" height="838.45" style="--bg:#1F1F1F;--fg:#CCCCCC;--line:#CCCCCC;--accent:#0078D4;--muted:#CCCCCCCC;--surface:#181818;--border:#CCCCCC;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+  <marker id="seq-arrow" markerWidth="8" markerHeight="5" refX="8" refY="2.5" orient="auto-start-reverse">
+    <polygon points="0 0, 8 2.5, 0 5" fill="var(--_arrow)" />
+  </marker>
+  <marker id="seq-arrow-open" markerWidth="8" markerHeight="5" refX="8" refY="2.5" orient="auto-start-reverse">
+    <polyline points="0 0, 8 2.5, 0 5" fill="none" stroke="var(--_arrow)" stroke-width="1" />
+  </marker>
+</defs>
+<g class="block" data-type="loop" data-label="Autonomous Investigation Loop (Max 8 Cycles or C ≥ 0.85)">
+  <rect x="652.7309999999999" y="220.45" width="1492.2220000000002" height="260" rx="0" ry="0" fill="none" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="652.7309999999999" y="220.45" width="346.98999999999984" height="18" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="658.7309999999999" y="229.45" font-size="11" font-weight="600" fill="var(--_text-sec)" dy="3.8499999999999996">loop [Autonomous Investigation Loop (Max 8 Cycles or C ≥ 0.85)]</text>
+</g>
+<g class="block" data-type="alt" data-label="Hypothesis Confidence C ≥ 0.85 (Confirmed Threat)">
+  <rect x="30" y="488.45000000000005" width="2114.953" height="220" rx="0" ry="0" fill="none" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="30" y="488.45000000000005" width="300.7899999999999" height="18" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="36" y="497.45000000000005" font-size="11" font-weight="600" fill="var(--_text-sec)" dy="3.8499999999999996">alt [Hypothesis Confidence C ≥ 0.85 (Confirmed Threat)]</text>
+</g>
+<line class="lifeline" data-actor="Analyst" x1="118.47800000000001" y1="92.45" x2="118.47800000000001" y2="808.45" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="Replayer" x1="342.851" y1="70" x2="342.851" y2="808.45" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="API" x1="555.7384999999999" y1="70" x2="555.7384999999999" y2="808.45" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="Planner" x1="762.6979999999999" y1="70" x2="762.6979999999999" y2="808.45" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="Bayes" x1="985.5889999999998" y1="70" x2="985.5889999999998" y2="808.45" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="Workers" x1="1231.8214999999998" y1="70" x2="1231.8214999999998" y2="808.45" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="DB" x1="1526.2189999999998" y1="70" x2="1526.2189999999998" y2="808.45" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="Containment" x1="1821.7279999999998" y1="70" x2="1821.7279999999998" y2="808.45" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="UI" x1="2060.5505" y1="70" x2="2060.5505" y2="808.45" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<g class="message" data-from="Replayer" data-to="API" data-label="Stream Telemetry / Attack Scenario Logs" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="342.851" y1="112.45" x2="555.7384999999999" y2="112.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="449.29474999999996" y="102.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Stream Telemetry / Attack Scenario Logs</text>
+</g>
+<g class="message" data-from="API" data-to="DB" data-label="Store Events in PostgreSQL &amp; Redis Pub/Sub" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="555.7384999999999" y1="152.45" x2="1526.2189999999998" y2="152.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="1040.9787499999998" y="142.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Store Events in PostgreSQL &amp; Redis Pub/Sub</text>
+</g>
+<g class="message" data-from="API" data-to="Planner" data-label="Launch Autonomous Threat Hunt" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="555.7384999999999" y1="192.45" x2="762.6979999999999" y2="192.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="659.2182499999999" y="182.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Launch Autonomous Threat Hunt</text>
+</g>
+<g class="message" data-from="Planner" data-to="Workers" data-label="Dispatch Highest Utility Worker (Argmax U_WS)" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="762.6979999999999" y1="260.45" x2="1231.8214999999998" y2="260.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="997.2597499999998" y="250.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Dispatch Highest Utility Worker (Argmax U_WS)</text>
+</g>
+<g class="message" data-from="Workers" data-to="DB" data-label="Query Logs &amp; Retrieve MITRE RAG Embeddings (ChromaDB)" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="1231.8214999999998" y1="300.45" x2="1526.2189999999998" y2="300.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="1379.0202499999998" y="290.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Query Logs &amp; Retrieve MITRE RAG Embeddings (ChromaDB)</text>
+</g>
+<g class="message" data-from="Workers" data-to="Planner" data-label="Return Evidence Findings &amp; Confidence Signals" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="1231.8214999999998" y1="340.45" x2="762.6979999999999" y2="340.45" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="997.2597499999998" y="330.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Return Evidence Findings &amp; Confidence Signals</text>
+</g>
+<g class="message" data-from="Planner" data-to="Bayes" data-label="Calculate Logit Bayesian Confidence Update" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="762.6979999999999" y1="380.45" x2="985.5889999999998" y2="380.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="874.1434999999999" y="370.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Calculate Logit Bayesian Confidence Update</text>
+</g>
+<g class="message" data-from="Bayes" data-to="Planner" data-label="Updated Confidence C_t &amp; 6-Factor Deltas" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="985.5889999999998" y1="420.45" x2="762.6979999999999" y2="420.45" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="874.1434999999999" y="410.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Updated Confidence C_t &amp; 6-Factor Deltas</text>
+</g>
+<g class="message" data-from="Planner" data-to="UI" data-label="Broadcast Real-Time Thought Stream &amp; Orbital Topology via WebSockets" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="762.6979999999999" y1="460.45" x2="2060.5505" y2="460.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="1411.6242499999998" y="450.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Broadcast Real-Time Thought Stream &amp; Orbital Topology via WebSockets</text>
+</g>
+<g class="message" data-from="Planner" data-to="Containment" data-label="Formulate Remediation Plan (Host Isolation / C2 Block)" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="762.6979999999999" y1="528.45" x2="1821.7279999999998" y2="528.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="1292.2129999999997" y="518.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Formulate Remediation Plan (Host Isolation / C2 Block)</text>
+</g>
+<g class="message" data-from="Containment" data-to="UI" data-label="Stage Action on HITL Governance Panel" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="1821.7279999999998" y1="568.45" x2="2060.5505" y2="568.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="1941.1392499999997" y="558.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Stage Action on HITL Governance Panel</text>
+</g>
+<g class="message" data-from="Analyst" data-to="UI" data-label="Review Impact Analysis &amp; Click &quot;Authorize Action&quot;" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="118.47800000000001" y1="608.45" x2="2060.5505" y2="608.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="1089.51425" y="598.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Review Impact Analysis &amp; Click &quot;Authorize Action&quot;</text>
+</g>
+<g class="message" data-from="UI" data-to="Containment" data-label="Execute Approved Containment Rule" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="2060.5505" y1="648.45" x2="1821.7279999999998" y2="648.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="1941.1392499999997" y="638.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Execute Approved Containment Rule</text>
+</g>
+<g class="message" data-from="Containment" data-to="DB" data-label="Log Execution in Immutable PostgreSQL Audit Trail" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="1821.7279999999998" y1="688.45" x2="1526.2189999999998" y2="688.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="1673.9734999999998" y="678.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Log Execution in Immutable PostgreSQL Audit Trail</text>
+</g>
+<g class="message" data-from="Planner" data-to="API" data-label="Calculate Scientific Evaluation Metrics (Accuracy, ECE, Coverage)" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="762.6979999999999" y1="728.45" x2="555.7384999999999" y2="728.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="659.2182499999999" y="718.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Calculate Scientific Evaluation Metrics (Accuracy, ECE, Coverage)</text>
+</g>
+<g class="message" data-from="API" data-to="UI" data-label="Render Benchmark Results &amp; Final Incident Report" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="555.7384999999999" y1="768.45" x2="2060.5505" y2="768.45" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="1308.1444999999999" y="758.45" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Render Benchmark Results &amp; Final Incident Report</text>
+</g>
+<g class="actor" data-id="Analyst" data-label="SOC Analyst (Human)" data-type="actor">
+  <g transform="translate(100.47800000000001,32) scale(1.5)">
+    <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" fill="none" stroke="var(--_line)" stroke-width="0.6666666666666666" />
+    <path d="M15 10C15 11.6569 13.6569 13 12 13C10.3431 13 9 11.6569 9 10C9 8.34315 10.3431 7 12 7C13.6569 7 15 8.34315 15 10Z" fill="none" stroke="var(--_line)" stroke-width="0.6666666666666666" />
+    <path d="M5.62842 18.3563C7.08963 17.0398 9.39997 16 12 16C14.6 16 16.9104 17.0398 18.3716 18.3563" fill="none" stroke="var(--_line)" stroke-width="0.6666666666666666" />
+  </g>
+  <text x="118.47800000000001" y="84" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">SOC Analyst (Human)</text>
+</g>
+<g class="actor" data-id="Replayer" data-label="Telemetry Replayer / Ingestion" data-type="participant">
+  <rect x="236.95600000000002" y="30" width="211.78999999999994" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="342.851" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">Telemetry Replayer / Ingestion</text>
+</g>
+<g class="actor" data-id="API" data-label="FastAPI Gateway" data-type="participant">
+  <rect x="488.7459999999999" y="30" width="133.985" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="555.7384999999999" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">FastAPI Gateway</text>
+</g>
+<g class="actor" data-id="Planner" data-label="Autonomous Planner Engine" data-type="participant">
+  <rect x="662.7309999999999" y="30" width="199.93399999999997" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="762.6979999999999" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">Autonomous Planner Engine</text>
+</g>
+<g class="actor" data-id="Bayes" data-label="Logit Bayesian Engine" data-type="participant">
+  <rect x="902.6649999999998" y="30" width="165.84799999999998" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="985.5889999999998" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">Logit Bayesian Engine</text>
+</g>
+<g class="actor" data-id="Workers" data-label="Worker Agents (Query, RAG, Enrich)" data-type="participant">
+  <rect x="1108.513" y="30" width="246.61699999999996" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="1231.8214999999998" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">Worker Agents (Query, RAG, Enrich)</text>
+</g>
+<g class="actor" data-id="DB" data-label="Polyglot DB (Postgres / Redis / Chroma)" data-type="participant">
+  <rect x="1395.1299999999999" y="30" width="262.178" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="1526.2189999999998" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">Polyglot DB (Postgres / Redis / Chroma)</text>
+</g>
+<g class="actor" data-id="Containment" data-label="Containment Worker (HITL Enforced)" data-type="participant">
+  <rect x="1697.3079999999998" y="30" width="248.83999999999995" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="1821.7279999999998" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">Containment Worker (HITL Enforced)</text>
+</g>
+<g class="actor" data-id="UI" data-label="React 18 SOC Studio" data-type="participant">
+  <rect x="1986.148" y="30" width="148.805" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="2060.5505" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">React 18 SOC Studio</text>
+</g>
+</svg>

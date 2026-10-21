@@ -1,0 +1,274 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1277.85225 2419.009" width="1277.85225" height="2419.009" style="--bg:#1F1F1F;--fg:#CCCCCC;--line:#CCCCCC;--accent:#0078D4;--muted:#CCCCCCCC;--surface:#181818;--border:#CCCCCC;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+  <marker id="arrowhead" markerWidth="8" markerHeight="5" refX="7" refY="2.5" orient="auto">
+    <polygon points="0 0, 8 2.5, 0 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+  <marker id="arrowhead-start" markerWidth="8" markerHeight="5" refX="1" refY="2.5" orient="auto-start-reverse">
+    <polygon points="8 0, 0 2.5, 8 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+</defs>
+<g class="subgraph" data-id="INGESTION" data-label="1. Ingestion &amp; Stream Layer">
+  <rect x="371.11412500000006" y="40" width="296.991" height="417.29999999999995" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="371.11412500000006" y="40" width="296.991" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="383.11412500000006" y="54" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">1. Ingestion &amp; Stream Layer</text>
+</g>
+<g class="subgraph" data-id="ORCHESTRATION" data-label="2. Multi-Agent Orchestrator (Planner Engine)">
+  <rect x="164.90262500000017" y="585.5999999999999" width="712.4604999999998" height="610.709" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="164.90262500000017" y="585.5999999999999" width="712.4604999999998" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="176.90262500000017" y="599.5999999999999" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">2. Multi-Agent Orchestrator (Planner Engine)</text>
+</g>
+<g class="subgraph" data-id="WORKERS" data-label="3. Specialized Worker Agents">
+  <rect x="143.73125" y="1256.309" width="1094.121" height="267" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="143.73125" y="1256.309" width="1094.121" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="155.73125" y="1270.309" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">3. Specialized Worker Agents</text>
+</g>
+<g class="subgraph" data-id="REASONING" data-label="4. Confidence &amp; State Updates">
+  <rect x="267.00475" y="1651.609" width="225.855" height="417.29999999999995" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="267.00475" y="1651.609" width="225.855" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="279.00475" y="1665.609" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">4. Confidence &amp; State Updates</text>
+</g>
+<g class="subgraph" data-id="INTERFACE" data-label="5. Real-Time SOC Station">
+  <rect x="40" y="2197.209" width="739.515" height="181.8" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="40" y="2197.209" width="739.515" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="52" y="2211.209" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">5. Real-Time SOC Station</text>
+</g>
+<polyline class="edge" data-from="C" data-to="D" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Triage Signals" points="519.609625,441.29999999999995 519.609625,629.5999999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="I" data-to="J1" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="751.097625,1162.2839999999999 751.097625,1231.2965 231.83524999999997,1231.2965 231.83524999999997,1300.309" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="I" data-to="J2" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="751.097625,1162.2839999999999 751.097625,1231.2965 409.97124999999994,1231.2965 409.97124999999994,1300.309" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="I" data-to="J3" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="751.097625,1162.2839999999999 751.097625,1231.2965 597.74025,1231.2965 597.74025,1300.309" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="I" data-to="J4" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="751.097625,1162.2839999999999 751.097625,1231.2965 970.1302500000002,1231.2965 970.1302500000002,1300.309" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="I" data-to="J5" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="751.097625,1162.2839999999999 751.097625,1231.2965 1146.7842500000002,1231.2965 1146.7842500000002,1300.309" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="J1" data-to="L" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Pydantic WorkerResult" points="207.8005833333333,1337.209 207.8005833333333,1349.209 185.58524999999986,1349.209 185.58524999999986,1565.309 118.0402499999999,1565.309 118.0402499999999,1633.609 315.3139166666666,1633.609 315.3139166666665,1695.609" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="J2" data-to="L" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Pydantic WorkerResult" points="383.96058333333326,1337.209 383.96058333333326,1349.209 280.1652499999999,1349.209 280.1652499999999,1565.309 248.98624999999993,1565.309 248.98624999999993,1621.609 347.6230833333333,1621.609 347.62308333333317,1695.609" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="J3" data-to="L" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Pydantic WorkerResult" points="570.4945833333334,1337.209 570.4945833333334,1361.209 379.93224999999995,1361.209 379.93224999999984,1695.609" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="J4" data-to="L" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Pydantic WorkerResult" points="994.6589166666668,1337.209 994.6589166666668,1361.209 1090.7752500000001,1361.209 1090.7752500000001,1577.309 779.16925,1577.309 779.16925,1621.609 412.2414166666666,1621.609 412.2414166666665,1695.609" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="J5" data-to="L" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Pydantic WorkerResult" points="1171.8069166666667,1337.209 1171.8069166666667,1349.209 1185.8492500000002,1349.209 1185.84925,1589.309 910.1152500000001,1589.309 910.1152500000001,1633.609 444.5505833333333,1633.609 444.5505833333332,1695.609" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="N" data-to="O" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="WebSocket Broadcast" points="379.93225,2052.9089999999997 379.93225,2241.209" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="A" data-to="B" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Parse &amp; Normalize" points="519.609625,120.9 519.609625,237.2" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="B" data-to="C" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Stream Events" points="519.609625,274.1 519.609625,390.4" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="D" data-to="E" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="1. Check Stop Criteria" points="470.21962500000006,666.4999999999999 470.21962500000006,678.4999999999999 287.60712500000017,678.4999999999999 287.60712500000017,782.8" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="D" data-to="F" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="2. Query Semantic Context" points="519.609625,666.4999999999999 519.609625,871.0544999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="F" data-to="G" data-style="solid" data-arrow-start="true" data-arrow-end="true" data-label="Cosine Search 384-dim" points="519.609625,907.9544999999998 519.609625,1125.3839999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" marker-start="url(#arrowhead-start)" />
+<polyline class="edge" data-from="D" data-to="H" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="3. Calculate Utilities" points="568.999625,666.4999999999999 568.999625,678.4999999999999 751.097625,678.4999999999999 751.097625,871.0544999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="H" data-to="I" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="4. Dispatch Task" points="751.097625,907.9544999999998 751.097625,1125.3839999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="J1" data-to="K" data-style="solid" data-arrow-start="true" data-arrow-end="true" data-label="Air-Gapped Inference" points="255.8699166666666,1337.209 255.8699166666666,1373.209 446.43225,1373.209 446.43225,1429.509 695.1769166666668,1429.509 695.1769166666668,1453.509" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" marker-start="url(#arrowhead-start)" />
+<polyline class="edge" data-from="J2" data-to="K" data-style="solid" data-arrow-start="true" data-arrow-end="true" data-label="Air-Gapped Inference" points="435.9819166666667,1337.209 435.9819166666667,1349.209 597.80325,1349.209 597.80325,1417.509 724.3985833333334,1417.509 724.3985833333334,1453.509" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" marker-start="url(#arrowhead-start)" />
+<polyline class="edge" data-from="J3" data-to="K" data-style="solid" data-arrow-start="true" data-arrow-end="true" data-label="Air-Gapped Inference" points="624.9859166666668,1337.209 624.9859166666668,1349.209 753.6202500000002,1349.209 753.6202500000002,1453.509" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" marker-start="url(#arrowhead-start)" />
+<polyline class="edge" data-from="J4" data-to="K" data-style="solid" data-arrow-start="true" data-arrow-end="true" data-label="Air-Gapped Inference" points="945.6015833333333,1337.209 945.6015833333333,1349.209 876.25025,1349.209 876.25025,1417.509 782.8419166666667,1417.509 782.8419166666667,1453.509" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" marker-start="url(#arrowhead-start)" />
+<polyline class="edge" data-from="J5" data-to="K" data-style="solid" data-arrow-start="true" data-arrow-end="true" data-label="Air-Gapped Inference" points="1121.7615833333334,1337.209 1121.7615833333334,1349.209 1025.64525,1349.209 1025.64525,1429.509 812.0635833333333,1429.509 812.0635833333333,1453.509" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" marker-start="url(#arrowhead-start)" />
+<polyline class="edge" data-from="L" data-to="M" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Log-Odds Update" points="379.93225,1732.509 379.93225,1848.809" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="M" data-to="N" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Persist Audit Record" points="379.93225,1885.7089999999998 379.93225,2002.009" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="O" data-to="P1" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="379.93225,2278.109 379.93225,2302.109 297.7185,2302.109 297.7185,2326.109" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="O" data-to="P2" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="379.93225,2278.109 379.93225,2302.109 462.146,2302.109 462.146,2326.109" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="O" data-to="P3" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="379.93225,2278.109 379.93225,2302.109 130.327,2302.109 130.327,2326.109" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="O" data-to="P4" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="379.93225,2278.109 379.93225,2302.109 662.512,2302.109 662.512,2326.109" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<g class="edge-label" data-from="C" data-to="D" data-label="Triage Signals">
+  <rect x="475.6096250000001" y="506.29999999999995" width="87.14800000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="519.1836250000001" y="521.4499999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Triage Signals</text>
+</g>
+<g class="edge-label" data-from="J1" data-to="L" data-label="Pydantic WorkerResult">
+  <rect x="54.5402499999999" y="1596.309" width="126.946" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="118.0132499999999" y="1611.459" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Pydantic WorkerResult</text>
+</g>
+<g class="edge-label" data-from="J2" data-to="L" data-label="Pydantic WorkerResult">
+  <rect x="185.48624999999993" y="1572.309" width="126.946" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="248.95924999999994" y="1587.459" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Pydantic WorkerResult</text>
+</g>
+<g class="edge-label" data-from="J3" data-to="L" data-label="Pydantic WorkerResult">
+  <rect x="316.43224999999984" y="1572.309" width="126.946" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="379.90524999999985" y="1587.459" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Pydantic WorkerResult</text>
+</g>
+<g class="edge-label" data-from="J4" data-to="L" data-label="Pydantic WorkerResult">
+  <rect x="715.6692500000001" y="1584.309" width="126.946" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="779.1422500000001" y="1599.459" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Pydantic WorkerResult</text>
+</g>
+<g class="edge-label" data-from="J5" data-to="L" data-label="Pydantic WorkerResult">
+  <rect x="846.6152500000001" y="1596.309" width="126.946" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="910.08825" y="1611.459" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Pydantic WorkerResult</text>
+</g>
+<g class="edge-label" data-from="N" data-to="O" data-label="WebSocket Broadcast">
+  <rect x="317.93225" y="2117.9089999999997" width="123.38199999999999" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="379.62325" y="2133.0589999999997" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">WebSocket Broadcast</text>
+</g>
+<g class="edge-label" data-from="A" data-to="B" data-label="Parse &amp; Normalize">
+  <rect x="467.10962500000005" y="163.9" width="104.37400000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="519.2966250000001" y="179.05" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Parse &amp; Normalize</text>
+</g>
+<g class="edge-label" data-from="B" data-to="C" data-label="Stream Events">
+  <rect x="476.60962500000005" y="317.1" width="85.96000000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="519.5896250000001" y="332.25" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Stream Events</text>
+</g>
+<g class="edge-label" data-from="D" data-to="E" data-label="1. Check Stop Criteria">
+  <rect x="229.60712500000014" y="709.4999999999999" width="115.66000000000001" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="287.43712500000015" y="724.6499999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">1. Check Stop Criteria</text>
+</g>
+<g class="edge-label" data-from="D" data-to="F" data-label="2. Query Semantic Context">
+  <rect x="449.60962500000005" y="709.4999999999999" width="139.42000000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="519.3196250000001" y="724.6499999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">2. Query Semantic Context</text>
+</g>
+<g class="edge-label" data-from="F" data-to="G" data-label="Cosine Search 384-dim">
+  <rect x="456.109625" y="1039.2089999999998" width="126.35200000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="519.285625" y="1054.359" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Cosine Search 384-dim</text>
+</g>
+<g class="edge-label" data-from="D" data-to="H" data-label="3. Calculate Utilities">
+  <rect x="697.597625" y="709.4999999999999" width="106.75000000000003" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="750.972625" y="724.6499999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">3. Calculate Utilities</text>
+</g>
+<g class="edge-label" data-from="H" data-to="I" data-label="4. Dispatch Task">
+  <rect x="702.597625" y="1039.2089999999998" width="96.058" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="750.626625" y="1054.359" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">4. Dispatch Task</text>
+</g>
+<g class="edge-label" data-from="J1" data-to="K" data-label="Air-Gapped Inference">
+  <rect x="386.93225" y="1380.2089999999998" width="118.63000000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="446.24725" y="1395.359" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Air-Gapped Inference</text>
+</g>
+<g class="edge-label" data-from="J2" data-to="K" data-label="Air-Gapped Inference">
+  <rect x="538.3032499999999" y="1380.2089999999998" width="118.63000000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="597.61825" y="1395.359" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Air-Gapped Inference</text>
+</g>
+<g class="edge-label" data-from="J3" data-to="K" data-label="Air-Gapped Inference">
+  <rect x="694.1202500000002" y="1380.2089999999998" width="118.63000000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="753.4352500000002" y="1395.359" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Air-Gapped Inference</text>
+</g>
+<g class="edge-label" data-from="J4" data-to="K" data-label="Air-Gapped Inference">
+  <rect x="816.75025" y="1380.2089999999998" width="118.63000000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="876.0652500000001" y="1395.359" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Air-Gapped Inference</text>
+</g>
+<g class="edge-label" data-from="J5" data-to="K" data-label="Air-Gapped Inference">
+  <rect x="966.14525" y="1380.2089999999998" width="118.63000000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1025.46025" y="1395.359" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Air-Gapped Inference</text>
+</g>
+<g class="edge-label" data-from="L" data-to="M" data-label="Log-Odds Update">
+  <rect x="329.93224999999995" y="1775.5089999999998" width="99.62200000000001" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="379.74325" y="1790.6589999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Log-Odds Update</text>
+</g>
+<g class="edge-label" data-from="M" data-to="N" data-label="Persist Audit Record">
+  <rect x="321.93225" y="1928.7089999999998" width="115.06600000000003" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="379.46525" y="1943.859" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Persist Audit Record</text>
+</g>
+<g class="node" data-id="A" data-label="CSE-CIC-IDS2018 5-Scenario Datasets" data-shape="rectangle">
+  <rect x="387.11412500000006" y="84" width="264.991" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="519.609625" y="102.45" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">CSE-CIC-IDS2018 5-Scenario Datasets</text>
+</g>
+<g class="node" data-id="B" data-label="Telemetry Ingestion Pipeline" data-shape="rectangle">
+  <rect x="416.38362500000005" y="237.2" width="206.45199999999994" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="519.609625" y="255.64999999999998" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Telemetry Ingestion Pipeline</text>
+</g>
+<g class="node" data-id="C" data-label="Redis 7 Stream Queue" data-shape="cylinder">
+  <rect x="434.53812500000004" y="397.4" width="170.14299999999997" height="36.900000000000006" fill="var(--_node-fill)" stroke="none" />
+  <line x1="434.53812500000004" y1="397.4" x2="434.53812500000004" y2="434.29999999999995" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <line x1="604.6811250000001" y1="397.4" x2="604.6811250000001" y2="434.29999999999995" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <ellipse cx="519.609625" cy="434.29999999999995" rx="85.07149999999999" ry="7" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <ellipse cx="519.609625" cy="397.4" rx="85.07149999999999" ry="7" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="519.609625" y="415.84999999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Redis 7 Stream Queue</text>
+</g>
+<g class="node" data-id="D" data-label="Autonomous Planner Loop" data-shape="rectangle">
+  <rect x="420.8296250000001" y="629.5999999999999" width="197.55999999999997" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="519.609625" y="648.05" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Autonomous Planner Loop</text>
+</g>
+<g class="node" data-id="E" data-label="Termination / Stagnation?" data-shape="diamond">
+  <polygon points="287.60712500000017,782.8 394.31162500000016,889.5044999999999 287.60712500000017,996.2089999999998 180.90262500000017,889.5044999999999" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="287.60712500000017" y="889.5044999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Termination / Stagnation?</text>
+</g>
+<g class="node" data-id="F" data-label="RAG Knowledge Retriever" data-shape="rectangle">
+  <rect x="422.31162500000016" y="871.0544999999998" width="194.59599999999995" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="519.6096250000002" y="889.5044999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">RAG Knowledge Retriever</text>
+</g>
+<g class="node" data-id="G" data-label="ChromaDB Vector Store
+MITRE ATT&amp;CK v14" data-shape="cylinder">
+  <rect x="428.2396250000001" y="1132.3839999999998" width="182.73999999999998" height="53.80000000000001" fill="var(--_node-fill)" stroke="none" />
+  <line x1="428.2396250000001" y1="1132.3839999999998" x2="428.2396250000001" y2="1186.1839999999997" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <line x1="610.979625" y1="1132.3839999999998" x2="610.979625" y2="1186.1839999999997" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <ellipse cx="519.609625" cy="1186.1839999999997" rx="91.36999999999999" ry="7" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <ellipse cx="519.609625" cy="1132.3839999999998" rx="91.36999999999999" ry="7" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="519.609625" y="1159.2839999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="519.609625" dy="-3.9000000000000012">ChromaDB Vector Store</tspan><tspan x="519.609625" dy="16.900000000000002">MITRE ATT&amp;CK v14</tspan></text>
+</g>
+<g class="node" data-id="H" data-label="Worker Selection Argmax Uw" data-shape="rectangle">
+  <rect x="644.907625" y="871.0544999999998" width="212.37999999999997" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="751.097625" y="889.5044999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Worker Selection Argmax Uw</text>
+</g>
+<g class="node" data-id="I" data-label="Specialized Worker Execution" data-shape="rectangle">
+  <rect x="640.832125" y="1125.3839999999998" width="220.53099999999998" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="751.097625" y="1143.8339999999998" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Specialized Worker Execution</text>
+</g>
+<g class="node" data-id="J1" data-label="Detection Worker" data-shape="rectangle">
+  <rect x="159.73125" y="1300.309" width="144.208" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="231.83524999999997" y="1318.759" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Detection Worker</text>
+</g>
+<g class="node" data-id="J2" data-label="Correlation Worker" data-shape="rectangle">
+  <rect x="331.93924999999996" y="1300.309" width="156.06400000000002" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="409.97124999999994" y="1318.759" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Correlation Worker</text>
+</g>
+<g class="node" data-id="J3" data-label="Investigation Worker" data-shape="rectangle">
+  <rect x="516.00325" y="1300.309" width="163.474" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="597.74025" y="1318.759" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Investigation Worker</text>
+</g>
+<g class="node" data-id="J4" data-label="Reporting Worker" data-shape="rectangle">
+  <rect x="896.5442500000001" y="1300.309" width="147.17200000000003" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="970.1302500000002" y="1318.759" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Reporting Worker</text>
+</g>
+<g class="node" data-id="J5" data-label="Response Worker" data-shape="rectangle">
+  <rect x="1071.7162500000002" y="1300.309" width="150.136" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1146.7842500000002" y="1318.759" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Response Worker</text>
+</g>
+<g class="node" data-id="K" data-label="Local Ollama / Qwen2.5
+Deterministic Fallback" data-shape="rectangle">
+  <rect x="665.9552500000002" y="1453.509" width="175.32999999999998" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="753.6202500000002" y="1480.409" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="753.6202500000002" dy="-3.9000000000000012">Local Ollama / Qwen2.5</tspan><tspan x="753.6202500000002" dy="16.900000000000002">Deterministic Fallback</tspan></text>
+</g>
+<g class="node" data-id="L" data-label="6-Factor Confidence Delta" data-shape="rectangle">
+  <rect x="283.00475" y="1695.609" width="193.855" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="379.93225" y="1714.059" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">6-Factor Confidence Delta</text>
+</g>
+<g class="node" data-id="M" data-label="Updated Confidence Ct" data-shape="rectangle">
+  <rect x="293.00825000000003" y="1848.809" width="173.84799999999996" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="379.93225" y="1867.259" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Updated Confidence Ct</text>
+</g>
+<g class="node" data-id="N" data-label="PostgreSQL 15 Store" data-shape="cylinder">
+  <rect x="298.19525" y="2009.009" width="163.474" height="36.900000000000006" fill="var(--_node-fill)" stroke="none" />
+  <line x1="298.19525" y1="2009.009" x2="298.19525" y2="2045.909" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <line x1="461.66925" y1="2009.009" x2="461.66925" y2="2045.909" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <ellipse cx="379.93224999999995" cy="2045.909" rx="81.737" ry="7" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <ellipse cx="379.93224999999995" cy="2009.009" rx="81.737" ry="7" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="379.93224999999995" y="2027.459" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">PostgreSQL 15 Store</text>
+</g>
+<g class="node" data-id="O" data-label="React 18 + Vite Dashboard" data-shape="rectangle">
+  <rect x="284.11625000000004" y="2241.209" width="191.63199999999995" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="379.93225" y="2259.6589999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">React 18 + Vite Dashboard</text>
+</g>
+<g class="node" data-id="P1" data-label="Attack Timeline" data-shape="rectangle">
+  <rect x="232.654" y="2326.109" width="130.12900000000002" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="297.7185" y="2344.5589999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Attack Timeline</text>
+</g>
+<g class="node" data-id="P2" data-label="Entity SVG Graph" data-shape="rectangle">
+  <rect x="390.783" y="2326.109" width="142.726" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="462.146" y="2344.5589999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Entity SVG Graph</text>
+</g>
+<g class="node" data-id="P3" data-label="Hypothesis Matrix" data-shape="rectangle">
+  <rect x="56" y="2326.109" width="148.654" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="130.327" y="2344.5589999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Hypothesis Matrix</text>
+</g>
+<g class="node" data-id="P4" data-label="HITL Containment Approval" data-shape="rectangle">
+  <rect x="561.509" y="2326.109" width="202.00599999999994" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="662.512" y="2344.5589999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">HITL Containment Approval</text>
+</g>
+</svg>
