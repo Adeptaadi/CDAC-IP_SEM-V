@@ -329,12 +329,12 @@ class PlannerEngine:
             "findings_count": len(worker_result.new_evidence),
         }
         try:
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
             if loop.is_running():
                 asyncio.create_task(
                     ws_manager.broadcast_to_investigation(str(investigation_id), broadcast_payload)
                 )
-        except Exception:
+        except RuntimeError:
             pass
 
         return {

@@ -34,6 +34,16 @@ class TelemetryReplayer:
         self.dispatched_events = []
         self.state = ReplayState.IDLE
 
+    def replay_all(self):
+        """Synchronously replays all events instantly (for testing, batch jobs, and offline benchmarking)."""
+        if not self.events:
+            raise RuntimeError("No scenario loaded. Load scenario before starting.")
+        self.state = ReplayState.PLAYING
+        while self.current_index < len(self.events):
+            self.dispatched_events.append(self.events[self.current_index])
+            self.current_index += 1
+        self.state = ReplayState.COMPLETED
+
     async def start(self):
         if not self.events:
             raise RuntimeError("No scenario loaded. Load scenario before starting.")
@@ -70,8 +80,8 @@ class TelemetryReplayer:
                     scaled_delay = max(0.05, delay_seconds / self.speed)
                     await asyncio.sleep(scaled_delay)
                 elif self.speed == float("inf"):
-                    # Instant mode
-                    await asyncio.sleep(0.001)
+                    # Instant mode: yield cooperatively without timer tick penalty
+                    await asyncio.sleep(0)
 
             if self.current_index >= len(self.events):
                 self.state = ReplayState.COMPLETED

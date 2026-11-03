@@ -76,14 +76,7 @@ def test_telemetry_replayer_instant_mode():
     assert replayer.state == ReplayState.IDLE
     assert len(replayer.events) > 0
 
-    import asyncio
-
-    async def _run():
-        await replayer.start()
-        if replayer._task:
-            await replayer._task
-
-    asyncio.run(_run())
+    replayer.replay_all()
 
     status = replayer.get_status()
     assert status["state"] == "COMPLETED"

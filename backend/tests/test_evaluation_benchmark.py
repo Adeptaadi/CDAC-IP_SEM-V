@@ -6,6 +6,7 @@ from app.eval.metrics import (
 )
 from app.eval.runner import BenchmarkRunner
 from app.database import Base
+import app.models  # register ORM models in Base.metadata
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool

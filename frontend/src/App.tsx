@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   ShieldAlert,
-  Activity,
-  Play,
-  Pause,
-  RotateCcw,
-  Radio,
-  FileCode2,
-  BookOpen,
   Search,
-  Sparkles,
-  BarChart3,
-  ChevronRight
+  LayoutGrid
 } from 'lucide-react';
 
-import { InvestigationStudioTab } from './components/InvestigationStudioTab';
-import { BenchmarkTab } from './components/BenchmarkTab';
-import { TelemetryTicker } from './components/TelemetryTicker';
+// Antigravity IDE UI Subcomponents
+import { ActivityBar, ActivityBarItem } from './components/ide/ActivityBar';
+import { PrimarySidebar } from './components/ide/PrimarySidebar';
+import { CentralWorkspace, TabItem } from './components/ide/CentralWorkspace';
+import { AgentCopilotPane } from './components/ide/AgentCopilotPane';
+import { BottomDockPanel } from './components/ide/BottomDockPanel';
+import { StatusBar } from './components/ide/StatusBar';
+
+// ThoughtLog interface
+import { ThoughtLog } from './components/AgentThoughtStream';
 
 interface Investigation {
   investigation_id: string;
@@ -54,16 +52,30 @@ interface ReplayStatus {
 const API_BASE = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
 
 export default function App() {
-  const [activeMainTab, setActiveMainTab] = useState<'workbench' | 'studio' | 'containment' | 'benchmark'>('workbench');
+  // Navigation & UI Layout State
+  const [activeActivity, setActiveActivity] = useState<ActivityBarItem>('explorer');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [copilotOpen, setCopilotOpen] = useState(true);
+  const [bottomDockOpen, setBottomDockOpen] = useState(true);
+
+  // Tabbed Workspace State
+  const [openTabs, setOpenTabs] = useState<TabItem[]>([
+    { id: 'timeline', title: 'AttackTimeline.canvas', type: 'timeline' },
+    { id: 'graph', title: 'EntityGraph.visual', type: 'graph' },
+    { id: 'matrix', title: 'Hypotheses.matrix', type: 'matrix' },
+    { id: 'reports', title: 'ForensicReport.md', type: 'reports' },
+    { id: 'math', title: 'ConfidenceDecay.math', type: 'math' },
+  ]);
+  const [activeTabId, setActiveTabId] = useState<string>('timeline');
+
+  // Backend Data State
   const [health, setHealth] = useState<{ status: string; service: string } | null>(null);
   const [investigations, setInvestigations] = useState<Investigation[]>([]);
   const [selectedInvestigationId, setSelectedInvestigationId] = useState<string | null>(null);
-  const [newTitle, setNewTitle] = useState('');
-
-  // Dataset Replay State
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [selectedScenarioId, setSelectedScenarioId] = useState<string>('infiltration');
-  const [replaySpeed, setReplaySpeed] = useState<number>(1.0);
+
+  // Replayer State
   const [replayStatus, setReplayStatus] = useState<ReplayStatus>({
     scenario: null,
     state: 'IDLE',
@@ -74,12 +86,24 @@ export default function App() {
     latest_event: null,
   });
 
-  // Stage 1: RAG & Knowledge State
+  // Knowledge RAG State
   const [knowledgeQuery, setKnowledgeQuery] = useState('');
   const [retrievedContext, setRetrievedContext] = useState<any | null>(null);
   const [isQueryingKnowledge, setIsQueryingKnowledge] = useState(false);
   const [isSeedingKnowledge, setIsSeedingKnowledge] = useState(false);
 
+  // Active Investigation Data Snapshot
+  const [investigationFullState, setInvestigationFullState] = useState<any | null>(null);
+  const [decisions, setDecisions] = useState<any[]>([]);
+  const [activeWorker, setActiveWorker] = useState<string | null>(null);
+  const [workerLatencies, setWorkerLatencies] = useState<Record<string, number>>({});
+  const [thoughtLogs, setThoughtLogs] = useState<ThoughtLog[]>([]);
+  const [wsConnected, setWsConnected] = useState(false);
+  const [isExecutingStep, setIsExecutingStep] = useState(false);
+  const [isRunningAuto, setIsRunningAuto] = useState(false);
+  const [isAutoHunting, setIsAutoHunting] = useState(false);
+
+  // Initial load
   useEffect(() => {
     fetchHealth();
     fetchInvestigations();
@@ -90,6 +114,54 @@ export default function App() {
     }, 1500);
     return () => clearInterval(interval);
   }, []);
+
+  // When selected investigation changes, fetch its full state and connect WS
+  useEffect(() => {
+    if (selectedInvestigationId) {
+      fetchFullState(selectedInvestigationId);
+      fetchDecisions(selectedInvestigationId);
+
+      const wsUrl = API_BASE.replace(/^http/, 'ws') + `/ws/investigations/${selectedInvestigationId}`;
+      let ws: WebSocket | null = null;
+      try {
+        ws = new WebSocket(wsUrl);
+        ws.onopen = () => setWsConnected(true);
+        ws.onclose = () => setWsConnected(false);
+        ws.onerror = () => setWsConnected(false);
+        ws.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.type === 'PLANNER_DECISION') {
+              fetchFullState(selectedInvestigationId);
+              fetchDecisions(selectedInvestigationId);
+              setThoughtLogs((prev) => [
+                ...prev,
+                {
+                  id: String(Date.now()),
+                  timestamp: new Date().toLocaleTimeString(),
+                  category: 'PLANNER',
+                  workerType: data.selected_worker,
+                  cycleNumber: data.cycle_number,
+                  message: data.explanation_summary,
+                  details: {
+                    confidence_after: data.confidence_after,
+                  },
+                },
+              ]);
+            }
+          } catch (e) {
+            // non-json ws tick
+          }
+        };
+      } catch (e) {
+        // ws err
+      }
+
+      return () => {
+        if (ws) ws.close();
+      };
+    }
+  }, [selectedInvestigationId]);
 
   const fetchHealth = async () => {
     try {
@@ -130,6 +202,69 @@ export default function App() {
     }
   };
 
+  const fetchFullState = async (id: string) => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/planner/investigations/${id}/state`);
+      setInvestigationFullState(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const fetchDecisions = async (id: string) => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/planner/investigations/${id}/decisions`);
+      setDecisions(res.data);
+      if (res.data.length > 0) {
+        const latest = res.data[res.data.length - 1];
+        setActiveWorker(latest.selected_worker);
+        if (latest.latency_ms) {
+          setWorkerLatencies((prev) => ({ ...prev, [latest.selected_worker]: latest.latency_ms }));
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // Replayer handlers
+  const handleStartReplay = async () => {
+    try {
+      await axios.post(`${API_BASE}/api/dataset/replay/start`);
+      fetchReplayStatus();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handlePauseReplay = async () => {
+    try {
+      await axios.post(`${API_BASE}/api/dataset/replay/pause`);
+      fetchReplayStatus();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleResetReplay = async () => {
+    try {
+      await axios.post(`${API_BASE}/api/dataset/replay/reset`);
+      fetchReplayStatus();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleChangeSpeed = async (speed: number) => {
+    try {
+      await axios.post(`${API_BASE}/api/dataset/replay/speed`, null, { params: { speed } });
+      fetchReplayStatus();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // Knowledge RAG handlers
   const handleSeedKnowledge = async () => {
     setIsSeedingKnowledge(true);
     try {
@@ -141,13 +276,12 @@ export default function App() {
     }
   };
 
-  const handleQueryKnowledge = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!knowledgeQuery) return;
+  const handleQueryKnowledge = async (queryText: string) => {
+    if (!queryText) return;
     setIsQueryingKnowledge(true);
     try {
       const res = await axios.post(`${API_BASE}/api/knowledge/query`, {
-        query: knowledgeQuery,
+        query: queryText,
         top_k: 4,
       });
       setRetrievedContext(res.data);
@@ -158,73 +292,94 @@ export default function App() {
     }
   };
 
-  const handleLoadScenario = async () => {
+  // Autonomous planning handlers
+  const handleExecuteCycle = async () => {
+    if (!selectedInvestigationId || isExecutingStep) return;
+    setIsExecutingStep(true);
     try {
-      await axios.post(`${API_BASE}/api/dataset/prepare/${selectedScenarioId}`);
-      const res = await axios.post(`${API_BASE}/api/dataset/replay/load/${selectedScenarioId}`, null, {
-        params: { speed: replaySpeed },
+      const res = await axios.post(`${API_BASE}/api/planner/investigations/${selectedInvestigationId}/cycle`);
+      await fetchFullState(selectedInvestigationId);
+      await fetchDecisions(selectedInvestigationId);
+      await fetchInvestigations();
+
+      setThoughtLogs((prev) => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          timestamp: new Date().toLocaleTimeString(),
+          category: 'PLANNER',
+          workerType: res.data.selected_worker,
+          cycleNumber: res.data.cycle_number,
+          message: res.data.explanation_summary,
+          details: {
+            confidence_after: res.data.confidence_after,
+          },
+        },
+      ]);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsExecutingStep(false);
+    }
+  };
+
+  const handleExecuteAuto = async () => {
+    if (!selectedInvestigationId || isRunningAuto) return;
+    setIsRunningAuto(true);
+    try {
+      await axios.post(`${API_BASE}/api/planner/investigations/${selectedInvestigationId}/run`, null, {
+        params: { max_steps: 6 },
       });
-      setReplayStatus(res.data);
+      await fetchFullState(selectedInvestigationId);
+      await fetchDecisions(selectedInvestigationId);
+      await fetchInvestigations();
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsRunningAuto(false);
     }
   };
 
-  const handleStartReplay = async () => {
+  const handleCreateInvestigation = async (title: string) => {
     try {
-      const res = await axios.post(`${API_BASE}/api/dataset/replay/start`);
-      setReplayStatus(res.data);
+      const res = await axios.post(`${API_BASE}/api/investigations`, {
+        title,
+        initial_goal: 'Autonomous investigation of anomalous telemetry signals',
+      });
+      await fetchInvestigations();
+      if (res.data?.investigation_id) {
+        setSelectedInvestigationId(res.data.investigation_id);
+      }
     } catch (e) {
       console.error(e);
     }
   };
-
-  const handlePauseReplay = async () => {
-    try {
-      const res = await axios.post(`${API_BASE}/api/dataset/replay/pause`);
-      setReplayStatus(res.data);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const handleResetReplay = async () => {
-    try {
-      const res = await axios.post(`${API_BASE}/api/dataset/replay/reset`);
-      setReplayStatus(res.data);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const [isAutoHunting, setIsAutoHunting] = useState(false);
 
   const handleAutoHuntScenario = async () => {
     setIsAutoHunting(true);
     try {
-      // 1. Prepare & load scenario
       await axios.post(`${API_BASE}/api/dataset/prepare/${selectedScenarioId}`);
       await axios.post(`${API_BASE}/api/dataset/replay/load/${selectedScenarioId}`, null, {
         params: { speed: 10 },
       });
       await axios.post(`${API_BASE}/api/dataset/replay/start`);
 
-      // 2. Create investigation
-      const scenarioName = scenarios.find((s) => s.scenario_id === selectedScenarioId)?.name || selectedScenarioId;
+      const scName = scenarios.find((s) => s.scenario_id === selectedScenarioId)?.name || selectedScenarioId;
       const res = await axios.post(`${API_BASE}/api/investigations`, {
-        title: `Autonomous Hunt: ${scenarioName}`,
-        initial_goal: `Investigate telemetry signals and neutralize ${scenarioName}`,
+        title: `Autonomous Hunt: ${scName}`,
+        initial_goal: `Investigate telemetry signals and neutralize ${scName}`,
       });
 
       const invId = res.data.investigation_id;
       setSelectedInvestigationId(invId);
       await fetchInvestigations();
 
-      // 3. Switch to Investigation Studio and kickoff autonomous cycle
-      setActiveMainTab('studio');
       await axios.post(`${API_BASE}/api/planner/investigations/${invId}/run`, null, {
         params: { max_steps: 6 },
       });
+
+      await fetchFullState(invId);
+      await fetchDecisions(invId);
       await fetchInvestigations();
     } catch (e) {
       console.error(e);
@@ -233,430 +388,221 @@ export default function App() {
     }
   };
 
-  const createInvestigation = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTitle) return;
-    try {
-      const res = await axios.post(`${API_BASE}/api/investigations`, {
-        title: newTitle,
-        initial_goal: 'Investigate initial telemetry anomaly',
-      });
-      setNewTitle('');
-      await fetchInvestigations();
-      if (res.data?.investigation_id) {
-        setSelectedInvestigationId(res.data.investigation_id);
-        setActiveMainTab('studio');
-      }
-    } catch (e) {
-      console.error(e);
+  // Tab management
+  const handleOpenView = (viewId: string) => {
+    const existing = openTabs.find((t) => t.id === viewId);
+    if (!existing) {
+      const typeMap: Record<string, { title: string; type: TabItem['type'] }> = {
+        timeline: { title: 'AttackTimeline.canvas', type: 'timeline' },
+        graph: { title: 'EntityGraph.visual', type: 'graph' },
+        matrix: { title: 'Hypotheses.matrix', type: 'matrix' },
+        reports: { title: 'ForensicReport.md', type: 'reports' },
+        math: { title: 'ConfidenceDecay.math', type: 'math' },
+        containment: { title: 'Containment.governance', type: 'containment' },
+        benchmarks: { title: 'BenchmarkSuite.eval', type: 'benchmarks' },
+        orbital: { title: 'AgentOrbital.map', type: 'orbital' },
+      };
+      const def = typeMap[viewId] || { title: `${viewId}.canvas`, type: 'timeline' };
+      setOpenTabs((prev) => [...prev, { id: viewId, title: def.title, type: def.type }]);
+    }
+    setActiveTabId(viewId);
+  };
+
+  const handleCloseTab = (id: string) => {
+    if (openTabs.length <= 1) return;
+    const remaining = openTabs.filter((t) => t.id !== id);
+    setOpenTabs(remaining);
+    if (activeTabId === id) {
+      setActiveTabId(remaining[remaining.length - 1].id);
     }
   };
 
+  const currentInvestigation = investigations.find((i) => i.investigation_id === selectedInvestigationId) || null;
   const currentScenarioDetails = scenarios.find((s) => s.scenario_id === selectedScenarioId);
+  const pendingApprovalsCount = (investigationFullState?.recommendations || []).filter(
+    (r: any) => r.approval_status === 'pending'
+  ).length;
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-gray-100 flex flex-col font-sans">
-      {/* Header */}
-      <header className="border-b border-gray-800 bg-[#111827]/90 backdrop-blur px-6 py-3.5 flex items-center justify-between sticky top-0 z-50">
+    <div className="h-screen w-screen bg-[#070A12] text-gray-100 flex flex-col font-sans overflow-hidden">
+      {/* 1. Top Window Titlebar & Quick Action Palette */}
+      <header className="h-9 bg-[#090D17] border-b border-gray-800/80 px-3 flex items-center justify-between select-none z-40 shrink-0">
         <div className="flex items-center space-x-3">
-          <div className="p-2 bg-blue-600/20 border border-blue-500/40 rounded-lg text-blue-400">
-            <ShieldAlert className="w-6 h-6" />
-          </div>
-          <div>
-            <h1 className="font-bold text-base tracking-wide text-white flex items-center gap-2">
+          <div className="flex items-center gap-2 text-white font-bold text-xs tracking-wider">
+            <span className="w-4 h-4 rounded bg-blue-600 flex items-center justify-center text-[10px]">Δ</span>
+            <span>ANTIGRAVITY IDE</span>
+            <span className="text-[10px] bg-blue-950 text-blue-400 border border-blue-800 px-1.5 py-0.2 rounded font-mono">
               PROJECT SENTINEL
-              <span className="text-[10px] bg-blue-950 text-blue-400 border border-blue-800 px-2 py-0.5 rounded font-mono">
-                SOC v1.0
-              </span>
-            </h1>
-            <p className="text-[11px] text-gray-400">Autonomous Cyber Threat Hunting Platform</p>
-          </div>
-        </div>
-
-        {/* Center 4-Step Navigable Stepper Header */}
-        <div className="hidden lg:flex items-center bg-gray-900 border border-gray-800 rounded-lg p-1 gap-1">
-          <button
-            onClick={() => setActiveMainTab('workbench')}
-            className={`text-xs font-semibold px-3 py-1.5 rounded-md transition flex items-center gap-1.5 ${
-              activeMainTab === 'workbench'
-                ? 'bg-blue-600 text-white shadow'
-                : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            <Radio className="w-3.5 h-3.5" />
-            <span>1. Telemetry Ingestion</span>
-          </button>
-          <ChevronRight className="w-3 h-3 text-gray-600" />
-          <button
-            onClick={() => setActiveMainTab('studio')}
-            className={`text-xs font-semibold px-3 py-1.5 rounded-md transition flex items-center gap-1.5 ${
-              activeMainTab === 'studio'
-                ? 'bg-blue-600 text-white shadow'
-                : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            <Activity className="w-3.5 h-3.5" />
-            <span>2. Autonomous Studio</span>
-          </button>
-          <ChevronRight className="w-3 h-3 text-gray-600" />
-          <button
-            onClick={() => setActiveMainTab('containment')}
-            className={`text-xs font-semibold px-3 py-1.5 rounded-md transition flex items-center gap-1.5 ${
-              activeMainTab === 'containment'
-                ? 'bg-blue-600 text-white shadow'
-                : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            <ShieldAlert className="w-3.5 h-3.5" />
-            <span>3. HITL Containment</span>
-          </button>
-          <ChevronRight className="w-3 h-3 text-gray-600" />
-          <button
-            onClick={() => setActiveMainTab('benchmark')}
-            className={`text-xs font-semibold px-3 py-1.5 rounded-md transition flex items-center gap-1.5 ${
-              activeMainTab === 'benchmark'
-                ? 'bg-blue-600 text-white shadow'
-                : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            <BarChart3 className="w-3.5 h-3.5" />
-            <span>4. Benchmark Suite</span>
-          </button>
-        </div>
-
-        {/* Right Status */}
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2 text-xs bg-gray-900 border border-gray-800 px-3 py-1.5 rounded-full">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                health?.status === 'healthy' ? 'bg-emerald-400 animate-pulse' : 'bg-red-500'
-              }`}
-            />
-            <span className="text-gray-300 font-mono text-[11px]">
-              API: {health ? health.status : 'Connecting...'}
             </span>
           </div>
+
+          <span className="text-gray-700">|</span>
+
+          {/* Quick Scenario Capsule */}
+          <div className="flex items-center gap-1.5 text-xs text-gray-300 font-mono">
+            <span className="text-gray-500">Scenario:</span>
+            <select
+              value={selectedScenarioId}
+              onChange={(e) => setSelectedScenarioId(e.target.value)}
+              className="bg-black/60 border border-gray-700 rounded px-2 py-0.5 text-[11px] text-white focus:outline-none focus:border-blue-500"
+            >
+              {scenarios.map((s) => (
+                <option key={s.scenario_id} value={s.scenario_id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Center Global Search / Command Bar */}
+        <div className="hidden md:flex items-center gap-2 bg-[#0C111F] border border-gray-800 rounded-lg px-3 py-1 text-xs text-gray-400 w-96 justify-between cursor-pointer hover:border-gray-700 transition">
+          <div className="flex items-center gap-2 truncate">
+            <Search className="w-3.5 h-3.5 text-gray-500" />
+            <span className="text-[11px] truncate">
+              {currentInvestigation ? `Active: ${currentInvestigation.title}` : 'Search artifacts, MITRE techniques (Ctrl+P)'}
+            </span>
+          </div>
+          <div className="flex items-center gap-1 font-mono text-[10px] text-gray-500 bg-gray-900 border border-gray-800 px-1.5 py-0.5 rounded">
+            <span>⌘K</span>
+          </div>
+        </div>
+
+        {/* Right Quick Status & Layout Toggles */}
+        <div className="flex items-center space-x-2">
+          {/* HITL Pending Badge */}
+          {pendingApprovalsCount > 0 && (
+            <button
+              onClick={() => handleOpenView('containment')}
+              className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-950/80 border border-amber-700 text-amber-300 text-[10px] font-mono animate-pulse"
+              title={`${pendingApprovalsCount} Containment Approvals Pending`}
+            >
+              <ShieldAlert className="w-3 h-3 text-amber-400" />
+              <span>{pendingApprovalsCount} Approvals Required</span>
+            </button>
+          )}
+
+          {/* Layout Pane Toggles */}
+          <button
+            onClick={() => setSidebarOpen((v) => !v)}
+            title={sidebarOpen ? 'Hide Primary Sidebar' : 'Show Primary Sidebar'}
+            className={`p-1.5 rounded transition ${
+              sidebarOpen ? 'text-blue-400 bg-blue-950/40' : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            <LayoutGrid className="w-3.5 h-3.5" />
+          </button>
         </div>
       </header>
 
-      {/* Real-time Telemetry Ingestion Ticker */}
-      <TelemetryTicker
-        latestEvent={replayStatus.latest_event}
-        totalEvents={replayStatus.total_events}
-        dispatchedEvents={replayStatus.dispatched_events_count}
-        replayState={replayStatus.state}
-        scenarioName={currentScenarioDetails?.name || selectedScenarioId}
-        speed={replayStatus.speed}
-      />
+      {/* 2. Main Middle Workspace Area (Activity Bar + Sidebar + Central Canvas + Copilot) */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Leftmost Activity Bar Rail */}
+        <ActivityBar
+          activeItem={activeActivity}
+          onSelectItem={(item) => {
+            setActiveActivity(item);
+            if (!sidebarOpen) setSidebarOpen(true);
+            if (item === 'containment') handleOpenView('containment');
+            if (item === 'benchmarks') handleOpenView('benchmarks');
+          }}
+          copilotOpen={copilotOpen}
+          onToggleCopilot={() => setCopilotOpen((v) => !v)}
+          bottomDockOpen={bottomDockOpen}
+          onToggleBottomDock={() => setBottomDockOpen((v) => !v)}
+          apiHealthy={health?.status === 'healthy'}
+          pendingApprovalsCount={pendingApprovalsCount}
+        />
 
-      {/* Main Content Area */}
-      <main className="flex-1 p-6 max-w-7xl w-full mx-auto">
-        {activeMainTab === 'studio' && (
-          <InvestigationStudioTab
-            apiBase={API_BASE}
+        {/* Collapsible Primary Sidebar Context */}
+        {sidebarOpen && (
+          <PrimarySidebar
+            activeItem={activeActivity}
+            scenarios={scenarios}
+            selectedScenarioId={selectedScenarioId}
+            onSelectScenario={(id) => setSelectedScenarioId(id)}
             investigations={investigations}
-            selectedId={selectedInvestigationId}
+            selectedInvestigationId={selectedInvestigationId}
             onSelectInvestigation={(id) => setSelectedInvestigationId(id)}
-            onRefreshList={fetchInvestigations}
+            onCreateInvestigation={handleCreateInvestigation}
+            onAutoHuntScenario={handleAutoHuntScenario}
+            isAutoHunting={isAutoHunting}
+            onSeedKnowledge={handleSeedKnowledge}
+            isSeedingKnowledge={isSeedingKnowledge}
+            onQueryKnowledge={handleQueryKnowledge}
+            knowledgeQuery={knowledgeQuery}
+            setKnowledgeQuery={setKnowledgeQuery}
+            retrievedContext={retrievedContext}
+            isQueryingKnowledge={isQueryingKnowledge}
+            pendingApprovalsCount={pendingApprovalsCount}
+            onOpenView={handleOpenView}
           />
         )}
 
-        {activeMainTab === 'workbench' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left 2 Cols: Dataset Replayer & Active Cases */}
-            <section className="lg:col-span-2 space-y-6">
-              {/* 5-Scenario Live Replay Suite */}
-              <div className="bg-[#111827] border border-gray-800 p-5 rounded-xl space-y-4">
-                <div className="flex items-center justify-between border-b border-gray-800 pb-3">
-                  <div className="flex items-center space-x-2 text-blue-400">
-                    <Radio className="w-5 h-5 text-emerald-400 animate-pulse" />
-                    <h2 className="font-semibold text-sm text-gray-200 tracking-wide uppercase">
-                      CSE-CIC-IDS2018 Telemetry Replay Engine (PRD FR-102)
-                    </h2>
-                  </div>
-                  <span className="text-xs font-mono bg-gray-900 border border-gray-800 px-2.5 py-1 rounded text-gray-400">
-                    State: <strong className="text-emerald-400">{replayStatus.state}</strong>
-                  </span>
-                </div>
+        {/* Central Dynamic Tabbed Canvas */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <CentralWorkspace
+            apiBase={API_BASE}
+            tabs={openTabs}
+            activeTabId={activeTabId}
+            onSelectTab={(id) => setActiveTabId(id)}
+            onCloseTab={handleCloseTab}
+            investigation={currentInvestigation}
+            state={investigationFullState}
+            decisions={decisions}
+            activeWorker={activeWorker}
+            workerLatencies={workerLatencies}
+            onRefreshInvestigation={() => {
+              if (selectedInvestigationId) {
+                fetchFullState(selectedInvestigationId);
+                fetchDecisions(selectedInvestigationId);
+                fetchInvestigations();
+              }
+            }}
+            scenarioName={currentScenarioDetails?.name}
+          />
 
-                {/* Scenario Picker */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                      Select Attack Scenario
-                    </label>
-                    <select
-                      value={selectedScenarioId}
-                      onChange={(e) => setSelectedScenarioId(e.target.value)}
-                      className="w-full bg-gray-900 border border-gray-700 text-sm rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
-                    >
-                      {scenarios.map((s) => (
-                        <option key={s.scenario_id} value={s.scenario_id}>
-                          {s.name} ({s.day})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                      Replay Speed
-                    </label>
-                    <div className="grid grid-cols-4 gap-2">
-                      {[1, 5, 10, 50].map((spd) => (
-                        <button
-                          key={spd}
-                          type="button"
-                          onClick={() => setReplaySpeed(spd)}
-                          className={`text-xs font-mono py-2 rounded-lg border transition ${
-                            replaySpeed === spd
-                              ? 'bg-blue-600 text-white border-blue-500 font-bold'
-                              : 'bg-gray-900 text-gray-300 border-gray-700 hover:bg-gray-800'
-                          }`}
-                        >
-                          {spd === 50 ? 'Max' : `${spd}x`}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Scenario Details Preview */}
-                {currentScenarioDetails && (
-                  <div className="bg-gray-900/70 border border-gray-800 p-3 rounded-lg text-xs space-y-2">
-                    <p className="text-gray-300">{currentScenarioDetails.description}</p>
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      {currentScenarioDetails.mitre_techniques.map((tech) => (
-                        <span
-                          key={tech}
-                          className="bg-blue-950 text-blue-400 border border-blue-800 px-2 py-0.5 rounded font-mono text-[10px]"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Replay Controls & Live Progress */}
-                <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={handleLoadScenario}
-                      className="bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold px-4 py-2 rounded-lg border border-gray-700 transition"
-                    >
-                      Load Scenario
-                    </button>
-                    <button
-                      onClick={handleStartReplay}
-                      disabled={replayStatus.state === 'PLAYING'}
-                      className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center space-x-1.5 transition disabled:opacity-50"
-                    >
-                      <Play className="w-3.5 h-3.5" />
-                      <span>Start Stream</span>
-                    </button>
-                    <button
-                      onClick={handlePauseReplay}
-                      disabled={replayStatus.state !== 'PLAYING'}
-                      className="bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center space-x-1.5 transition disabled:opacity-50"
-                    >
-                      <Pause className="w-3.5 h-3.5" />
-                      <span>Pause</span>
-                    </button>
-                    <button
-                      onClick={handleResetReplay}
-                      className="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold px-3 py-2 rounded-lg border border-gray-700 transition"
-                    >
-                      <RotateCcw className="w-3.5 h-3.5" />
-                    </button>
-
-                    <button
-                      onClick={handleAutoHuntScenario}
-                      disabled={isAutoHunting}
-                      className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center space-x-1.5 transition disabled:opacity-50 shadow-lg shadow-purple-950 ml-2"
-                    >
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>{isAutoHunting ? 'Launching Auto-Hunt...' : 'Auto-Hunt Scenario'}</span>
-                    </button>
-                  </div>
-
-                  <div className="text-xs font-mono text-gray-400">
-                    Dispatched:{' '}
-                    <strong className="text-white">
-                      {replayStatus.dispatched_events_count} / {replayStatus.total_events}
-                    </strong>{' '}
-                    ({replayStatus.progress_percent}%)
-                  </div>
-                </div>
-
-                {/* Progress Bar */}
-                <div className="w-full bg-gray-900 rounded-full h-2 overflow-hidden border border-gray-800">
-                  <div
-                    className="bg-blue-500 h-2 transition-all duration-300"
-                    style={{ width: `${replayStatus.progress_percent}%` }}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Right Col: RAG Knowledge Explorer & Stats */}
-            <section className="space-y-6">
-              {/* Stage 1: RAG & Knowledge Base Explorer */}
-              <div className="bg-[#111827] border border-gray-800 p-5 rounded-xl space-y-4">
-                <div className="flex items-center justify-between border-b border-gray-800 pb-3">
-                  <div className="flex items-center space-x-2 text-purple-400">
-                    <BookOpen className="w-5 h-5 text-purple-400" />
-                    <h3 className="font-semibold text-sm text-gray-200">RAG Knowledge Explorer (Stage 1)</h3>
-                  </div>
-                  <button
-                    onClick={handleSeedKnowledge}
-                    disabled={isSeedingKnowledge}
-                    className="text-xs bg-purple-950 text-purple-300 border border-purple-800 hover:bg-purple-900 px-2.5 py-1 rounded transition disabled:opacity-50 flex items-center gap-1"
-                  >
-                    <Sparkles className="w-3 h-3" />
-                    <span>{isSeedingKnowledge ? 'Seeding...' : 'Seed MITRE'}</span>
-                  </button>
-                </div>
-
-                {/* Semantic Search Query Form */}
-                <form onSubmit={handleQueryKnowledge} className="space-y-2">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Semantic search (e.g. PowerShell base64 command)..."
-                      value={knowledgeQuery}
-                      onChange={(e) => setKnowledgeQuery(e.target.value)}
-                      className="w-full bg-gray-900 border border-gray-700 text-xs rounded-lg pl-8 pr-3 py-2 text-white focus:outline-none focus:border-purple-500"
-                    />
-                    <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-2.5" />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={isQueryingKnowledge}
-                    className="w-full bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold py-2 rounded-lg transition disabled:opacity-50"
-                  >
-                    {isQueryingKnowledge ? 'Retrieving Knowledge...' : 'Query MITRE & Playbooks'}
-                  </button>
-                </form>
-
-                {/* Retrieved Context Results */}
-                {retrievedContext && (
-                  <div className="space-y-2 pt-2">
-                    <span className="text-[11px] font-mono text-gray-400 uppercase tracking-wider block">
-                      Top Ranked Chunks (w_rel weighted):
-                    </span>
-                    <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-                      {retrievedContext.chunks.map((chunk: any, i: number) => (
-                        <div
-                          key={i}
-                          className="p-2.5 bg-gray-900 border border-gray-800 rounded-lg text-xs space-y-1"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="bg-purple-950 text-purple-300 border border-purple-800 px-1.5 py-0.5 rounded font-mono text-[10px] uppercase">
-                              {chunk.category}
-                            </span>
-                            <span className="text-[10px] font-mono text-emerald-400 font-semibold">
-                              Score: {chunk.similarity_score.toFixed(3)}
-                            </span>
-                          </div>
-                          <p className="text-gray-300 text-[11px] line-clamp-3 leading-relaxed">
-                            {chunk.text}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* ADR Records Summary */}
-              <div className="bg-[#111827] border border-gray-800 p-5 rounded-xl space-y-3">
-                <h3 className="font-semibold text-sm text-gray-200 flex items-center gap-2">
-                  <FileCode2 className="w-4 h-4 text-purple-400" />
-                  Architecture Decision Records
-                </h3>
-                <div className="space-y-2 text-xs">
-                  <div className="p-2.5 bg-gray-900 border border-gray-800 rounded-lg">
-                    <span className="font-mono text-blue-400 font-semibold">ADR-001:</span>
-                    <p className="text-gray-300 mt-0.5">3-Tier Polyglot Persistence (Postgres + ChromaDB + Redis)</p>
-                  </div>
-                  <div className="p-2.5 bg-gray-900 border border-gray-800 rounded-lg">
-                    <span className="font-mono text-purple-400 font-semibold">ADR-002:</span>
-                    <p className="text-gray-300 mt-0.5">CSE-CIC-IDS2018 5-Scenario Suite Benchmark Telemetry</p>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-        )}
-
-        {activeMainTab === 'containment' && (
-          <div className="bg-[#111827] border border-gray-800 rounded-xl p-6 space-y-6 shadow-xl">
-            <div className="flex items-center justify-between border-b border-gray-800 pb-4">
-              <div>
-                <h2 className="text-base font-bold text-white flex items-center gap-2">
-                  <ShieldAlert className="w-5 h-5 text-amber-400" />
-                  Stage 3: Human-in-the-Loop (HITL) Containment Governance
-                </h2>
-                <p className="text-xs text-gray-400 mt-1">
-                  Enforces mandatory analyst authorization for high-risk containment actions generated by the autonomous agent.
-                </p>
-              </div>
-              <span className="bg-amber-950 text-amber-300 border border-amber-800 px-3 py-1 rounded text-xs font-mono uppercase font-semibold">
-                Governance Enforced
-              </span>
-            </div>
-
-            <InvestigationStudioTab
-              apiBase={API_BASE}
-              investigations={investigations}
-              selectedId={selectedInvestigationId}
-              onSelectInvestigation={(id) => setSelectedInvestigationId(id)}
-              onRefreshList={fetchInvestigations}
-              initialSubTab="observability"
-            />
-          </div>
-        )}
-
-        {activeMainTab === 'benchmark' && <BenchmarkTab apiBase={API_BASE} />}
-
-        {/* Guided Navigation Footer Controls */}
-        <div className="mt-8 pt-4 border-t border-gray-800 flex items-center justify-between text-xs text-gray-400">
-          <div>
-            <span>Current Workflow Phase: </span>
-            <strong className="text-blue-400 capitalize font-mono">{activeMainTab}</strong>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {activeMainTab !== 'workbench' && (
-              <button
-                onClick={() => {
-                  if (activeMainTab === 'studio') setActiveMainTab('workbench');
-                  else if (activeMainTab === 'containment') setActiveMainTab('studio');
-                  else if (activeMainTab === 'benchmark') setActiveMainTab('containment');
-                }}
-                className="bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2 rounded-lg border border-gray-700 transition"
-              >
-                ← Previous Stage
-              </button>
-            )}
-
-            {activeMainTab !== 'benchmark' && (
-              <button
-                onClick={() => {
-                  if (activeMainTab === 'workbench') setActiveMainTab('studio');
-                  else if (activeMainTab === 'studio') setActiveMainTab('containment');
-                  else if (activeMainTab === 'containment') setActiveMainTab('benchmark');
-                }}
-                className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg shadow transition flex items-center gap-1.5"
-              >
-                <span>Proceed to Next Stage</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+          {/* Bottom Dock Console (Telemetry Replayer, Terminal, Audit Bus) */}
+          <BottomDockPanel
+            isOpen={bottomDockOpen}
+            onToggle={() => setBottomDockOpen(false)}
+            replayStatus={replayStatus}
+            scenarioName={currentScenarioDetails?.name}
+            onStartReplay={handleStartReplay}
+            onPauseReplay={handlePauseReplay}
+            onResetReplay={handleResetReplay}
+            onChangeSpeed={handleChangeSpeed}
+            thoughtLogs={thoughtLogs}
+          />
         </div>
-      </main>
+
+        {/* Right-hand Auxiliary Copilot Pane with Slash Commands */}
+        {copilotOpen && (
+          <AgentCopilotPane
+            confidence={currentInvestigation?.current_confidence || 0}
+            activeWorker={activeWorker}
+            thoughtLogs={thoughtLogs}
+            onExecuteCycle={handleExecuteCycle}
+            onExecuteAuto={handleExecuteAuto}
+            isRunningAuto={isRunningAuto}
+            isExecutingStep={isExecutingStep}
+            onOpenView={handleOpenView}
+          />
+        )}
+      </div>
+
+      {/* 3. Bottom Status Bar */}
+      <StatusBar
+        scenarioName={currentScenarioDetails?.name}
+        investigationTitle={currentInvestigation?.title}
+        cycleNumber={currentInvestigation?.planning_cycle_count || 0}
+        confidence={currentInvestigation?.current_confidence || 0}
+        confidenceState={currentInvestigation?.confidence_state || 'idle'}
+        activeWorker={activeWorker}
+        apiHealthy={health?.status === 'healthy'}
+        wsConnected={wsConnected}
+        replayState={replayStatus.state}
+      />
     </div>
   );
 }
