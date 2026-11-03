@@ -1,10 +1,12 @@
 import os
 
 try:
-    from pydantic_settings import BaseSettings
+    from pydantic_settings import BaseSettings, SettingsConfigDict
     from pydantic import Field
 
     class Settings(BaseSettings):
+        model_config = SettingsConfigDict(env_file=".env", extra="allow")
+
         ENVIRONMENT: str = Field(default="development")
         LOG_LEVEL: str = Field(default="INFO")
         SECRET_KEY: str = Field(default="sentinel_dev_secret_key_change_in_production_32bytes!")
@@ -39,10 +41,6 @@ try:
         WEIGHT_KNOWLEDGE: float = Field(default=0.15)
         WEIGHT_AGREEMENT: float = Field(default=0.15)
         WEIGHT_HISTORICAL: float = Field(default=0.20)
-
-        class Config:
-            env_file = ".env"
-            extra = "allow"
 
     settings = Settings()
 
