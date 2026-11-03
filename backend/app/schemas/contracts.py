@@ -68,6 +68,37 @@ class TelemetryEvent(BaseModel):
     raw_log: Dict[str, Any] = Field(default_factory=dict)
 
 
+class CanonicalSecurityEvent(BaseModel):
+    """Canonical event contract bridging heterogeneous telemetry sources with durable PostgreSQL persistence (Phase 4)."""
+    model_config = ConfigDict(extra="allow", from_attributes=True)
+
+    id: UUID = Field(default_factory=uuid4)
+    replay_session_id: Optional[UUID] = None
+    dataset_file_id: Optional[UUID] = None
+    source_record_id: Optional[str] = None
+    event_type: str
+    event_timestamp: datetime
+    ingestion_timestamp: datetime = Field(default_factory=datetime.utcnow)
+    source_ip: Optional[str] = None
+    destination_ip: Optional[str] = None
+    source_port: Optional[int] = None
+    destination_port: Optional[int] = None
+    protocol: Optional[str] = None
+    source_identifier: Optional[str] = None
+    normalized_data: Dict[str, Any] = Field(default_factory=dict)
+    normalization_version: str = "1.0.0"
+    content_hash: Optional[str] = None
+
+
+class RejectedRecord(BaseModel):
+    """Encapsulates invalid or malformed telemetry records rejected during ingestion."""
+    source_file: str
+    source_record_id: Optional[str] = None
+    reason: str
+    raw_data: Optional[Dict[str, Any]] = None
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+
 # API response / request schemas
 class InvestigationCreate(BaseModel):
     title: str

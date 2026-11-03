@@ -140,6 +140,25 @@ def get_replay_status():
     return replayer_instance.get_status()
 
 
+@dataset_router.post("/ingest/{scenario_id}")
+def ingest_scenario_into_db(scenario_id: str, db: Session = Depends(get_db)):
+    """Executes the Phase 4 batch ingestion pipeline, parsing and storing canonical SecurityEvents."""
+    scen = get_scenario(scenario_id)
+    if not scen:
+        raise HTTPException(status_code=404, detail="Scenario not found")
+
+    from app.ingest.pipeline import EventIngestionPipeline
+    from app.ingest.downloader import NORMALIZED_DIR
+    import os
+
+    TelemetryNormalizer.normalize_scenario_file(scenario_id)
+    norm_path = os.path.join(NORMALIZED_DIR, scen.normalized_filename)
+
+    pipeline = EventIngestionPipeline(db, batch_size=200)
+    stats = pipeline.ingest_file(norm_path)
+    return stats.model_dump()
+
+
 @dataset_router.get("/replays")
 def list_replay_sessions(db: Session = Depends(get_db)):
     """Lists persistent replay sessions from the database."""
