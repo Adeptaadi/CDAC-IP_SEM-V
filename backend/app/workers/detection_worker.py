@@ -3,6 +3,7 @@ from typing import List, Dict, Any, Optional
 from uuid import uuid4
 from app.workers.base import BaseWorker
 from app.schemas.contracts import WorkerTask, WorkerResult, Finding, WorkerType
+from app.detection import hybrid_detection_engine_instance
 
 
 class DetectionWorker(BaseWorker):
@@ -98,6 +99,19 @@ class DetectionWorker(BaseWorker):
                 "processes": [proc] if proc else []
             }
 
+            # Evaluate through Phase 5 Hybrid Detection Engine
+            hybrid_findings = hybrid_detection_engine_instance.analyze_event(ev_dict)
+            for hf in hybrid_findings:
+                findings.append(
+                    Finding(
+                        description=f"{hf.explanation} (Severity: {hf.severity})",
+                        entity_refs=hf.entity_refs or entity_refs,
+                        mitre_technique_id=hf.mitre_techniques[0] if hf.mitre_techniques else None
+                    )
+                )
+                max_confidence_signal = max(max_confidence_signal, hf.confidence)
+
+            # Also evaluate legacy heuristics for backwards compatibility
             for h in self.HEURISTICS:
                 matched = False
                 if "regex" in h and (h["regex"].search(cmd) or h["regex"].search(proc)):
@@ -106,14 +120,17 @@ class DetectionWorker(BaseWorker):
                     matched = True
 
                 if matched:
-                    findings.append(
-                        Finding(
-                            description=f"{h['description']} (Event: {ev_dict.get('event_type')})",
-                            entity_refs=entity_refs,
-                            mitre_technique_id=h["technique_id"]
+                    # Avoid duplicate if already covered by hybrid engine
+                    desc = f"{h['description']} (Event: {ev_dict.get('event_type')})"
+                    if not any(f.description == desc for f in findings):
+                        findings.append(
+                            Finding(
+                                description=desc,
+                                entity_refs=entity_refs,
+                                mitre_technique_id=h["technique_id"]
+                            )
                         )
-                    )
-                    max_confidence_signal = max(max_confidence_signal, h["confidence"])
+                        max_confidence_signal = max(max_confidence_signal, h["confidence"])
 
         # Default fallback finding if none matched explicitly
         if not findings:
