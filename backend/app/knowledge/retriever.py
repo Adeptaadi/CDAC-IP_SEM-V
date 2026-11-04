@@ -3,6 +3,8 @@ from datetime import datetime
 from typing import List, Optional, Dict, Any
 from app.schemas.contracts import RetrievedChunk, RetrievedContext
 from app.knowledge.store import knowledge_store
+from app.knowledge.security import rag_security_filter
+from app.knowledge.contracts import KnowledgeCitation
 from app.knowledge.seed_data import (
     MITRE_TECHNIQUES_SEED,
     RESPONSE_PLAYBOOKS_SEED,
@@ -87,6 +89,7 @@ class RAGRetriever:
         category_filter: Optional[List[str]] = None
     ) -> RetrievedContext:
         """Retrieves and ranks relevant knowledge chunks matching query semantics (IS §4)."""
+        clean_query = rag_security_filter.sanitize_content(query)
         candidates: List[Dict[str, Any]] = []
 
         collections_to_search = []
@@ -98,7 +101,7 @@ class RAGRetriever:
             collections_to_search.append(self.COLLECTION_HISTORICAL)
 
         for coll in collections_to_search:
-            res = self.store.query(coll, query, top_k=top_k)
+            res = self.store.query(coll, clean_query, top_k=top_k)
             candidates.extend(res)
 
         # Calculate final rank score: similarity * reliability_weight
@@ -124,10 +127,38 @@ class RAGRetriever:
         top_chunks = chunks[:top_k]
 
         return RetrievedContext(
-            query=query,
+            query=clean_query,
             chunks=top_chunks,
             assembled_at=datetime.utcnow()
         )
+
+    def retrieve_citations(
+        self,
+        query: str,
+        top_k: int = 5,
+        category_filter: Optional[List[str]] = None,
+    ) -> List[KnowledgeCitation]:
+        """Returns structured citations with source, version, and content hash for evidence integration."""
+        clean_query = rag_security_filter.sanitize_content(query)
+        ctx = self.retrieve(clean_query, top_k=top_k, category_filter=category_filter)
+        citations: List[KnowledgeCitation] = []
+
+        for chunk in ctx.chunks:
+            import hashlib
+            chash = hashlib.sha256(chunk.text.encode("utf-8")).hexdigest()[:16]
+            citations.append(
+                KnowledgeCitation(
+                    citation_id=uuid4(),
+                    source_name=f"{chunk.category.upper()}_KNOWLEDGE_BASE",
+                    doc_title=chunk.text.split(":", 1)[0] if ":" in chunk.text else chunk.category,
+                    category=chunk.category,
+                    version="1.0.0",
+                    content_hash=chash,
+                    snippet=chunk.text[:200],
+                    reliability_weight=chunk.reliability_weight,
+                )
+            )
+        return citations
 
 
 rag_retriever = RAGRetriever()
