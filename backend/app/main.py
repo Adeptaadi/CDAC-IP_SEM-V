@@ -17,6 +17,8 @@ from app.api.worker_router import worker_router
 from app.api.planner_router import planner_router
 from app.api.eval_router import eval_router
 from app.api.task_router import router as task_router
+from app.api.reporting_router import reporting_router
+from app.api.review_router import review_router
 from app.api.ws import ws_manager
 
 logging.basicConfig(
@@ -70,6 +72,8 @@ app.include_router(worker_router)
 app.include_router(planner_router)
 app.include_router(eval_router)
 app.include_router(task_router)
+app.include_router(reporting_router)
+app.include_router(review_router)
 
 
 @app.websocket("/ws/investigations/{investigation_id}")
