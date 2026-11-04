@@ -2,6 +2,12 @@ from typing import List, Dict, Set, Any, Tuple
 from uuid import uuid4
 from app.workers.base import BaseWorker
 from app.schemas.contracts import WorkerTask, WorkerResult, Finding, WorkerType
+from app.correlation import (
+    entity_resolver_instance,
+    graph_engine_instance,
+    correlation_scorer_instance,
+    correlation_engine_instance,
+)
 
 
 class CorrelationWorker(BaseWorker):
@@ -15,6 +21,19 @@ class CorrelationWorker(BaseWorker):
 
         # Extract entities from task context or findings
         entity_evidence_map: Dict[str, List[Finding]] = {}
+
+        # Extract entities from task events if present (Phase 6)
+        raw_events = getattr(task, "events", [])
+        for ev in raw_events:
+            ev_dict = ev if isinstance(ev, dict) else ev.model_dump()
+            resolved_ents = entity_resolver_instance.extract_and_resolve_from_event(ev_dict)
+            for re_ent in resolved_ents:
+                nodes.add(f"{re_ent.entity_type.title()}:{re_ent.identifier}")
+            rels = graph_engine_instance.build_relationships_for_event(ev_dict, resolved_ents)
+            for r in rels:
+                src_str = next((f"{e.entity_type.title()}:{e.identifier}" for e in resolved_ents if e.id == r.source_entity_id), str(r.source_entity_id))
+                tgt_str = next((f"{e.entity_type.title()}:{e.identifier}" for e in resolved_ents if e.id == r.target_entity_id), str(r.target_entity_id))
+                edges.append((src_str, tgt_str, r.relationship_type))
 
         # If incoming evidence/findings exist in task
         incoming_findings = getattr(task, "findings", [])
