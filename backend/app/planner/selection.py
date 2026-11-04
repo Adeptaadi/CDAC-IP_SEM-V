@@ -18,6 +18,7 @@ class InvestigationStateSnapshot:
         cycles_since_confidence_gain: int = 0,
         has_unresolved_contradictions: bool = False,
         analyst_requested_stop: bool = False,
+        requires_analyst_review: bool = False,
     ):
         self.investigation_id = investigation_id
         self.confidence = confidence
@@ -32,7 +33,7 @@ class InvestigationStateSnapshot:
         self.has_unresolved_contradictions = has_unresolved_contradictions
         self.analyst_requested_stop = analyst_requested_stop
         self.termination_reason: Optional[str] = None
-        self.requires_analyst_review: bool = False
+        self.requires_analyst_review = requires_analyst_review
 
 
 def select_worker(state: InvestigationStateSnapshot) -> Tuple[str, float, Dict[str, float]]:
