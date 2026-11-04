@@ -60,6 +60,7 @@ export default function App() {
 
   // Tabbed Workspace State
   const [openTabs, setOpenTabs] = useState<TabItem[]>([
+    { id: 'alerts', title: 'DetectedAlerts.feed', type: 'alerts' },
     { id: 'timeline', title: 'AttackTimeline.canvas', type: 'timeline' },
     { id: 'graph', title: 'EntityGraph.visual', type: 'graph' },
     { id: 'matrix', title: 'Hypotheses.matrix', type: 'matrix' },
@@ -393,6 +394,7 @@ export default function App() {
     const existing = openTabs.find((t) => t.id === viewId);
     if (!existing) {
       const typeMap: Record<string, { title: string; type: TabItem['type'] }> = {
+        alerts: { title: 'DetectedAlerts.feed', type: 'alerts' },
         timeline: { title: 'AttackTimeline.canvas', type: 'timeline' },
         graph: { title: 'EntityGraph.visual', type: 'graph' },
         matrix: { title: 'Hypotheses.matrix', type: 'matrix' },

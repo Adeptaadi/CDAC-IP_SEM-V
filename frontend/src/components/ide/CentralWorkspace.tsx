@@ -6,6 +6,7 @@ import {
   BarChart2,
   ShieldCheck,
   BarChart3,
+  ShieldAlert,
   X,
   ChevronRight
 } from 'lucide-react';
@@ -18,11 +19,12 @@ import { FactorDecompositionView } from '../FactorDecompositionView';
 import { ContainmentPanel, RecommendationItem } from '../ContainmentPanel';
 import { BenchmarkTab } from '../BenchmarkTab';
 import { AgentOrbitalMap } from '../AgentOrbitalMap';
+import { AlertsTab } from '../AlertsTab';
 
 export interface TabItem {
   id: string;
   title: string;
-  type: 'timeline' | 'graph' | 'matrix' | 'reports' | 'math' | 'utility' | 'containment' | 'benchmarks' | 'orbital';
+  type: 'timeline' | 'graph' | 'matrix' | 'reports' | 'math' | 'utility' | 'containment' | 'benchmarks' | 'orbital' | 'alerts';
 }
 
 interface CentralWorkspaceProps {
@@ -93,6 +95,8 @@ export const CentralWorkspace: React.FC<CentralWorkspaceProps> = ({
         return <BarChart3 className="w-3.5 h-3.5 text-indigo-400" />;
       case 'orbital':
         return <Layers className="w-3.5 h-3.5 text-orange-400" />;
+      case 'alerts':
+        return <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />;
       default:
         return <FileText className="w-3.5 h-3.5 text-gray-400" />;
     }
@@ -307,6 +311,16 @@ export const CentralWorkspace: React.FC<CentralWorkspaceProps> = ({
               activeCycle={investigation?.planning_cycle_count || 0}
               confidence={investigation?.current_confidence || 0}
               workerLatencies={workerLatencies}
+            />
+          </div>
+        )}
+
+        {/* Real-Time Detection Alerts & Incident Candidates */}
+        {activeTab.type === 'alerts' && (
+          <div className="space-y-4">
+            <AlertsTab
+              apiBase={apiBase}
+              onPromoteCandidate={() => onRefreshInvestigation()}
             />
           </div>
         )}

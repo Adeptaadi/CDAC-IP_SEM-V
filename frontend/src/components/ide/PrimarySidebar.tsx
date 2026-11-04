@@ -131,6 +131,7 @@ export const PrimarySidebar: React.FC<PrimarySidebarProps> = ({
               {expandedSections.views && (
                 <div className="mt-1 space-y-0.5 pl-2 font-mono">
                   {[
+                    { id: 'alerts', label: 'DetectedAlerts.feed', icon: <ShieldAlert className="w-3.5 h-3.5 text-rose-400" /> },
                     { id: 'timeline', label: 'AttackTimeline.canvas', icon: <FileText className="w-3.5 h-3.5 text-blue-400" /> },
                     { id: 'graph', label: 'EntityGraph.visual', icon: <Layers className="w-3.5 h-3.5 text-emerald-400" /> },
                     { id: 'matrix', label: 'Hypotheses.matrix', icon: <Cpu className="w-3.5 h-3.5 text-purple-400" /> },
