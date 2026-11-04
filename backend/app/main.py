@@ -7,8 +7,10 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.config import settings
 from app.database import engine, Base
+import app.models  # Register all 41 schema entities
 from app.api.health_router import health_router
 from app.api.routers import router
+from app.api.investigation_router import router as investigation_router
 from app.api.dataset_router import dataset_router
 from app.api.knowledge_router import knowledge_router
 from app.api.worker_router import worker_router
@@ -57,34 +59,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include Routers
 app.include_router(health_router)
 app.include_router(router)
-from app.api.dataset_router import dataset_router
-from app.api.knowledge_router import knowledge_router
-from app.api.worker_router import worker_router
-from app.api.planner_router import planner_router
-from app.api.eval_router import eval_router
-from app.api.ws import ws_manager
-
-# Initialize tables if not using Alembic migrations in dev
-Base.metadata.create_all(bind=engine)
-
-app = FastAPI(
-    title="Project Sentinel API",
-    description="Agentic AI-powered Autonomous Cyber Threat Hunting Platform Gateway",
-    version="1.0.0"
-)
-
-# CORS middleware for React frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Adjust for production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-app.include_router(router)
+app.include_router(investigation_router)
 app.include_router(dataset_router)
 app.include_router(knowledge_router)
 app.include_router(worker_router)
