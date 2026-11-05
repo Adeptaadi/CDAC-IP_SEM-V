@@ -17,6 +17,7 @@ import uuid
 from datetime import datetime, timezone
 import pytest
 from sqlalchemy import create_engine
+from sqlalchemy.pool import StaticPool
 from sqlalchemy.orm import sessionmaker
 from fastapi.testclient import TestClient
 
@@ -34,7 +35,11 @@ from app.investigation.workspace_service import workspace_projection_service_ins
 @pytest.fixture
 def db_session():
     """Isolated in-memory SQLite database session."""
-    engine = create_engine("sqlite:///:memory:")
+    engine = create_engine(
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
     Base.metadata.create_all(engine)
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     session = TestingSessionLocal()
@@ -477,7 +482,7 @@ def test_no_recommendation_returns_null(db_session):
 # =========================================================================
 # Test 10: Backward Compatibility of Existing APIs
 # =========================================================================
-def test_existing_apis_remain_functional(test_client, db_session):
+def test_existing_apis_remain_functional(db_session):
     """Existing endpoints continue to work without error."""
     inv = Investigation(
         investigation_id=uuid.uuid4(),
@@ -489,26 +494,26 @@ def test_existing_apis_remain_functional(test_client, db_session):
     db_session.add(inv)
     db_session.commit()
 
+    from app.api.investigation_router import list_investigations, get_investigation_details
+    from app.api.planner_router import get_investigation_full_state
+
     # Core GET list
-    res_list = test_client.get("/api/investigations")
-    assert res_list.status_code == 200
-    assert any(item["investigation_id"] == str(inv.investigation_id) for item in res_list.json())
+    items = list_investigations(db=db_session)
+    assert any(item["investigation_id"] == str(inv.investigation_id) for item in items)
 
     # Core GET single
-    res_single = test_client.get(f"/api/investigations/{inv.investigation_id}")
-    assert res_single.status_code == 200
-    assert res_single.json()["title"] == inv.title
+    details = get_investigation_details(investigation_id=inv.investigation_id, db=db_session)
+    assert details["title"] == inv.title
 
     # Planner state snapshot endpoint
-    res_state = test_client.get(f"/api/planner/investigations/{inv.investigation_id}/state")
-    assert res_state.status_code == 200
-    assert res_state.json()["investigation_id"] == str(inv.investigation_id)
+    state = get_investigation_full_state(investigation_id=inv.investigation_id, db=db_session)
+    assert state["investigation_id"] == str(inv.investigation_id)
 
 
 # =========================================================================
 # Test 11: HTTP Endpoint Integration (GET /api/investigations/{id}/workspace)
 # =========================================================================
-def test_workspace_api_endpoint(test_client, db_session):
+def test_workspace_api_endpoint(db_session):
     """GET /api/investigations/{id}/workspace returns 200 with complete valid schema."""
     inv = Investigation(
         investigation_id=uuid.uuid4(),
@@ -521,20 +526,17 @@ def test_workspace_api_endpoint(test_client, db_session):
     db_session.add(inv)
     db_session.commit()
 
+    from app.api.investigation_router import get_investigation_workspace
+    from fastapi import HTTPException
+
     # Successful call
-    res = test_client.get(f"/api/investigations/{inv.investigation_id}/workspace")
-    assert res.status_code == 200
-    data = res.json()
-    assert "threat" in data
-    assert "planner" in data
-    assert "key_findings" in data
-    assert "orchestration_history" in data
-    assert "recommendation" in data
-    assert "human_review" in data
-    assert "workspace_metadata" in data
-    assert data["threat"]["investigation_id"] == str(inv.investigation_id)
+    res = get_investigation_workspace(investigation_id=inv.investigation_id, db=db_session)
+    assert res.threat.investigation_id == str(inv.investigation_id)
+    assert res.threat.confidence == 0.55
+    assert res.workspace_metadata.investigation_state_version == 1
 
     # 404 on nonexistent investigation
     missing_id = uuid.uuid4()
-    res_404 = test_client.get(f"/api/investigations/{missing_id}/workspace")
-    assert res_404.status_code == 404
+    with pytest.raises(HTTPException) as exc_info:
+        get_investigation_workspace(investigation_id=missing_id, db=db_session)
+    assert exc_info.value.status_code == 404

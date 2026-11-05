@@ -3,9 +3,13 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 from app.config import settings
 
 try:
+    connect_args = {}
+    if "postgresql" in settings.DATABASE_URL:
+        connect_args["connect_timeout"] = 1
     engine = create_engine(
         settings.DATABASE_URL,
         pool_pre_ping=True,
+        connect_args=connect_args,
         echo=(settings.ENVIRONMENT == "development")
     )
     # Test connection creation / driver loading
