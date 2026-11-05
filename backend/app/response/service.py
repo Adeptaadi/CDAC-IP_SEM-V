@@ -104,11 +104,13 @@ class HumanReviewService:
         requested_action: str,
         risk_level: str,
         db: Session,
+        recommendation_id: Optional[uuid.UUID] = None,
     ) -> HumanReview:
         """Submits a human review request and places investigation into awaiting_review status."""
         review = HumanReview(
             id=uuid.uuid4(),
             investigation_id=investigation_id,
+            recommendation_id=recommendation_id,
             requested_action=requested_action,
             risk_level=risk_level,
             status="pending",

@@ -5,7 +5,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 from app.database import Base
-from app.models.base import GUID, JSONB_TYPE
+from app.models.base import GUID, JSONB_TYPE, ARRAY_UUID
 
 
 class HumanReview(Base):
@@ -13,6 +13,7 @@ class HumanReview(Base):
 
     id = Column(GUID, primary_key=True, default=uuid.uuid4)
     investigation_id = Column(GUID, ForeignKey("investigations.investigation_id", ondelete="CASCADE"), nullable=False)
+    recommendation_id = Column(GUID, ForeignKey("recommendations.recommendation_id", ondelete="SET NULL"), nullable=True)
     requested_action = Column(Text, nullable=False)
     risk_level = Column(String(20), nullable=False)  # low, medium, high, critical
     status = Column(String(20), default="pending", nullable=False)  # pending, approved, rejected, modified
@@ -22,6 +23,7 @@ class HumanReview(Base):
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
 
     investigation = relationship("Investigation", back_populates="human_reviews")
+    recommendation = relationship("Recommendation", back_populates="human_reviews")
     analyst = relationship("User")
 
 
@@ -35,10 +37,12 @@ class Recommendation(Base):
     impact_summary = Column(Text, nullable=True)
     requires_approval = Column(Boolean, default=True, nullable=False)
     approval_status = Column(String(15), default="pending", nullable=False)  # pending, approved, rejected, executed
+    supporting_evidence_ids = Column(ARRAY_UUID, default=list)
     approved_by_user_id = Column(GUID, ForeignKey("users.user_id"), nullable=True)
 
     report = relationship("Report", back_populates="recommendations")
     simulations = relationship("ResponseSimulation", back_populates="recommendation", cascade="all, delete-orphan")
+    human_reviews = relationship("HumanReview", back_populates="recommendation")
 
 
 class ResponseSimulation(Base):

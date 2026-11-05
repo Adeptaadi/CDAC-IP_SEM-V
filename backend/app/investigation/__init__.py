@@ -13,6 +13,10 @@ from app.investigation.service import (
     InvestigationService,
     investigation_service_instance,
 )
+from app.investigation.workspace_service import (
+    WorkspaceProjectionService,
+    workspace_projection_service_instance,
+)
 
 __all__ = [
     "InvestigationStatus",
@@ -24,4 +28,6 @@ __all__ = [
     "state_machine_instance",
     "InvestigationService",
     "investigation_service_instance",
+    "WorkspaceProjectionService",
+    "workspace_projection_service_instance",
 ]

@@ -9,8 +9,10 @@ from app.investigation import (
     InvestigationCreatePayload,
     InvestigationTransitionPayload,
     investigation_service_instance,
+    workspace_projection_service_instance,
     InvalidStateTransitionError,
 )
+from app.schemas.workspace_projection import InvestigationWorkspaceProjection
 from app.repositories.investigation_repo import OptimisticLockError
 
 router = APIRouter(prefix="/api/investigations", tags=["Investigation Management"])
@@ -104,6 +106,18 @@ def get_investigation_details(
         "updated_at": inv.updated_at.isoformat() if inv.updated_at else None,
         "closed_at": inv.closed_at.isoformat() if inv.closed_at else None,
     }
+
+
+@router.get("/{investigation_id}/workspace", response_model=InvestigationWorkspaceProjection)
+def get_investigation_workspace(
+    investigation_id: uuid.UUID,
+    db: Session = Depends(get_db),
+):
+    """Retrieves the unified Agentic Investigation Workspace projection (P0)."""
+    try:
+        return workspace_projection_service_instance.build_workspace_projection(investigation_id, db=db)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @router.post("/{investigation_id}/transition")

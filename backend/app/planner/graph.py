@@ -139,6 +139,8 @@ class InvestigationStateGraph:
                         description=f_data.get("description", "Observation"),
                         entity_refs=f_data.get("entity_refs", {}),
                         produced_by_worker=decision.selected_worker,
+                        planner_decision_id=decision.decision_id,
+                        agent_task_id=task_res.task_id,
                         created_at=datetime.utcnow(),
                     )
                     db.add(ev)

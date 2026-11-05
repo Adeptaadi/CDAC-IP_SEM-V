@@ -71,6 +71,7 @@ class PlannerDecision(Base):
     investigation = relationship("Investigation", back_populates="decisions")
     planner_run = relationship("PlannerRun", back_populates="decisions")
     executions = relationship("WorkerExecution", back_populates="decision", cascade="all, delete-orphan")
+    evidence = relationship("Evidence", back_populates="planner_decision")
 
 
 class WorkerExecution(Base):
@@ -87,6 +88,7 @@ class WorkerExecution(Base):
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
 
     decision = relationship("PlannerDecision", back_populates="executions")
+    evidence = relationship("Evidence", back_populates="worker_execution")
 
 
 class AgentTask(Base):
@@ -106,6 +108,7 @@ class AgentTask(Base):
     investigation = relationship("Investigation", back_populates="agent_tasks")
     capability = relationship("Capability", back_populates="agent_tasks")
     attempts = relationship("TaskAttempt", back_populates="task", cascade="all, delete-orphan")
+    evidence = relationship("Evidence", back_populates="agent_task")
 
 
 class TaskDependency(Base):

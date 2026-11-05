@@ -155,6 +155,11 @@ class PlannerEngine:
         worker_result: WorkerResult = worker.execute(task)
         latency_ms = int((time.time() - t_start) * 1000)
 
+        # Pre-generate decision and execution IDs for direct provenance linkage
+        cycle_decision_id = uuid4()
+        cycle_execution_id = uuid4()
+        created_evidence_ids: List[UUID] = []
+
         # 5. Apply Worker Results to Database State
         for finding in worker_result.new_evidence:
             ev = Evidence(
@@ -163,9 +168,12 @@ class PlannerEngine:
                 description=finding.description,
                 entity_refs=finding.entity_refs,
                 produced_by_worker=worker_type,
+                planner_decision_id=cycle_decision_id,
+                worker_execution_id=cycle_execution_id,
             )
             db.add(ev)
             db.flush()
+            created_evidence_ids.append(ev.evidence_id)
 
             # Record corresponding timeline event
             te = TimelineEvent(
@@ -237,6 +245,7 @@ class PlannerEngine:
 
         # 7. Persist PlannerDecision & WorkerExecution (PostgreSQL Audit Trail)
         decision = PlannerDecision(
+            decision_id=cycle_decision_id,
             investigation_id=investigation_id,
             cycle_number=next_cycle,
             selected_worker=worker_type,
@@ -256,6 +265,7 @@ class PlannerEngine:
         raw_output_payload["delta"] = round(float(delta), 4)
 
         execution = WorkerExecution(
+            execution_id=cycle_execution_id,
             decision_id=decision.decision_id,
             worker_type=worker_type,
             status=worker_result.status,
@@ -296,7 +306,13 @@ class PlannerEngine:
             db.add(rep)
             db.flush()
 
-            # Generate Containment Recommendation
+            # Collect evidence IDs supporting this recommendation
+            all_evidence_ids = [
+                str(e.evidence_id)
+                for e in db.query(Evidence).filter(Evidence.investigation_id == investigation_id).all()
+            ]
+
+            # Generate Containment Recommendation with direct supporting evidence provenance
             rec = Recommendation(
                 report_id=rep.report_id,
                 action="Isolate affected host and block C2 IP at border firewall",
@@ -304,6 +320,7 @@ class PlannerEngine:
                 impact_summary="Prevents lateral movement and active data exfiltration.",
                 requires_approval=True,
                 approval_status="pending",
+                supporting_evidence_ids=all_evidence_ids,
             )
             db.add(rec)
 

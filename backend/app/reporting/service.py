@@ -150,7 +150,13 @@ class ReportingService:
             )
             db.add(db_sec)
 
-        # Default recommendations
+        # Collect existing evidence IDs for direct recommendation provenance
+        ev_ids = [
+            str(e.evidence_id)
+            for e in db.query(Evidence).filter(Evidence.investigation_id == investigation_id).all()
+        ]
+
+        # Default recommendations with grounded evidence provenance
         recs = [
             Recommendation(
                 recommendation_id=uuid.uuid4(),
@@ -160,6 +166,7 @@ class ReportingService:
                 impact_summary="Host network isolation to contain lateral spread.",
                 requires_approval=True,
                 approval_status="pending",
+                supporting_evidence_ids=ev_ids,
             ),
             Recommendation(
                 recommendation_id=uuid.uuid4(),
@@ -169,6 +176,7 @@ class ReportingService:
                 impact_summary="Egress traffic dropped for confirmed threat IPs.",
                 requires_approval=True,
                 approval_status="pending",
+                supporting_evidence_ids=ev_ids,
             ),
         ]
         for r in recs:

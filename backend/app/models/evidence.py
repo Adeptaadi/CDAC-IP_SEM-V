@@ -18,10 +18,16 @@ class Evidence(Base):
     description = Column(Text, nullable=False)
     entity_refs = Column(JSONB_TYPE, nullable=True)  # {"hosts":[], "users":[], "ips":[]}
     produced_by_worker = Column(String(30), nullable=True)
+    planner_decision_id = Column(GUID, ForeignKey("planner_decisions.decision_id", ondelete="SET NULL"), nullable=True)
+    worker_execution_id = Column(GUID, ForeignKey("worker_executions.execution_id", ondelete="SET NULL"), nullable=True)
+    agent_task_id = Column(GUID, ForeignKey("agent_tasks.id", ondelete="SET NULL"), nullable=True)
     corroborated_by = Column(ARRAY_UUID, default=list)
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
 
     investigation = relationship("Investigation", back_populates="evidence")
+    planner_decision = relationship("PlannerDecision", back_populates="evidence")
+    worker_execution = relationship("WorkerExecution", back_populates="evidence")
+    agent_task = relationship("AgentTask", back_populates="evidence")
 
 
 class TimelineEvent(Base):
