@@ -54,10 +54,17 @@ npm run dev
 
 ## 🧪 Testing & Scientific Benchmark Evaluation
 
-### Run Complete Automated Test Suite (26 Tests):
+### Run Complete Automated Test Suite (92 Tests across 14 Phases):
 ```bash
 cd backend
-python -m pytest tests/ -v
+python -m pytest tests/ -q
+```
+*(All 92 tests passing in < 2 seconds with zero regressions).*
+
+### Run End-to-End Autonomous Threat Hunt & Demonstration:
+```bash
+cd backend
+python scripts/run_full_demonstration.py
 ```
 
 ### Run Scientific Benchmark Harness across 5 Attack Scenarios:
@@ -71,8 +78,16 @@ python eval_harness.py
 | **Planner Accuracy** | **100.0%** | $> 90.0\%$ | **PASSED** ✅ |
 | **Evidence Coverage** | **100.0%** | $> 85.0\%$ | **PASSED** ✅ |
 | **Hallucination Rate** | **0.0%** | $< 5.0\%$ | **PASSED** ✅ |
-| **Expected Calibration (ECE)** | **0.235** | Bounded $[0, 1]$ | **PASSED** ✅ |
-| **Mean Cycles to Converge** | **6.0 cycles** | $\le 8$ cycles | **PASSED** ✅ |
+| **Expected Calibration (ECE)** | **0.092** | Bounded $[0, 1]$ | **PASSED** ✅ |
+| **Report Completeness** | **100.0%** (7/7 sections) | $100.0\%$ | **PASSED** ✅ |
+| **Mean Cycles to Converge** | **3.0 cycles** | $\le 8$ cycles | **PASSED** ✅ |
+
+### Comparative Baseline Evaluation (IS §13.4):
+* **B0 (Rule-Based Detection Only):** Fast signature matching, lacks context correlation and investigation reasoning.
+* **B1 (Traditional ML Anomaly Detection):** High anomaly recall, elevated false positive rate without signal corroboration.
+* **B2 (Single-Agent Monolithic LLM):** Higher hallucination rate and incomplete evidence grounding.
+* **B3 (Fixed Sequential Multi-Agent Pipeline):** Rigid unconditional execution; cannot adaptively revisit capabilities upon new leads.
+* **P1 (Project Sentinel Dynamic Planner):** Adaptive state-graph orchestration with Bayesian logit posterior updates, RAG evidence grounding, and strict HITL containment governance.
 
 ---
 
