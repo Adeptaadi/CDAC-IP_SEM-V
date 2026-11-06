@@ -52,6 +52,7 @@ class EvaluationService:
         db: Session,
         max_cycles: int = 8,
         evaluation_run_id: Optional[uuid.UUID] = None,
+        blind_mode: bool = False,
     ) -> ScenarioEvaluationResult:
         """Executes a single benchmark scenario end-to-end, measuring real execution metrics."""
         scenario = get_scenario(scenario_id)
@@ -66,8 +67,8 @@ class EvaluationService:
         eval_run = EvaluationRun(
             id=run_id,
             scenario_id=scenario_id,
-            name=f"Evaluation: {scenario.name}",
-            configuration={"max_cycles": max_cycles, "scenario_id": scenario_id},
+            name=f"Evaluation ({'Blind' if blind_mode else 'Standard'}): {scenario.name}",
+            configuration={"max_cycles": max_cycles, "scenario_id": scenario_id, "blind_mode": blind_mode},
             status="running",
             started_at=started_at_dt,
         )
@@ -75,13 +76,15 @@ class EvaluationService:
         db.flush()
 
         # 2. Create clean isolated Investigation record
+        inv_title = f"[Blind Benchmark] {scenario_id}" if blind_mode else f"[Evaluation Benchmark] {scenario.name}"
+        inv_goal = "Investigate anomalous telemetry activities on monitored endpoints/network" if blind_mode else f"Evaluate telemetry anomalies for {scenario.name}"
         inv = Investigation(
             investigation_id=uuid.uuid4(),
-            title=f"[Evaluation Benchmark] {scenario.name}",
+            title=inv_title,
             status="investigating",
             current_confidence=0.15,
             confidence_state="very_low",
-            current_goal=f"Evaluate telemetry anomalies for {scenario.name}",
+            current_goal=inv_goal,
             planning_cycle_count=0,
             state_version=1,
         )
@@ -108,17 +111,18 @@ class EvaluationService:
             )
             db.add(ev)
 
-        # 4. Formulate initial scenario hypothesis
-        hypo = Hypothesis(
-            hypothesis_id=uuid.uuid4(),
-            investigation_id=inv.investigation_id,
-            label=scenario.gold_hypothesis,
-            status="active",
-            confidence=0.35,
-            mitre_technique_ids=scenario.mitre_techniques,
-            created_at=datetime.now(timezone.utc),
-        )
-        db.add(hypo)
+        # 4. Formulate initial scenario hypothesis only in standard mode (B2.2 Blind Isolation)
+        if not blind_mode:
+            hypo = Hypothesis(
+                hypothesis_id=uuid.uuid4(),
+                investigation_id=inv.investigation_id,
+                label=scenario.gold_hypothesis,
+                status="active",
+                confidence=0.35,
+                mitre_technique_ids=scenario.mitre_techniques,
+                created_at=datetime.now(timezone.utc),
+            )
+            db.add(hypo)
         db.commit()
 
         # 5. Run autonomous multi-cycle planner until convergence or max_cycles
@@ -175,6 +179,12 @@ class EvaluationService:
         elif inv.status == "escalated":
             termination_reason = "stagnation"
 
+        termination_class = "safety_bound" if termination_reason == "max_cycles_reached" else (
+            "uncalibrated_heuristic" if termination_reason == "confidence_threshold_met" else (
+                "stagnation_escalation" if termination_reason == "stagnation" else "normal"
+            )
+        )
+
         inv_metrics = InvestigationEvaluationMetrics(
             investigation_id=str(inv.investigation_id),
             initial_confidence=init_conf,
@@ -182,6 +192,7 @@ class EvaluationService:
             confidence_delta=conf_delta,
             planning_cycles=inv.planning_cycle_count,
             termination_reason=termination_reason,
+            termination_classification=termination_class,
             final_status=inv.status,
         )
 
@@ -206,17 +217,28 @@ class EvaluationService:
             seen_capabilities.add(cap_name)
             last_cap = cap_name
 
-            if getattr(d, "decision_type", "") == "replan":
+            is_replan = bool(getattr(d, "is_replanning", False) or getattr(d, "decision_type", "") == "replan")
+            if is_replan:
                 replanning_count += 1
 
             c_before = float(d.confidence_before) if d.confidence_before is not None else init_conf
             c_after = float(d.confidence_after) if d.confidence_after is not None else final_conf
             c_delta = round(c_after - c_before, 4)
 
-            # Evidence gained this cycle
+            # Evidence gained this cycle (distinguishing novel vs duplicate)
             ev_gained = sum(
                 1 for e in evidence_records
                 if e.planner_decision_id and str(e.planner_decision_id) == str(d.decision_id)
+            )
+            novel_ev_gained = sum(
+                1 for e in evidence_records
+                if e.planner_decision_id and str(e.planner_decision_id) == str(d.decision_id)
+                and getattr(e, "is_novel", True) and not getattr(e, "is_duplicate", False)
+            )
+            dup_ev_gained = sum(
+                1 for e in evidence_records
+                if e.planner_decision_id and str(e.planner_decision_id) == str(d.decision_id)
+                and getattr(e, "is_duplicate", False)
             )
 
             trace_step = PlannerTraceStep(
@@ -231,7 +253,11 @@ class EvaluationService:
                 confidence_delta=c_delta,
                 latency_ms=exec_rec.latency_ms if exec_rec else None,
                 evidence_gained=ev_gained,
+                novel_evidence_gained=novel_ev_gained,
+                duplicate_evidence_gained=dup_ev_gained,
                 decision_type=getattr(d, "decision_type", "continue_investigation"),
+                is_replanning=is_replan,
+                replan_reason=getattr(d, "replan_reason", None),
             )
             execution_trace.append(trace_step)
 
@@ -328,6 +354,8 @@ class EvaluationService:
 
         # 10. Compute Evidence Metrics & Provenance
         total_ev = len(evidence_records)
+        novel_ev = sum(1 for e in evidence_records if getattr(e, "is_novel", True) and not getattr(e, "is_duplicate", False))
+        dup_ev = sum(1 for e in evidence_records if getattr(e, "is_duplicate", False))
         direct_ev = sum(1 for e in evidence_records if e.planner_decision_id or e.worker_execution_id)
         derived_ev = sum(1 for e in evidence_records if not (e.planner_decision_id or e.worker_execution_id) and e.produced_by_worker)
         legacy_ev = sum(1 for e in evidence_records if not (e.planner_decision_id or e.worker_execution_id or e.produced_by_worker))
@@ -339,6 +367,8 @@ class EvaluationService:
 
         evidence_metrics = EvidenceEvaluationMetrics(
             total_items=total_ev,
+            novel_items=novel_ev,
+            duplicate_items=dup_ev,
             direct_provenance_items=direct_ev,
             derived_provenance_items=derived_ev,
             legacy_unlinked_items=legacy_ev,
@@ -358,7 +388,7 @@ class EvaluationService:
             review_status=rev.status if rev else ("pending" if rec and rec.requires_approval else None),
         )
 
-        # 12. Compute Benchmark Scientific Accuracy Scores
+        # 12. Compute Benchmark Scientific Accuracy Scores (B2 Blind Evaluation)
         extracted_techniques: List[str] = []
         for h in hypotheses_records:
             if h.mitre_technique_ids:
@@ -366,11 +396,25 @@ class EvaluationService:
 
         gold_techniques = scenario.mitre_techniques or []
         coverage = compute_evidence_coverage(extracted_techniques, gold_techniques)
+
+        unique_extracted = set(extracted_techniques)
+        unique_gold = set(gold_techniques)
+        mitre_prec = (
+            len(unique_extracted.intersection(unique_gold)) / max(1, len(unique_extracted))
+            if unique_extracted
+            else 0.0
+        )
+
         matching_hyp = any(
-            (h.label == scenario.gold_hypothesis or any(t in (h.mitre_technique_ids or []) for t in gold_techniques))
+            (
+                h.label.lower() in scenario.gold_hypothesis.lower()
+                or scenario.gold_hypothesis.lower() in h.label.lower()
+                or any(t in (h.mitre_technique_ids or []) for t in gold_techniques)
+            )
             for h in hypotheses_records
         )
-        accuracy = 1.0 if matching_hyp else 0.85
+        discovery_acc = 1.0 if matching_hyp else (0.50 if coverage > 0 else 0.0)
+        accuracy = discovery_acc if blind_mode else (1.0 if matching_hyp else 0.85)
 
         claims = [{"claim_id": str(h.hypothesis_id), "evidence_ids": [str(e.evidence_id) for e in evidence_records]} for h in hypotheses_records]
         hallucination_rate = compute_hallucination_rate(claims, [str(e.evidence_id) for e in evidence_records])
@@ -384,6 +428,8 @@ class EvaluationService:
             evidence_coverage=round(coverage, 4),
             hallucination_rate=round(hallucination_rate, 4),
             expected_calibration_error=round(ece, 4),
+            mitre_precision=round(mitre_prec, 4),
+            hypothesis_discovery_accuracy=round(discovery_acc, 4),
         )
 
         # 13. Construct Complete ScenarioEvaluationResult
@@ -447,11 +493,11 @@ class EvaluationService:
         db.commit()
         return eval_result
 
-    def evaluate_all(self, db: Session, max_cycles: int = 6) -> List[ScenarioEvaluationResult]:
+    def evaluate_all(self, db: Session, max_cycles: int = 6, blind_mode: bool = False) -> List[ScenarioEvaluationResult]:
         """Runs evaluation across all registered CSE-CIC-IDS2018 scenarios."""
         results: List[ScenarioEvaluationResult] = []
         for sid in SCENARIO_REGISTRY.keys():
-            res = self.evaluate_scenario(sid, db=db, max_cycles=max_cycles)
+            res = self.evaluate_scenario(sid, db=db, max_cycles=max_cycles, blind_mode=blind_mode)
             results.append(res)
         return results
 

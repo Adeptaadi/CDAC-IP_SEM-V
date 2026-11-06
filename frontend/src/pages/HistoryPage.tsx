@@ -77,9 +77,12 @@ export const HistoryPage: React.FC = () => {
             className="bg-zinc-950 border border-zinc-800 text-zinc-300 rounded px-2.5 py-1.5 text-xs focus:outline-none"
           >
             <option value="all">All Statuses</option>
+            <option value="investigating">Investigating</option>
+            <option value="awaiting_review">Awaiting Review</option>
+            <option value="completed">Completed</option>
             <option value="active">Active</option>
-            <option value="closed">Closed</option>
             <option value="paused">Paused</option>
+            <option value="closed">Closed</option>
           </select>
         </div>
       </div>

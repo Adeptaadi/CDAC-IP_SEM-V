@@ -1,11 +1,29 @@
 import uuid
+import hashlib
+import json
 from datetime import datetime
+from typing import Optional, Dict, Any
 from sqlalchemy import (
-    Column, String, Text, Integer, Numeric, DateTime, ForeignKey
+    Column, String, Text, Integer, Numeric, DateTime, ForeignKey, Boolean
 )
 from sqlalchemy.orm import relationship
 from app.database import Base
 from app.models.base import GUID, JSONB_TYPE, ARRAY_STRING, ARRAY_UUID
+
+
+def compute_evidence_fingerprint(description: str, entity_refs: Optional[Dict[str, Any]] = None) -> str:
+    """Computes a deterministic SHA-256 fingerprint for semantic deduplication of evidence."""
+    clean_desc = (description or "").strip().lower()
+    norm_entities = {}
+    if entity_refs and isinstance(entity_refs, dict):
+        for k in sorted(entity_refs.keys()):
+            val = entity_refs[k]
+            if isinstance(val, list):
+                norm_entities[k] = sorted(str(x).strip().lower() for x in val if x)
+            elif val:
+                norm_entities[k] = str(val).strip().lower()
+    raw = f"{clean_desc}::{json.dumps(norm_entities, sort_keys=True)}"
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 class Evidence(Base):
@@ -16,6 +34,10 @@ class Evidence(Base):
     source_type = Column(String(50), nullable=False)  # log, alert, worker_output, analyst_input
     source_ref = Column(Text, nullable=True)
     description = Column(Text, nullable=False)
+    content_hash = Column(String(64), nullable=True, index=True)
+    is_duplicate = Column(Boolean, default=False, nullable=False)
+    is_novel = Column(Boolean, default=True, nullable=False)
+    observation_count = Column(Integer, default=1, nullable=False)
     entity_refs = Column(JSONB_TYPE, nullable=True)  # {"hosts":[], "users":[], "ips":[]}
     produced_by_worker = Column(String(30), nullable=True)
     planner_decision_id = Column(GUID, ForeignKey("planner_decisions.decision_id", ondelete="SET NULL"), nullable=True)
@@ -53,6 +75,8 @@ class Hypothesis(Base):
     status = Column(String(20), default="active", nullable=False)  # active, strengthened, weakened, rejected, confirmed
     confidence = Column(Numeric(5, 4), nullable=False)
     mitre_technique_ids = Column(ARRAY_STRING, default=list)
+    generation_source = Column(String(50), default="RULE_DERIVED", nullable=True)  # RULE_DERIVED, RAG_ASSISTED, LLM_ASSISTED
+    provenance_summary = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 

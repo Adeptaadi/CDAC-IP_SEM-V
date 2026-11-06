@@ -1,0 +1,633 @@
+[
+  {
+    "run_id": "long_run_productive_telemetry",
+    "condition": "productive_telemetry",
+    "cycles": [
+      {
+        "cycle": 1,
+        "selected_worker": "detection",
+        "score": 1.0,
+        "confidence_after": 0.2063,
+        "novelty_count": 2,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 2,
+        "selected_worker": "correlation",
+        "score": 2.0,
+        "confidence_after": 0.3665,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 3,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.5873,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 4,
+        "selected_worker": "correlation",
+        "score": 1.4,
+        "confidence_after": 0.76,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 5,
+        "selected_worker": "response",
+        "score": 0.95,
+        "confidence_after": 0.8523,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      }
+    ],
+    "final_status": "terminated",
+    "termination_classification": "uncalibrated_heuristic"
+  },
+  {
+    "run_id": "long_run_duplicate_heavy_telemetry",
+    "condition": "duplicate_heavy_telemetry",
+    "cycles": [
+      {
+        "cycle": 1,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1,
+        "novelty_count": 0,
+        "duplicate_count": 3,
+        "is_replanning": false,
+        "stagnation_cycles": 1,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 2,
+        "selected_worker": "detection",
+        "score": 0.2,
+        "confidence_after": 0.1,
+        "novelty_count": 0,
+        "duplicate_count": 3,
+        "is_replanning": false,
+        "stagnation_cycles": 2,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 3,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1,
+        "novelty_count": 0,
+        "duplicate_count": 3,
+        "is_replanning": false,
+        "stagnation_cycles": 3,
+        "has_contradictions": false
+      }
+    ],
+    "final_status": "terminated",
+    "termination_classification": "stagnation_escalation"
+  },
+  {
+    "run_id": "long_run_contradictory_telemetry",
+    "condition": "contradictory_telemetry",
+    "cycles": [
+      {
+        "cycle": 1,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.0631,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 2,
+        "selected_worker": "investigation",
+        "score": 0.225,
+        "confidence_after": 0.0393,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 3,
+        "selected_worker": "correlation",
+        "score": 2.0,
+        "confidence_after": 0.0242,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 4,
+        "selected_worker": "investigation",
+        "score": 0.9,
+        "confidence_after": 0.0148,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 5,
+        "selected_worker": "correlation",
+        "score": 4.0,
+        "confidence_after": 0.009,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 6,
+        "selected_worker": "correlation",
+        "score": 1.25,
+        "confidence_after": 0.0055,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 7,
+        "selected_worker": "investigation",
+        "score": 0.9,
+        "confidence_after": 0.0033,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 8,
+        "selected_worker": "correlation",
+        "score": 7.0,
+        "confidence_after": 0.002,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 9,
+        "selected_worker": "correlation",
+        "score": 2.0,
+        "confidence_after": 0.0012,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 10,
+        "selected_worker": "investigation",
+        "score": 0.9,
+        "confidence_after": 0.0007,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 11,
+        "selected_worker": "correlation",
+        "score": 10.0,
+        "confidence_after": 0.0005,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 12,
+        "selected_worker": "correlation",
+        "score": 2.75,
+        "confidence_after": 0.0003,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 13,
+        "selected_worker": "investigation",
+        "score": 0.9,
+        "confidence_after": 0.0002,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      },
+      {
+        "cycle": 14,
+        "selected_worker": "correlation",
+        "score": 13.0,
+        "confidence_after": 0.0001,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": true
+      }
+    ],
+    "final_status": "terminated",
+    "termination_classification": "safety_bound"
+  },
+  {
+    "run_id": "long_run_ambiguous_telemetry",
+    "condition": "ambiguous_telemetry",
+    "cycles": [
+      {
+        "cycle": 1,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1046,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 2,
+        "selected_worker": "detection",
+        "score": 0.2,
+        "confidence_after": 0.1094,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 3,
+        "selected_worker": "correlation",
+        "score": 2.0,
+        "confidence_after": 0.1143,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 4,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1195,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 5,
+        "selected_worker": "correlation",
+        "score": 4.0,
+        "confidence_after": 0.1249,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 6,
+        "selected_worker": "correlation",
+        "score": 1.25,
+        "confidence_after": 0.1304,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 7,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1362,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 8,
+        "selected_worker": "correlation",
+        "score": 7.0,
+        "confidence_after": 0.1422,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 9,
+        "selected_worker": "correlation",
+        "score": 2.0,
+        "confidence_after": 0.1484,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 10,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1548,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 11,
+        "selected_worker": "correlation",
+        "score": 10.0,
+        "confidence_after": 0.1615,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 12,
+        "selected_worker": "correlation",
+        "score": 2.75,
+        "confidence_after": 0.1684,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 13,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1755,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 14,
+        "selected_worker": "correlation",
+        "score": 13.0,
+        "confidence_after": 0.1828,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      }
+    ],
+    "final_status": "terminated",
+    "termination_classification": "safety_bound"
+  },
+  {
+    "run_id": "long_run_zero_telemetry",
+    "condition": "zero_telemetry",
+    "cycles": [
+      {
+        "cycle": 1,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 1,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 2,
+        "selected_worker": "investigation",
+        "score": 0.2,
+        "confidence_after": 0.1,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 2,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 3,
+        "selected_worker": "detection",
+        "score": 0.05,
+        "confidence_after": 0.1,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 3,
+        "has_contradictions": false
+      }
+    ],
+    "final_status": "terminated",
+    "termination_classification": "stagnation_escalation"
+  },
+  {
+    "run_id": "long_run_intermittent_worker_failures",
+    "condition": "intermittent_worker_failures",
+    "cycles": [
+      {
+        "cycle": 1,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1195,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 2,
+        "selected_worker": "detection",
+        "score": 0.2,
+        "confidence_after": 0.1195,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": true,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 3,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1422,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 4,
+        "selected_worker": "correlation",
+        "score": 2.0,
+        "confidence_after": 0.1422,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": true,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 5,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1684,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 6,
+        "selected_worker": "correlation",
+        "score": 3.0,
+        "confidence_after": 0.1684,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": true,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 7,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.1983,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 8,
+        "selected_worker": "correlation",
+        "score": 4.0,
+        "confidence_after": 0.1983,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": true,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 9,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.232,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 10,
+        "selected_worker": "correlation",
+        "score": 5.0,
+        "confidence_after": 0.232,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": true,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 11,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.2695,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 12,
+        "selected_worker": "correlation",
+        "score": 6.0,
+        "confidence_after": 0.2695,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": true,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 13,
+        "selected_worker": "investigation",
+        "score": 0.8,
+        "confidence_after": 0.3106,
+        "novelty_count": 1,
+        "duplicate_count": 0,
+        "is_replanning": false,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      },
+      {
+        "cycle": 14,
+        "selected_worker": "correlation",
+        "score": 7.0,
+        "confidence_after": 0.3106,
+        "novelty_count": 0,
+        "duplicate_count": 0,
+        "is_replanning": true,
+        "stagnation_cycles": 0,
+        "has_contradictions": false
+      }
+    ],
+    "final_status": "terminated",
+    "termination_classification": "safety_bound"
+  }
+]

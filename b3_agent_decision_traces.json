@@ -1,0 +1,458 @@
+[
+  {
+    "cycle": 1,
+    "planner_state_summary": {
+      "investigation_id": "trace_state_1",
+      "confidence": 0.1,
+      "evidence_count": 0,
+      "graph_density": 0.0,
+      "has_unresolved_contradictions": false,
+      "has_confirmed_hypothesis": false,
+      "has_formulated_response": false,
+      "is_replanning": false,
+      "last_worker": null,
+      "worker_history": []
+    },
+    "candidate_workers": [
+      "detection",
+      "correlation",
+      "investigation",
+      "reporting",
+      "response"
+    ],
+    "base_utilities": {
+      "detection": 1.0,
+      "correlation": 0.0,
+      "investigation": 0.8,
+      "reporting": 0.0,
+      "response": 0.0
+    },
+    "history_penalties": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 1.0,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "replan_modifiers": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 1.0,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "contradiction_modifiers": {
+      "reporting": 1.0,
+      "investigation": 1.0,
+      "detection": 1.0,
+      "correlation": 1.0,
+      "response": 1.0
+    },
+    "final_utilities": {
+      "detection": 1.0,
+      "correlation": 0.0,
+      "investigation": 0.8,
+      "reporting": 0.0,
+      "response": 0.0
+    },
+    "selection_method": "DETERMINISTIC_STATE_DRIVEN",
+    "randomness_used": false,
+    "random_seed": null,
+    "selected_worker": "detection",
+    "selection_rationale": "Selected 'detection' (Score: 1.0000, Raw: 1.0000, RepeatPenalty: 1.0)."
+  },
+  {
+    "cycle": 2,
+    "planner_state_summary": {
+      "investigation_id": "trace_state_2",
+      "confidence": 0.25,
+      "evidence_count": 4,
+      "graph_density": 0.1,
+      "has_unresolved_contradictions": false,
+      "has_confirmed_hypothesis": false,
+      "has_formulated_response": false,
+      "is_replanning": false,
+      "last_worker": "detection",
+      "worker_history": [
+        "detection"
+      ]
+    },
+    "candidate_workers": [
+      "detection",
+      "correlation",
+      "investigation",
+      "reporting",
+      "response"
+    ],
+    "base_utilities": {
+      "detection": 0.05,
+      "correlation": 3.6,
+      "investigation": 0.8,
+      "reporting": 0.0,
+      "response": 0.0
+    },
+    "history_penalties": {
+      "detection": 0.25,
+      "correlation": 1.0,
+      "investigation": 1.0,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "replan_modifiers": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 1.0,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "contradiction_modifiers": {
+      "reporting": 1.0,
+      "investigation": 1.0,
+      "detection": 1.0,
+      "correlation": 1.0,
+      "response": 1.0
+    },
+    "final_utilities": {
+      "detection": 0.0125,
+      "correlation": 3.6,
+      "investigation": 0.8,
+      "reporting": 0.0,
+      "response": 0.0
+    },
+    "selection_method": "DETERMINISTIC_STATE_DRIVEN",
+    "randomness_used": false,
+    "random_seed": null,
+    "selected_worker": "correlation",
+    "selection_rationale": "Selected 'correlation' (Score: 3.6000, Raw: 3.6000, RepeatPenalty: 1.0)."
+  },
+  {
+    "cycle": 3,
+    "planner_state_summary": {
+      "investigation_id": "trace_state_3",
+      "confidence": 0.4,
+      "evidence_count": 6,
+      "graph_density": 0.6,
+      "has_unresolved_contradictions": false,
+      "has_confirmed_hypothesis": false,
+      "has_formulated_response": false,
+      "is_replanning": false,
+      "last_worker": "correlation",
+      "worker_history": [
+        "detection",
+        "correlation"
+      ]
+    },
+    "candidate_workers": [
+      "detection",
+      "correlation",
+      "investigation",
+      "reporting",
+      "response"
+    ],
+    "base_utilities": {
+      "detection": 0.05,
+      "correlation": 2.4,
+      "investigation": 0.6,
+      "reporting": 0.0,
+      "response": 0.0
+    },
+    "history_penalties": {
+      "detection": 1.0,
+      "correlation": 0.25,
+      "investigation": 1.0,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "replan_modifiers": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 1.0,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "contradiction_modifiers": {
+      "reporting": 1.0,
+      "investigation": 1.0,
+      "detection": 1.0,
+      "correlation": 1.0,
+      "response": 1.0
+    },
+    "final_utilities": {
+      "detection": 0.05,
+      "correlation": 0.6,
+      "investigation": 0.6,
+      "reporting": 0.0,
+      "response": 0.0
+    },
+    "selection_method": "DETERMINISTIC_STATE_DRIVEN",
+    "randomness_used": false,
+    "random_seed": null,
+    "selected_worker": "correlation",
+    "selection_rationale": "Selected 'correlation' (Score: 0.6000, Raw: 2.4000, RepeatPenalty: 0.25)."
+  },
+  {
+    "cycle": 4,
+    "planner_state_summary": {
+      "investigation_id": "trace_state_4",
+      "confidence": 0.88,
+      "evidence_count": 8,
+      "graph_density": 0.8,
+      "has_unresolved_contradictions": true,
+      "has_confirmed_hypothesis": false,
+      "has_formulated_response": false,
+      "is_replanning": false,
+      "last_worker": "investigation",
+      "worker_history": [
+        "detection",
+        "correlation",
+        "investigation"
+      ]
+    },
+    "candidate_workers": [
+      "detection",
+      "correlation",
+      "investigation",
+      "reporting",
+      "response"
+    ],
+    "base_utilities": {
+      "detection": 0.05,
+      "correlation": 1.6,
+      "investigation": 0.9,
+      "reporting": 0.0,
+      "response": 0.0
+    },
+    "history_penalties": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 0.25,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "replan_modifiers": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 1.0,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "contradiction_modifiers": {
+      "reporting": 0.0,
+      "investigation": 0.9,
+      "detection": 1.0,
+      "correlation": 1.0,
+      "response": 1.0
+    },
+    "final_utilities": {
+      "detection": 0.05,
+      "correlation": 1.6,
+      "investigation": 0.225,
+      "reporting": 0.0,
+      "response": 0.0
+    },
+    "selection_method": "DETERMINISTIC_STATE_DRIVEN",
+    "randomness_used": false,
+    "random_seed": null,
+    "selected_worker": "correlation",
+    "selection_rationale": "Selected 'correlation' (Score: 1.6000, Raw: 1.6000, RepeatPenalty: 1.0)."
+  },
+  {
+    "cycle": 5,
+    "planner_state_summary": {
+      "investigation_id": "trace_state_5",
+      "confidence": 0.55,
+      "evidence_count": 8,
+      "graph_density": 0.0,
+      "has_unresolved_contradictions": false,
+      "has_confirmed_hypothesis": true,
+      "has_formulated_response": false,
+      "is_replanning": false,
+      "last_worker": "investigation",
+      "worker_history": [
+        "detection",
+        "correlation",
+        "investigation"
+      ]
+    },
+    "candidate_workers": [
+      "detection",
+      "correlation",
+      "investigation",
+      "reporting",
+      "response"
+    ],
+    "base_utilities": {
+      "detection": 0.05,
+      "correlation": 8.0,
+      "investigation": 0.8,
+      "reporting": 0.0,
+      "response": 0.95
+    },
+    "history_penalties": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 0.25,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "replan_modifiers": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 1.0,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "contradiction_modifiers": {
+      "reporting": 1.0,
+      "investigation": 1.0,
+      "detection": 1.0,
+      "correlation": 1.0,
+      "response": 1.0
+    },
+    "final_utilities": {
+      "detection": 0.05,
+      "correlation": 8.0,
+      "investigation": 0.2,
+      "reporting": 0.0,
+      "response": 0.95
+    },
+    "selection_method": "DETERMINISTIC_STATE_DRIVEN",
+    "randomness_used": false,
+    "random_seed": null,
+    "selected_worker": "correlation",
+    "selection_rationale": "Selected 'correlation' (Score: 8.0000, Raw: 8.0000, RepeatPenalty: 1.0)."
+  },
+  {
+    "cycle": 6,
+    "planner_state_summary": {
+      "investigation_id": "trace_state_6",
+      "confidence": 0.35,
+      "evidence_count": 5,
+      "graph_density": 0.0,
+      "has_unresolved_contradictions": false,
+      "has_confirmed_hypothesis": false,
+      "has_formulated_response": false,
+      "is_replanning": true,
+      "last_worker": "investigation",
+      "worker_history": [
+        "correlation",
+        "investigation",
+        "investigation"
+      ]
+    },
+    "candidate_workers": [
+      "detection",
+      "correlation",
+      "investigation",
+      "reporting",
+      "response"
+    ],
+    "base_utilities": {
+      "detection": 0.05,
+      "correlation": 5.0,
+      "investigation": 0.8,
+      "reporting": 0.0,
+      "response": 0.0
+    },
+    "history_penalties": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 0.0,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "replan_modifiers": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 0.0,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "contradiction_modifiers": {
+      "reporting": 1.0,
+      "investigation": 1.0,
+      "detection": 1.0,
+      "correlation": 1.0,
+      "response": 1.0
+    },
+    "final_utilities": {
+      "detection": 0.05,
+      "correlation": 5.0,
+      "investigation": 0.0,
+      "reporting": 0.0,
+      "response": 0.0
+    },
+    "selection_method": "DETERMINISTIC_STATE_DRIVEN",
+    "randomness_used": false,
+    "random_seed": null,
+    "selected_worker": "correlation",
+    "selection_rationale": "[REPLAN] Pivoted from 'investigation' to 'correlation'. Selected 'correlation' (Score: 5.0000, Raw: 5.0000, RepeatPenalty: 1.0)."
+  },
+  {
+    "cycle": 7,
+    "planner_state_summary": {
+      "investigation_id": "trace_state_7",
+      "confidence": 0.92,
+      "evidence_count": 10,
+      "graph_density": 0.0,
+      "has_unresolved_contradictions": false,
+      "has_confirmed_hypothesis": true,
+      "has_formulated_response": true,
+      "is_replanning": false,
+      "last_worker": "response",
+      "worker_history": [
+        "detection",
+        "correlation",
+        "investigation",
+        "response"
+      ]
+    },
+    "candidate_workers": [
+      "detection",
+      "correlation",
+      "investigation",
+      "reporting",
+      "response"
+    ],
+    "base_utilities": {
+      "detection": 0.05,
+      "correlation": 10.0,
+      "investigation": 0.8,
+      "reporting": 0.97,
+      "response": 0.05
+    },
+    "history_penalties": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 1.0,
+      "reporting": 1.0,
+      "response": 0.25
+    },
+    "replan_modifiers": {
+      "detection": 1.0,
+      "correlation": 1.0,
+      "investigation": 1.0,
+      "reporting": 1.0,
+      "response": 1.0
+    },
+    "contradiction_modifiers": {
+      "reporting": 1.0,
+      "investigation": 1.0,
+      "detection": 1.0,
+      "correlation": 1.0,
+      "response": 1.0
+    },
+    "final_utilities": {
+      "detection": 0.05,
+      "correlation": 10.0,
+      "investigation": 0.8,
+      "reporting": 0.97,
+      "response": 0.0125
+    },
+    "selection_method": "DETERMINISTIC_STATE_DRIVEN",
+    "randomness_used": false,
+    "random_seed": null,
+    "selected_worker": "correlation",
+    "selection_rationale": "Selected 'correlation' (Score: 10.0000, Raw: 10.0000, RepeatPenalty: 1.0)."
+  }
+]

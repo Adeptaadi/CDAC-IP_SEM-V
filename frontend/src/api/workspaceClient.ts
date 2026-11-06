@@ -81,13 +81,13 @@ export const workspaceClient = {
    * Creates a new investigation directly
    * POST /api/investigations
    */
-  createInvestigation: (title: string, initialGoal?: string): Promise<{ investigation_id: string; title: string }> => {
+  createInvestigation: (title: string, currentGoal?: string): Promise<{ investigation_id: string; title: string }> => {
     return request<{ investigation_id: string; title: string }>({
       method: 'POST',
       url: '/api/investigations',
       data: {
         title,
-        initial_goal: initialGoal || 'Autonomous investigation of anomalous security signals',
+        current_goal: currentGoal || 'Autonomous investigation of anomalous security signals',
       },
     });
   },

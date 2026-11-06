@@ -1,0 +1,47 @@
+{
+  "static_code_inspection": {
+    "suspicious_patterns_checked": {
+      "workers = [": {
+        "in_selection": false,
+        "in_engine": false
+      },
+      "workers[cycle": {
+        "in_selection": false,
+        "in_engine": false
+      },
+      "if cycle == 1": {
+        "in_selection": false,
+        "in_engine": false
+      },
+      "if cycle == 2": {
+        "in_selection": false,
+        "in_engine": false
+      },
+      "if scenario ==": {
+        "in_selection": false,
+        "in_engine": false
+      },
+      "if attack ==": {
+        "in_selection": false,
+        "in_engine": false
+      },
+      "['detection', 'investigation', 'correlation']": {
+        "in_selection": false,
+        "in_engine": false
+      },
+      "['detection', 'correlation', 'investigation']": {
+        "in_selection": false,
+        "in_engine": false
+      }
+    },
+    "has_hardcoded_sequence": false,
+    "has_cycle_number_routing": false,
+    "has_scenario_name_routing": false
+  },
+  "fallback_logic_audit": {
+    "mechanism": "max(candidates, key=raw_scores.get)",
+    "is_utility_based": true,
+    "has_hardcoded_fallback_chain": false
+  },
+  "final_classification": "STATE_DRIVEN_NON_LINEAR"
+}

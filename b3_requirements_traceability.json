@@ -1,0 +1,92 @@
+[
+  {
+    "claim_id": "REQ-01",
+    "requirement": "Deterministic SHA-256 evidence content fingerprinting & semantic deduplication",
+    "source_document": "PRD \u00a73.1 / TDD \u00a74.2",
+    "implementation_location": "backend/app/models/evidence.py:compute_evidence_fingerprint",
+    "test_coverage": "backend/tests/test_b3_requirements_traceability.py",
+    "runtime_evidence": "Generates 64-character SHA-256 hash matching regardless of whitespace or casing variations.",
+    "status": "VERIFIED"
+  },
+  {
+    "claim_id": "REQ-02",
+    "requirement": "Zero artificial confidence growth on zero-novelty or duplicate cycles",
+    "source_document": "PRD \u00a73.2 / IS \u00a72.1",
+    "implementation_location": "backend/app/planner/confidence.py:ConfidenceEngine.compute_factors",
+    "test_coverage": "backend/tests/test_b3_metrics_mathematical_audit.py",
+    "runtime_evidence": "delta_evidence is strictly 0.0 when novel_evidence_count <= 0; confidence never increases.",
+    "status": "VERIFIED"
+  },
+  {
+    "claim_id": "REQ-03",
+    "requirement": "Contradiction penalty (delta <= -0.24) and hard confidence ceiling at 0.60",
+    "source_document": "IS \u00a71.5 / B0 & B2 Reports",
+    "implementation_location": "backend/app/planner/confidence.py:ConfidenceEngine.update",
+    "test_coverage": "backend/tests/test_b3_metrics_mathematical_audit.py",
+    "runtime_evidence": "When unresolved_contradictions_count > 0, confidence is capped at <= 0.60.",
+    "status": "VERIFIED"
+  },
+  {
+    "claim_id": "REQ-04",
+    "requirement": "Dynamic state-driven capability selection via utility scoring U(w)",
+    "source_document": "TDD \u00a75.3 / ADAPTIVE \u00a72",
+    "implementation_location": "backend/app/planner/selection.py:select_worker",
+    "test_coverage": "backend/tests/test_b3_agent_autonomy.py",
+    "runtime_evidence": "Utilities dynamically balance untriaged events, evidence volume, graph density, and hypotheses.",
+    "status": "VERIFIED"
+  },
+  {
+    "claim_id": "REQ-05",
+    "requirement": "Exponential repeat penalty (0.25^k) preventing worker lock-in",
+    "source_document": "TDD \u00a75.4 / B0 Report",
+    "implementation_location": "backend/app/planner/selection.py:select_worker",
+    "test_coverage": "backend/tests/test_b3_agent_autonomy.py",
+    "runtime_evidence": "Consecutive worker invocations dampened by factor 0.25^k.",
+    "status": "VERIFIED"
+  },
+  {
+    "claim_id": "REQ-06",
+    "requirement": "Stagnation detection at 3 cycles triggering explicit replanning pivot (utility = 0.0)",
+    "source_document": "ADAPTIVE \u00a74 / B1 Report",
+    "implementation_location": "backend/app/planner/engine.py, selection.py",
+    "test_coverage": "backend/tests/test_b3_planner_state_sensitivity.py",
+    "runtime_evidence": "is_replanning sets failing worker utility to 0.0, forcing strategic redirection.",
+    "status": "VERIFIED"
+  },
+  {
+    "claim_id": "REQ-07",
+    "requirement": "Bottom-up telemetry-to-hypothesis generation without gold label leakage",
+    "source_document": "B2 Specification / Report",
+    "implementation_location": "backend/app/hypothesis/discovery.py:BottomUpHypothesisGenerator",
+    "test_coverage": "backend/tests/test_b3_adversarial_leakage.py",
+    "runtime_evidence": "Extracts features from observed events and infers candidate MITRE techniques without attack name.",
+    "status": "VERIFIED"
+  },
+  {
+    "claim_id": "REQ-08",
+    "requirement": "Explicit termination classification (uncalibrated_heuristic, stagnation_escalation, safety_bound)",
+    "source_document": "IS \u00a73.3 / B0 Report",
+    "implementation_location": "backend/app/planner/selection.py:should_terminate",
+    "test_coverage": "backend/tests/test_b3_documentation_conformance.py",
+    "runtime_evidence": "Sets state.termination_classification accurately on all termination conditions.",
+    "status": "VERIFIED"
+  },
+  {
+    "claim_id": "REQ-09",
+    "requirement": "Multi-agent capability diversity across 5 functional worker roles",
+    "source_document": "PRD \u00a74.1 / TDD \u00a73.2",
+    "implementation_location": "backend/app/workers/*",
+    "test_coverage": "backend/tests/test_b3_agent_autonomy.py",
+    "runtime_evidence": "Detection, Correlation, Investigation, Response, and Reporting execute distinct contracts.",
+    "status": "VERIFIED"
+  },
+  {
+    "claim_id": "REQ-10",
+    "requirement": "Legacy 2026 Momentum productivity tool documentation",
+    "source_document": "docs/reference/*",
+    "implementation_location": "None (Historical template)",
+    "test_coverage": "backend/tests/test_b3_requirements_traceability.py",
+    "runtime_evidence": "Files reference 2026 Momentum productivity tool; superseded by Sentinel core specs in docs/.",
+    "status": "DOCUMENTED_BUT_NOT_IMPLEMENTED"
+  }
+]

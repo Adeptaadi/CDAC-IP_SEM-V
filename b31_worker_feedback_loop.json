@@ -1,0 +1,63 @@
+{
+  "detection": {
+    "causal_chain_verified": true,
+    "input_state": {
+      "evidence_count": 0,
+      "correlation_utility": 0.0
+    },
+    "output_state": {
+      "evidence_count": 3,
+      "correlation_utility": 1.2
+    },
+    "feedback_mechanism": "Evidence records persisted; load_state_snapshot counts evidence >= 2; select_worker scales correlation utility."
+  },
+  "correlation": {
+    "causal_chain_verified": true,
+    "input_state": {
+      "graph_density": 0.6,
+      "correlation_utility": 1.2
+    },
+    "output_state": {
+      "graph_density": 1.0,
+      "correlation_utility": 0.0
+    },
+    "feedback_mechanism": "Correlation updates graph density; select_worker dampens correlation utility as graph approaches saturation."
+  },
+  "investigation": {
+    "causal_chain_verified": true,
+    "input_state": {
+      "has_confirmed_hypothesis": false,
+      "response_utility": 0.0
+    },
+    "output_state": {
+      "has_confirmed_hypothesis": true,
+      "response_utility": 0.95
+    },
+    "feedback_mechanism": "Investigation sets hypothesis status='confirmed'; load_state_snapshot detects confirmed hypothesis; select_worker surges response utility to 0.95."
+  },
+  "response": {
+    "causal_chain_verified": true,
+    "input_state": {
+      "has_formulated_response": false,
+      "response_utility": 0.95
+    },
+    "output_state": {
+      "has_formulated_response": true,
+      "response_utility": 0.05,
+      "reporting_utility": 0.95
+    },
+    "feedback_mechanism": "Response formulations mark has_formulated_response=True; response utility collapses to 0.05; reporting is prioritized for final dossier."
+  },
+  "reporting": {
+    "causal_chain_verified": true,
+    "input_state": {
+      "confidence": 0.9,
+      "reporting_ready": true
+    },
+    "output_state": {
+      "report_generated": true,
+      "status": "success"
+    },
+    "feedback_mechanism": "Reporting generates 7-section report without replacing investigation or bypassing evidence grounding."
+  }
+}

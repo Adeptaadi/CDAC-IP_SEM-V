@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ShieldAlert,
@@ -6,7 +6,9 @@ import {
   XCircle,
   AlertTriangle,
   RotateCw,
+  Play,
   ChevronRight,
+  RefreshCw,
 } from 'lucide-react';
 import { workspaceClient } from '../api/workspaceClient';
 import { reviewClient } from '../api/reviewClient';
@@ -34,6 +36,7 @@ export const InvestigatePage: React.FC = () => {
 
   // Review & Execution Action State
   const [isExecutingStep, setIsExecutingStep] = useState<boolean>(false);
+  const [isRunningAutonomous, setIsRunningAutonomous] = useState<boolean>(false);
   const [isSubmittingReview, setIsSubmittingReview] = useState<boolean>(false);
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
   const [selectedReviewDecision, setSelectedReviewDecision] = useState<'approve' | 'reject'>('approve');
@@ -43,8 +46,8 @@ export const InvestigatePage: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const [selectedFinding, setSelectedFinding] = useState<KeyFinding | null>(null);
 
-  const fetchWorkspace = async (investigationId: string) => {
-    setIsLoading(true);
+  const fetchWorkspace = useCallback(async (investigationId: string, silent: boolean = false) => {
+    if (!silent) setIsLoading(true);
     setError(null);
     try {
       const data = await workspaceClient.getWorkspace(investigationId);
@@ -52,9 +55,9 @@ export const InvestigatePage: React.FC = () => {
     } catch (err: any) {
       setError(err.message || 'Failed to load investigation workspace');
     } finally {
-      setIsLoading(false);
+      if (!silent) setIsLoading(false);
     }
-  };
+  }, []);
 
   // If no ID is provided in route, pick the most recent investigation or prompt selection
   useEffect(() => {
@@ -76,19 +79,33 @@ export const InvestigatePage: React.FC = () => {
           setIsLoading(false);
         });
     }
-  }, [routeInvestigationId]);
+  }, [routeInvestigationId, fetchWorkspace, navigate]);
 
   // Handle single autonomous step execution
   const handleExecuteNextStep = async () => {
-    if (!workspace?.threat.investigation_id || isExecutingStep) return;
+    if (!workspace?.threat.investigation_id || isExecutingStep || isRunningAutonomous) return;
     setIsExecutingStep(true);
     try {
       await workspaceClient.executeStep(workspace.threat.investigation_id);
-      await fetchWorkspace(workspace.threat.investigation_id);
+      await fetchWorkspace(workspace.threat.investigation_id, true);
     } catch (err: any) {
       setError(err.message || 'Step execution failed');
     } finally {
       setIsExecutingStep(false);
+    }
+  };
+
+  // Handle continuous autonomous loop run
+  const handleRunAutonomous = async () => {
+    if (!workspace?.threat.investigation_id || isRunningAutonomous || isExecutingStep) return;
+    setIsRunningAutonomous(true);
+    try {
+      await workspaceClient.runAutonomous(workspace.threat.investigation_id, 6);
+      await fetchWorkspace(workspace.threat.investigation_id, true);
+    } catch (err: any) {
+      setError(err.message || 'Autonomous execution failed');
+    } finally {
+      setIsRunningAutonomous(false);
     }
   };
 
@@ -103,7 +120,7 @@ export const InvestigatePage: React.FC = () => {
         analyst_comments: analystComment || 'Authorized via Sentinel Agentic Workspace',
       });
       setReviewModalOpen(false);
-      await fetchWorkspace(workspace.threat.investigation_id);
+      await fetchWorkspace(workspace.threat.investigation_id, true);
     } catch (err: any) {
       setError(err.message || 'Failed to submit review decision');
     } finally {
@@ -174,9 +191,24 @@ export const InvestigatePage: React.FC = () => {
                 <Badge variant={severityBadgeVariant} size="sm">
                   {threat.severity}
                 </Badge>
-                <Badge variant="violet" size="sm">
-                  {threat.status}
-                </Badge>
+                {threat.status === 'investigating' ? (
+                  <Badge variant="info" size="sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse mr-1" />
+                    Investigating
+                  </Badge>
+                ) : threat.status === 'awaiting_review' ? (
+                  <Badge variant="high" size="sm">
+                    Awaiting Review
+                  </Badge>
+                ) : threat.status === 'completed' ? (
+                  <Badge variant="success" size="sm">
+                    Completed
+                  </Badge>
+                ) : (
+                  <Badge variant="neutral" size="sm">
+                    {threat.status}
+                  </Badge>
+                )}
               </div>
               <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono mt-0.5">
                 <span>ID: {threat.investigation_id.slice(0, 8)}...</span>
@@ -193,8 +225,8 @@ export const InvestigatePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Calibrated Confidence & Single-Step Control */}
-          <div className="flex items-center gap-4">
+          {/* Calibrated Confidence & Single-Step / Autonomous Controls */}
+          <div className="flex items-center gap-3">
             <div className="text-right">
               <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
                 Calibrated Confidence
@@ -217,11 +249,32 @@ export const InvestigatePage: React.FC = () => {
               size="sm"
               icon={<RotateCw className="w-3.5 h-3.5" />}
               isLoading={isExecutingStep}
+              disabled={isRunningAutonomous || threat.status === 'completed' || threat.status === 'closed'}
               onClick={handleExecuteNextStep}
               title="Execute single autonomous planner cycle"
             >
               Step Planner
             </Button>
+
+            <Button
+              variant="primary"
+              size="sm"
+              icon={<Play className="w-3.5 h-3.5 fill-current" />}
+              isLoading={isRunningAutonomous}
+              disabled={isExecutingStep || threat.status === 'completed' || threat.status === 'closed'}
+              onClick={handleRunAutonomous}
+              title="Execute continuous autonomous loop until completion or containment"
+            >
+              Run Autonomous
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              icon={<RefreshCw className="w-3.5 h-3.5" />}
+              onClick={() => fetchWorkspace(threat.investigation_id, true)}
+              title="Refresh workspace projection"
+            />
           </div>
         </div>
 

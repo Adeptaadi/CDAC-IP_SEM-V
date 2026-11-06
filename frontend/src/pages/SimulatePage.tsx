@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Zap, Play, CheckCircle2, Sliders } from 'lucide-react';
+import { Zap, Play, CheckCircle2, Sliders, RefreshCw } from 'lucide-react';
 import { datasetClient } from '../api/datasetClient';
-import { workspaceClient } from '../api/workspaceClient';
+import { evaluationClient } from '../api/evaluationClient';
 import { ScenarioMetadata } from '../types/dataset';
 import { Card, CardHeader } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -13,12 +13,12 @@ export const SimulatePage: React.FC = () => {
   const navigate = useNavigate();
   const [scenarios, setScenarios] = useState<ScenarioMetadata[]>([]);
   const [selectedScenarioId, setSelectedScenarioId] = useState<string>('botnet_c2');
-  const [executionMode, setExecutionMode] = useState<'instant' | 'streaming'>('instant');
+  const [executionMode, setExecutionMode] = useState<'instant' | 'step'>('instant');
   const [maxSteps, setMaxSteps] = useState<number>(6);
-  const [replaySpeed, setReplaySpeed] = useState<number>(1.0);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLaunching, setIsLaunching] = useState<boolean>(false);
+  const [launchStatus, setLaunchStatus] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
   const fetchScenarios = async () => {
@@ -44,34 +44,39 @@ export const SimulatePage: React.FC = () => {
   const selectedScenario = scenarios.find((s) => s.scenario_id === selectedScenarioId);
 
   const handleLaunchInvestigation = async () => {
-    if (!selectedScenario) return;
+    if (!selectedScenario || isLaunching) return;
     setIsLaunching(true);
     setError(null);
+    setLaunchStatus('Preparing CSE-CIC-IDS2018 benchmark telemetry...');
 
     try {
-      // 1. Create a new formal Investigation record
-      const title = `Autonomous Hunt: ${selectedScenario.name}`;
-      const invRes = await workspaceClient.createInvestigation(
-        title,
-        `Neutralize and investigate ${selectedScenario.name} (${selectedScenario.scenario_id})`
-      );
-      const newInvId = invRes.investigation_id;
+      // 1. Ensure scenario telemetry files are prepared on disk
+      await datasetClient.prepareScenario(selectedScenario.scenario_id);
 
-      if (executionMode === 'instant') {
-        // Run autonomous loop up to maxSteps
-        await workspaceClient.runAutonomous(newInvId, maxSteps);
-      } else {
-        // Prepare scenario file and load into streaming replayer
-        await datasetClient.prepareScenario(selectedScenario.scenario_id);
-        await datasetClient.loadReplay(selectedScenario.scenario_id, replaySpeed, 50);
-        await datasetClient.startReplay();
+      // 2. Launch scenario through evaluation service to seed telemetry & run Planner
+      setLaunchStatus(
+        executionMode === 'instant'
+          ? `Autonomous Planner executing up to ${maxSteps} planning cycles...`
+          : 'Initializing scenario investigation with baseline telemetry and initial cycle...'
+      );
+
+      const cyclesToRun = executionMode === 'instant' ? maxSteps : 1;
+      const evalRes = await evaluationClient.triggerEvaluationRun(
+        selectedScenario.scenario_id,
+        cyclesToRun
+      );
+
+      const newInvId = evalRes?.result?.investigation?.investigation_id;
+      if (!newInvId) {
+        throw new Error('Backend did not return an investigation ID for the launched scenario');
       }
 
-      // 2. Navigate directly to the live investigation workspace
+      setLaunchStatus('Navigating to Agentic Investigation Workspace...');
       navigate(`/investigate/${newInvId}`);
     } catch (err: any) {
       setError(err.message || 'Failed to launch investigation');
       setIsLaunching(false);
+      setLaunchStatus('');
     }
   };
 
@@ -227,7 +232,7 @@ export const SimulatePage: React.FC = () => {
                 <div>
                   <label className="text-zinc-400 font-medium block mb-1.5">Execution Mode</label>
                   <div className="space-y-1.5">
-                    <label className={`flex items-start gap-2 p-2 rounded border cursor-pointer transition-colors ${
+                    <label className={`flex items-start gap-2 p-2.5 rounded border cursor-pointer transition-colors ${
                       executionMode === 'instant' ? 'bg-blue-950/40 border-blue-500/60 text-zinc-200' : 'border-zinc-800 text-zinc-400'
                     }`}>
                       <input
@@ -235,66 +240,68 @@ export const SimulatePage: React.FC = () => {
                         name="execMode"
                         checked={executionMode === 'instant'}
                         onChange={() => setExecutionMode('instant')}
-                        className="mt-0.5"
+                        className="mt-0.5 accent-blue-500"
                       />
                       <div>
-                        <div className="font-semibold text-zinc-200 text-xs">Autonomous Investigation</div>
-                        <div className="text-[11px] text-zinc-400">Runs autonomous Planner loop until confidence or max cycles.</div>
+                        <div className="font-semibold text-zinc-200 text-xs">Autonomous Investigation (Full Loop)</div>
+                        <div className="text-[11px] text-zinc-400 mt-0.5">
+                          Seeds benchmark telemetry and executes the autonomous Planner loop for up to {maxSteps} cycles until confidence or containment.
+                        </div>
                       </div>
                     </label>
 
-                    <label className={`flex items-start gap-2 p-2 rounded border cursor-pointer transition-colors ${
-                      executionMode === 'streaming' ? 'bg-blue-950/40 border-blue-500/60 text-zinc-200' : 'border-zinc-800 text-zinc-400'
+                    <label className={`flex items-start gap-2 p-2.5 rounded border cursor-pointer transition-colors ${
+                      executionMode === 'step' ? 'bg-blue-950/40 border-blue-500/60 text-zinc-200' : 'border-zinc-800 text-zinc-400'
                     }`}>
                       <input
                         type="radio"
                         name="execMode"
-                        checked={executionMode === 'streaming'}
-                        onChange={() => setExecutionMode('streaming')}
-                        className="mt-0.5"
+                        checked={executionMode === 'step'}
+                        onChange={() => setExecutionMode('step')}
+                        className="mt-0.5 accent-blue-500"
                       />
                       <div>
-                        <div className="font-semibold text-zinc-200 text-xs">Streaming Replayer</div>
-                        <div className="text-[11px] text-zinc-400">Stream events into ingest queue via live replayer instance.</div>
+                        <div className="font-semibold text-zinc-200 text-xs">Interactive Step-by-Step</div>
+                        <div className="text-[11px] text-zinc-400 mt-0.5">
+                          Seeds benchmark telemetry and executes cycle 1, then opens the workspace for manual cycle-by-cycle stepping.
+                        </div>
                       </div>
                     </label>
                   </div>
                 </div>
 
                 {/* Sub-parameters */}
-                {executionMode === 'instant' ? (
-                  <div>
-                    <div className="flex items-center justify-between text-zinc-400 mb-1">
+                {executionMode === 'instant' && (
+                  <div className="bg-zinc-950/60 p-3 rounded border border-zinc-800/80 space-y-2">
+                    <div className="flex items-center justify-between text-zinc-400 text-xs">
                       <span>Max Planning Cycles:</span>
-                      <span className="font-mono text-zinc-200">{maxSteps} cycles</span>
+                      <span className="font-mono text-blue-400 font-semibold">{maxSteps} cycles</span>
                     </div>
                     <input
                       type="range"
-                      min="1"
-                      max="12"
+                      min="2"
+                      max="10"
                       value={maxSteps}
                       onChange={(e) => setMaxSteps(Number(e.target.value))}
-                      className="w-full accent-blue-500"
+                      className="w-full accent-blue-500 cursor-pointer"
                     />
+                    <div className="flex justify-between text-[10px] font-mono text-zinc-500">
+                      <span>2 cycles (Fast)</span>
+                      <span>6 cycles (Standard)</span>
+                      <span>10 cycles (Deep)</span>
+                    </div>
                   </div>
-                ) : (
-                  <div>
-                    <label className="text-zinc-400 font-medium block mb-1">Replay Speed Multiplier</label>
-                    <div className="grid grid-cols-4 gap-1.5">
-                      {[1.0, 2.0, 5.0, 10.0].map((s) => (
-                        <button
-                          key={s}
-                          type="button"
-                          onClick={() => setReplaySpeed(s)}
-                          className={`py-1 text-xs font-mono rounded border text-center ${
-                            replaySpeed === s
-                              ? 'bg-blue-600 text-white border-blue-500'
-                              : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-750'
-                          }`}
-                        >
-                          {s}x
-                        </button>
-                      ))}
+                )}
+
+                {/* Launch Status Progress Indicator */}
+                {isLaunching && (
+                  <div className="p-3 bg-blue-950/30 border border-blue-800/60 rounded-md text-xs space-y-2 animate-pulse">
+                    <div className="flex items-center gap-2 text-blue-300 font-medium">
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-400" />
+                      <span>{launchStatus}</span>
+                    </div>
+                    <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-blue-500 h-full w-2/3 animate-indeterminate" />
                     </div>
                   </div>
                 )}
@@ -309,7 +316,11 @@ export const SimulatePage: React.FC = () => {
                     isLoading={isLaunching}
                     onClick={handleLaunchInvestigation}
                   >
-                    Launch Investigation
+                    {isLaunching
+                      ? 'Executing Scenario Hunt...'
+                      : executionMode === 'instant'
+                      ? 'Launch Autonomous Hunt'
+                      : 'Initialize Step Investigation'}
                   </Button>
                 </div>
               </div>

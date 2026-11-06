@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-05T11:11:51.705131",
+  "timestamp": "2026-11-05T13:13:38.175203",
   "aggregate_metrics": {
     "total_evaluation_runs": 5,
     "completed_runs": 5,
@@ -13,22 +13,22 @@
       "web_attacks"
     ],
     "average_planning_cycles": 6.0,
-    "average_investigation_duration_ms": 91.9,
-    "average_confidence_delta": 0.4501,
-    "average_evidence_per_investigation": 24.4,
-    "total_replanning_events": 0,
-    "total_capability_revisits": 0,
+    "average_investigation_duration_ms": 96.8,
+    "average_confidence_delta": 0.1006,
+    "average_evidence_per_investigation": 16.6,
+    "total_replanning_events": 9,
+    "total_capability_revisits": 14,
     "overall_agent_success_rate": 100.0,
     "overall_agent_success_sample": "100.0% (30/30 executions)",
-    "most_frequently_selected_capability": "response.execute",
-    "most_frequently_revisited_capability": null,
+    "most_frequently_selected_capability": "investigation.execute",
+    "most_frequently_revisited_capability": "investigation.execute",
     "highest_evidence_yield_capability": "response.execute",
     "sample_size_population_statement": "Metrics aggregated from 5 completed evaluation run(s) across 5 unique benchmark scenario(s) (CSE-CIC-IDS2018 Profile).",
-    "generated_at": "2026-11-05T11:11:51.705131+00:00"
+    "generated_at": "2026-11-05T13:13:38.175203+00:00"
   },
   "scenario_results": [
     {
-      "evaluation_run_id": "aeacb93f-d3da-4c73-b0a7-c23528387af5",
+      "evaluation_run_id": "88040b2f-43ed-4ce3-9671-d39b237ee96a",
       "scenario": {
         "scenario_id": "infiltration",
         "name": "Infiltration & Lateral Movement",
@@ -39,56 +39,61 @@
       },
       "status": "completed",
       "timing": {
-        "started_at": "2026-11-05T11:11:51.214215+00:00",
-        "completed_at": "2026-11-05T11:11:51.552382+00:00",
-        "total_duration_ms": 338.17
+        "started_at": "2026-11-05T13:13:37.660852+00:00",
+        "completed_at": "2026-11-05T13:13:38.009335+00:00",
+        "total_duration_ms": 348.48
       },
       "investigation": {
-        "investigation_id": "c972822e-8251-460c-b9fb-b35bb338051d",
+        "investigation_id": "61acbb48-81ca-4cd9-9fae-4ec62987ba5e",
         "initial_confidence": 0.15,
-        "final_confidence": 0.6121,
-        "confidence_delta": 0.4621,
+        "final_confidence": 0.2428,
+        "confidence_delta": 0.0928,
         "planning_cycles": 6,
         "termination_reason": "max_cycles_reached",
+        "termination_classification": "safety_bound",
         "final_status": "investigating"
       },
       "planner": {
         "total_selections": 6,
-        "unique_capabilities": 2,
-        "capability_diversity": 0.3333,
-        "replanning_events": 0,
-        "capability_revisits": 0,
-        "revisit_sequences": [],
+        "unique_capabilities": 3,
+        "capability_diversity": 0.5,
+        "replanning_events": 2,
+        "capability_revisits": 3,
+        "revisit_sequences": [
+          "response.execute -> investigation.execute",
+          "detection.execute -> response.execute",
+          "response.execute -> investigation.execute"
+        ],
         "confidence_progression": [
           {
             "cycle": 1,
-            "confidence": 0.1916,
-            "delta": 0.0416
+            "confidence": 0.1751,
+            "delta": 0.0251
           },
           {
             "cycle": 2,
-            "confidence": 0.2537,
-            "delta": 0.0621
+            "confidence": 0.2159,
+            "delta": 0.0408
           },
           {
             "cycle": 3,
-            "confidence": 0.3281,
-            "delta": 0.0744
+            "confidence": 0.2159,
+            "delta": 0.0
           },
           {
             "cycle": 4,
-            "confidence": 0.4151,
-            "delta": 0.087
+            "confidence": 0.2428,
+            "delta": 0.0269
           },
           {
             "cycle": 5,
-            "confidence": 0.5118,
-            "delta": 0.0967
+            "confidence": 0.2428,
+            "delta": 0.0
           },
           {
             "cycle": 6,
-            "confidence": 0.6121,
-            "delta": 0.1003
+            "confidence": 0.2428,
+            "delta": 0.0
           }
         ],
         "execution_trace": [
@@ -100,81 +105,105 @@
             "observation": "Investigation worker validated hypothesis 'Malicious Macro Execution with Encoded PowerShell Reverse Shell' against RAG knowledge base. Stance: SUPPORTS (Confidence: 0.88).",
             "unresolved_question": "Evaluate telemetry anomalies for Infiltration & Lateral Movement",
             "confidence_before": 0.15,
-            "confidence_after": 0.1916,
-            "confidence_delta": 0.0416,
-            "latency_ms": 213,
+            "confidence_after": 0.1751,
+            "confidence_delta": 0.0251,
+            "latency_ms": 209,
             "evidence_gained": 1,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 1,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 2,
             "selected_worker": "response",
             "selected_capability": "response.execute",
-            "utility_score": 1.0,
+            "utility_score": 0.95,
             "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.1916,
-            "confidence_after": 0.2537,
-            "confidence_delta": 0.0621,
+            "confidence_before": 0.1751,
+            "confidence_after": 0.2159,
+            "confidence_delta": 0.0408,
             "latency_ms": 0,
             "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 4,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 3,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
+            "selected_worker": "investigation",
+            "selected_capability": "investigation.execute",
+            "utility_score": 0.12,
+            "observation": "Investigation worker validated hypothesis 'Malicious Macro Execution with Encoded PowerShell Reverse Shell' against RAG knowledge base. Stance: SUPPORTS (Confidence: 0.88).",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.2537,
-            "confidence_after": 0.3281,
-            "confidence_delta": 0.0744,
-            "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "confidence_before": 0.2159,
+            "confidence_after": 0.2159,
+            "confidence_delta": 0.0,
+            "latency_ms": 1,
+            "evidence_gained": 1,
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 1,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 4,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
+            "selected_worker": "detection",
+            "selected_capability": "detection.execute",
+            "utility_score": 0.05,
+            "observation": "[REPLAN] Pivoted from 'investigation' to 'detection'. Selected 'detection' (Score: 0.0500, Raw: 0.0500, RepeatPenalty: 1.0).",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.3281,
-            "confidence_after": 0.4151,
-            "confidence_delta": 0.087,
+            "confidence_before": 0.2159,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0269,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 1,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "replan",
+            "is_replanning": true,
+            "replan_reason": "Strategy 'investigation' yielded no novel evidence for 1 cycle(s). Initiating explicit strategy pivot."
           },
           {
             "cycle": 5,
             "selected_worker": "response",
             "selected_capability": "response.execute",
-            "utility_score": 1.0,
+            "utility_score": 0.95,
             "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
-            "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.4151,
-            "confidence_after": 0.5118,
-            "confidence_delta": 0.0967,
+            "unresolved_question": "Proceed to investigation following detection findings",
+            "confidence_before": 0.2428,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
             "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 4,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 6,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
-            "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.5118,
-            "confidence_after": 0.6121,
-            "confidence_delta": 0.1003,
+            "selected_worker": "investigation",
+            "selected_capability": "investigation.execute",
+            "utility_score": 0.12,
+            "observation": "[REPLAN] Pivoted from 'response' to 'investigation'. Selected 'investigation' (Score: 0.1200, Raw: 0.1200, RepeatPenalty: 1.0).",
+            "unresolved_question": "Proceed to investigation following detection findings",
+            "confidence_before": 0.2428,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 1,
+            "decision_type": "replan",
+            "is_replanning": true,
+            "replan_reason": "Strategy 'response' yielded no novel evidence for 1 cycle(s). Initiating explicit strategy pivot."
           }
         ]
       },
@@ -188,37 +217,52 @@
           {
             "worker_type": "investigation",
             "capability_name": "investigation.execute",
+            "total_executions": 3,
+            "successful_executions": 3,
+            "failed_executions": 0,
+            "partial_executions": 0,
+            "success_rate_percent": 100.0,
+            "sample_size_repr": "100.0% (3/3 executions)",
+            "average_latency_ms": 70.0,
+            "total_evidence_produced": 3,
+            "evidence_yield_per_execution": 1.0
+          },
+          {
+            "worker_type": "response",
+            "capability_name": "response.execute",
+            "total_executions": 2,
+            "successful_executions": 2,
+            "failed_executions": 0,
+            "partial_executions": 0,
+            "success_rate_percent": 100.0,
+            "sample_size_repr": "100.0% (2/2 executions)",
+            "average_latency_ms": 0.0,
+            "total_evidence_produced": 8,
+            "evidence_yield_per_execution": 4.0
+          },
+          {
+            "worker_type": "detection",
+            "capability_name": "detection.execute",
             "total_executions": 1,
             "successful_executions": 1,
             "failed_executions": 0,
             "partial_executions": 0,
             "success_rate_percent": 100.0,
             "sample_size_repr": "100.0% (1/1 executions)",
-            "average_latency_ms": 213.0,
+            "average_latency_ms": 0.0,
             "total_evidence_produced": 1,
             "evidence_yield_per_execution": 1.0
-          },
-          {
-            "worker_type": "response",
-            "capability_name": "response.execute",
-            "total_executions": 5,
-            "successful_executions": 5,
-            "failed_executions": 0,
-            "partial_executions": 0,
-            "success_rate_percent": 100.0,
-            "sample_size_repr": "100.0% (5/5 executions)",
-            "average_latency_ms": 0.0,
-            "total_evidence_produced": 20,
-            "evidence_yield_per_execution": 4.0
           }
         ]
       },
       "evidence": {
-        "total_items": 26,
-        "direct_provenance_items": 21,
+        "total_items": 17,
+        "novel_items": 11,
+        "duplicate_items": 6,
+        "direct_provenance_items": 12,
         "derived_provenance_items": 5,
         "legacy_unlinked_items": 0,
-        "evidence_per_successful_execution": 4.33
+        "evidence_per_successful_execution": 2.83
       },
       "recommendation": {
         "generated": false,
@@ -236,7 +280,7 @@
       }
     },
     {
-      "evaluation_run_id": "a277966f-ad98-4c59-9d76-bcdc41f50e9b",
+      "evaluation_run_id": "142147ea-d8ff-44e3-b5cb-dbc31ea466fd",
       "scenario": {
         "scenario_id": "brute_force",
         "name": "SSH & FTP Credential Brute Force",
@@ -247,56 +291,61 @@
       },
       "status": "completed",
       "timing": {
-        "started_at": "2026-11-05T11:11:51.563372+00:00",
-        "completed_at": "2026-11-05T11:11:51.594379+00:00",
-        "total_duration_ms": 31.01
+        "started_at": "2026-11-05T13:13:38.019839+00:00",
+        "completed_at": "2026-11-05T13:13:38.053627+00:00",
+        "total_duration_ms": 33.79
       },
       "investigation": {
-        "investigation_id": "48fa8ecc-47e5-45d6-b512-79f208b71421",
+        "investigation_id": "0bebd938-8fe5-43e2-bb12-50da3b3633d3",
         "initial_confidence": 0.15,
-        "final_confidence": 0.5963,
-        "confidence_delta": 0.4463,
+        "final_confidence": 0.2428,
+        "confidence_delta": 0.0928,
         "planning_cycles": 6,
         "termination_reason": "max_cycles_reached",
+        "termination_classification": "safety_bound",
         "final_status": "investigating"
       },
       "planner": {
         "total_selections": 6,
-        "unique_capabilities": 2,
-        "capability_diversity": 0.3333,
-        "replanning_events": 0,
-        "capability_revisits": 0,
-        "revisit_sequences": [],
+        "unique_capabilities": 3,
+        "capability_diversity": 0.5,
+        "replanning_events": 2,
+        "capability_revisits": 3,
+        "revisit_sequences": [
+          "response.execute -> investigation.execute",
+          "detection.execute -> response.execute",
+          "response.execute -> investigation.execute"
+        ],
         "confidence_progression": [
           {
             "cycle": 1,
-            "confidence": 0.1906,
-            "delta": 0.0406
+            "confidence": 0.1751,
+            "delta": 0.0251
           },
           {
             "cycle": 2,
-            "confidence": 0.2489,
-            "delta": 0.0583
+            "confidence": 0.2159,
+            "delta": 0.0408
           },
           {
             "cycle": 3,
-            "confidence": 0.3195,
-            "delta": 0.0706
+            "confidence": 0.2159,
+            "delta": 0.0
           },
           {
             "cycle": 4,
-            "confidence": 0.403,
-            "delta": 0.0835
+            "confidence": 0.2428,
+            "delta": 0.0269
           },
           {
             "cycle": 5,
-            "confidence": 0.4971,
-            "delta": 0.0941
+            "confidence": 0.2428,
+            "delta": 0.0
           },
           {
             "cycle": 6,
-            "confidence": 0.5963,
-            "delta": 0.0992
+            "confidence": 0.2428,
+            "delta": 0.0
           }
         ],
         "execution_trace": [
@@ -308,81 +357,105 @@
             "observation": "Investigation worker validated hypothesis 'Malicious Macro Execution with Encoded PowerShell Reverse Shell' against RAG knowledge base. Stance: SUPPORTS (Confidence: 0.88).",
             "unresolved_question": "Evaluate telemetry anomalies for SSH & FTP Credential Brute Force",
             "confidence_before": 0.15,
-            "confidence_after": 0.1906,
-            "confidence_delta": 0.0406,
+            "confidence_after": 0.1751,
+            "confidence_delta": 0.0251,
             "latency_ms": 0,
             "evidence_gained": 1,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 1,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 2,
             "selected_worker": "response",
             "selected_capability": "response.execute",
-            "utility_score": 1.0,
+            "utility_score": 0.95,
             "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.1906,
-            "confidence_after": 0.2489,
-            "confidence_delta": 0.0583,
-            "latency_ms": 0,
+            "confidence_before": 0.1751,
+            "confidence_after": 0.2159,
+            "confidence_delta": 0.0408,
+            "latency_ms": 1,
             "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 4,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 3,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
+            "selected_worker": "investigation",
+            "selected_capability": "investigation.execute",
+            "utility_score": 0.12,
+            "observation": "Investigation worker validated hypothesis 'Malicious Macro Execution with Encoded PowerShell Reverse Shell' against RAG knowledge base. Stance: SUPPORTS (Confidence: 0.88).",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.2489,
-            "confidence_after": 0.3195,
-            "confidence_delta": 0.0706,
+            "confidence_before": 0.2159,
+            "confidence_after": 0.2159,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 1,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 4,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
+            "selected_worker": "detection",
+            "selected_capability": "detection.execute",
+            "utility_score": 0.05,
+            "observation": "[REPLAN] Pivoted from 'investigation' to 'detection'. Selected 'detection' (Score: 0.0500, Raw: 0.0500, RepeatPenalty: 1.0).",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.3195,
-            "confidence_after": 0.403,
-            "confidence_delta": 0.0835,
+            "confidence_before": 0.2159,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0269,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 1,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "replan",
+            "is_replanning": true,
+            "replan_reason": "Strategy 'investigation' yielded no novel evidence for 1 cycle(s). Initiating explicit strategy pivot."
           },
           {
             "cycle": 5,
             "selected_worker": "response",
             "selected_capability": "response.execute",
-            "utility_score": 1.0,
+            "utility_score": 0.95,
             "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
-            "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.403,
-            "confidence_after": 0.4971,
-            "confidence_delta": 0.0941,
+            "unresolved_question": "Proceed to investigation following detection findings",
+            "confidence_before": 0.2428,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
             "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 4,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 6,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
-            "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.4971,
-            "confidence_after": 0.5963,
-            "confidence_delta": 0.0992,
+            "selected_worker": "investigation",
+            "selected_capability": "investigation.execute",
+            "utility_score": 0.12,
+            "observation": "[REPLAN] Pivoted from 'response' to 'investigation'. Selected 'investigation' (Score: 0.1200, Raw: 0.1200, RepeatPenalty: 1.0).",
+            "unresolved_question": "Proceed to investigation following detection findings",
+            "confidence_before": 0.2428,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 1,
+            "decision_type": "replan",
+            "is_replanning": true,
+            "replan_reason": "Strategy 'response' yielded no novel evidence for 1 cycle(s). Initiating explicit strategy pivot."
           }
         ]
       },
@@ -396,6 +469,32 @@
           {
             "worker_type": "investigation",
             "capability_name": "investigation.execute",
+            "total_executions": 3,
+            "successful_executions": 3,
+            "failed_executions": 0,
+            "partial_executions": 0,
+            "success_rate_percent": 100.0,
+            "sample_size_repr": "100.0% (3/3 executions)",
+            "average_latency_ms": 0.0,
+            "total_evidence_produced": 3,
+            "evidence_yield_per_execution": 1.0
+          },
+          {
+            "worker_type": "response",
+            "capability_name": "response.execute",
+            "total_executions": 2,
+            "successful_executions": 2,
+            "failed_executions": 0,
+            "partial_executions": 0,
+            "success_rate_percent": 100.0,
+            "sample_size_repr": "100.0% (2/2 executions)",
+            "average_latency_ms": 0.5,
+            "total_evidence_produced": 8,
+            "evidence_yield_per_execution": 4.0
+          },
+          {
+            "worker_type": "detection",
+            "capability_name": "detection.execute",
             "total_executions": 1,
             "successful_executions": 1,
             "failed_executions": 0,
@@ -405,28 +504,17 @@
             "average_latency_ms": 0.0,
             "total_evidence_produced": 1,
             "evidence_yield_per_execution": 1.0
-          },
-          {
-            "worker_type": "response",
-            "capability_name": "response.execute",
-            "total_executions": 5,
-            "successful_executions": 5,
-            "failed_executions": 0,
-            "partial_executions": 0,
-            "success_rate_percent": 100.0,
-            "sample_size_repr": "100.0% (5/5 executions)",
-            "average_latency_ms": 0.0,
-            "total_evidence_produced": 20,
-            "evidence_yield_per_execution": 4.0
           }
         ]
       },
       "evidence": {
-        "total_items": 26,
-        "direct_provenance_items": 21,
+        "total_items": 17,
+        "novel_items": 11,
+        "duplicate_items": 6,
+        "direct_provenance_items": 12,
         "derived_provenance_items": 5,
         "legacy_unlinked_items": 0,
-        "evidence_per_successful_execution": 4.33
+        "evidence_per_successful_execution": 2.83
       },
       "recommendation": {
         "generated": false,
@@ -444,7 +532,7 @@
       }
     },
     {
-      "evaluation_run_id": "34618f8a-e5d3-4ae5-8a6d-165a2e71a239",
+      "evaluation_run_id": "238f82ce-f4b7-42f9-a9c3-3d9d7efb6cc5",
       "scenario": {
         "scenario_id": "web_attacks",
         "name": "Web Application Exploitation (SQLi / XSS)",
@@ -455,56 +543,60 @@
       },
       "status": "completed",
       "timing": {
-        "started_at": "2026-11-05T11:11:51.599380+00:00",
-        "completed_at": "2026-11-05T11:11:51.628374+00:00",
-        "total_duration_ms": 28.99
+        "started_at": "2026-11-05T13:13:38.058242+00:00",
+        "completed_at": "2026-11-05T13:13:38.092877+00:00",
+        "total_duration_ms": 34.63
       },
       "investigation": {
-        "investigation_id": "17d1bf50-6c16-4374-a9e9-0c37b1acf1a6",
+        "investigation_id": "fd554229-6ffc-4df8-b302-29c982dadccb",
         "initial_confidence": 0.15,
-        "final_confidence": 0.5993,
-        "confidence_delta": 0.4493,
+        "final_confidence": 0.282,
+        "confidence_delta": 0.132,
         "planning_cycles": 6,
         "termination_reason": "max_cycles_reached",
+        "termination_classification": "safety_bound",
         "final_status": "investigating"
       },
       "planner": {
         "total_selections": 6,
-        "unique_capabilities": 3,
-        "capability_diversity": 0.5,
-        "replanning_events": 0,
-        "capability_revisits": 0,
-        "revisit_sequences": [],
+        "unique_capabilities": 4,
+        "capability_diversity": 0.6667,
+        "replanning_events": 1,
+        "capability_revisits": 2,
+        "revisit_sequences": [
+          "response.execute -> investigation.execute",
+          "detection.execute -> response.execute"
+        ],
         "confidence_progression": [
           {
             "cycle": 1,
-            "confidence": 0.1917,
-            "delta": 0.0417
+            "confidence": 0.177,
+            "delta": 0.027
           },
           {
             "cycle": 2,
-            "confidence": 0.244,
-            "delta": 0.0523
+            "confidence": 0.2064,
+            "delta": 0.0294
           },
           {
             "cycle": 3,
-            "confidence": 0.3112,
-            "delta": 0.0672
+            "confidence": 0.2522,
+            "delta": 0.0458
           },
           {
             "cycle": 4,
-            "confidence": 0.4001,
-            "delta": 0.0889
+            "confidence": 0.2522,
+            "delta": 0.0
           },
           {
             "cycle": 5,
-            "confidence": 0.4978,
-            "delta": 0.0977
+            "confidence": 0.282,
+            "delta": 0.0298
           },
           {
             "cycle": 6,
-            "confidence": 0.5993,
-            "delta": 0.1015
+            "confidence": 0.282,
+            "delta": 0.0
           }
         ],
         "execution_trace": [
@@ -516,81 +608,105 @@
             "observation": "Correlation worker constructed entity graph with 4 nodes and 3 edges (Graph Density: 0.75).",
             "unresolved_question": "Evaluate telemetry anomalies for Web Application Exploitation (SQLi / XSS)",
             "confidence_before": 0.15,
-            "confidence_after": 0.1917,
-            "confidence_delta": 0.0417,
+            "confidence_after": 0.177,
+            "confidence_delta": 0.027,
             "latency_ms": 0,
             "evidence_gained": 1,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 1,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 2,
-            "selected_worker": "correlation",
-            "selected_capability": "correlation.execute",
-            "utility_score": 0.8,
-            "observation": "Correlation worker constructed entity graph with 4 nodes and 3 edges (Graph Density: 0.75).",
-            "unresolved_question": "Proceed to investigation following correlation findings",
-            "confidence_before": 0.1917,
-            "confidence_after": 0.244,
-            "confidence_delta": 0.0523,
-            "latency_ms": 0,
-            "evidence_gained": 1,
-            "decision_type": "continue_investigation"
-          },
-          {
-            "cycle": 3,
             "selected_worker": "investigation",
             "selected_capability": "investigation.execute",
             "utility_score": 0.65,
             "observation": "Investigation worker validated hypothesis 'Malicious Macro Execution with Encoded PowerShell Reverse Shell' against RAG knowledge base. Stance: SUPPORTS (Confidence: 0.88).",
             "unresolved_question": "Proceed to investigation following correlation findings",
-            "confidence_before": 0.244,
-            "confidence_after": 0.3112,
-            "confidence_delta": 0.0672,
+            "confidence_before": 0.177,
+            "confidence_after": 0.2064,
+            "confidence_delta": 0.0294,
             "latency_ms": 0,
             "evidence_gained": 1,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 1,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
+          },
+          {
+            "cycle": 3,
+            "selected_worker": "response",
+            "selected_capability": "response.execute",
+            "utility_score": 0.95,
+            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
+            "unresolved_question": "Proceed to reporting following investigation findings",
+            "confidence_before": 0.2064,
+            "confidence_after": 0.2522,
+            "confidence_delta": 0.0458,
+            "latency_ms": 0,
+            "evidence_gained": 4,
+            "novel_evidence_gained": 4,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 4,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
+            "selected_worker": "investigation",
+            "selected_capability": "investigation.execute",
+            "utility_score": 0.12,
+            "observation": "Investigation worker validated hypothesis 'Malicious Macro Execution with Encoded PowerShell Reverse Shell' against RAG knowledge base. Stance: SUPPORTS (Confidence: 0.88).",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.3112,
-            "confidence_after": 0.4001,
-            "confidence_delta": 0.0889,
+            "confidence_before": 0.2522,
+            "confidence_after": 0.2522,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 1,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 5,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
+            "selected_worker": "detection",
+            "selected_capability": "detection.execute",
+            "utility_score": 0.05,
+            "observation": "[REPLAN] Pivoted from 'investigation' to 'detection'. Selected 'detection' (Score: 0.0500, Raw: 0.0500, RepeatPenalty: 1.0).",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.4001,
-            "confidence_after": 0.4978,
-            "confidence_delta": 0.0977,
+            "confidence_before": 0.2522,
+            "confidence_after": 0.282,
+            "confidence_delta": 0.0298,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 1,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "replan",
+            "is_replanning": true,
+            "replan_reason": "Strategy 'investigation' yielded no novel evidence for 1 cycle(s). Initiating explicit strategy pivot."
           },
           {
             "cycle": 6,
             "selected_worker": "response",
             "selected_capability": "response.execute",
-            "utility_score": 1.0,
+            "utility_score": 0.95,
             "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
-            "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.4978,
-            "confidence_after": 0.5993,
-            "confidence_delta": 0.1015,
+            "unresolved_question": "Proceed to investigation following detection findings",
+            "confidence_before": 0.282,
+            "confidence_after": 0.282,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
             "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 4,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           }
         ]
       },
@@ -604,6 +720,19 @@
           {
             "worker_type": "correlation",
             "capability_name": "correlation.execute",
+            "total_executions": 1,
+            "successful_executions": 1,
+            "failed_executions": 0,
+            "partial_executions": 0,
+            "success_rate_percent": 100.0,
+            "sample_size_repr": "100.0% (1/1 executions)",
+            "average_latency_ms": 0.0,
+            "total_evidence_produced": 1,
+            "evidence_yield_per_execution": 1.0
+          },
+          {
+            "worker_type": "investigation",
+            "capability_name": "investigation.execute",
             "total_executions": 2,
             "successful_executions": 2,
             "failed_executions": 0,
@@ -615,8 +744,21 @@
             "evidence_yield_per_execution": 1.0
           },
           {
-            "worker_type": "investigation",
-            "capability_name": "investigation.execute",
+            "worker_type": "response",
+            "capability_name": "response.execute",
+            "total_executions": 2,
+            "successful_executions": 2,
+            "failed_executions": 0,
+            "partial_executions": 0,
+            "success_rate_percent": 100.0,
+            "sample_size_repr": "100.0% (2/2 executions)",
+            "average_latency_ms": 0.0,
+            "total_evidence_produced": 8,
+            "evidence_yield_per_execution": 4.0
+          },
+          {
+            "worker_type": "detection",
+            "capability_name": "detection.execute",
             "total_executions": 1,
             "successful_executions": 1,
             "failed_executions": 0,
@@ -626,28 +768,17 @@
             "average_latency_ms": 0.0,
             "total_evidence_produced": 1,
             "evidence_yield_per_execution": 1.0
-          },
-          {
-            "worker_type": "response",
-            "capability_name": "response.execute",
-            "total_executions": 3,
-            "successful_executions": 3,
-            "failed_executions": 0,
-            "partial_executions": 0,
-            "success_rate_percent": 100.0,
-            "sample_size_repr": "100.0% (3/3 executions)",
-            "average_latency_ms": 0.0,
-            "total_evidence_produced": 12,
-            "evidence_yield_per_execution": 4.0
           }
         ]
       },
       "evidence": {
-        "total_items": 18,
-        "direct_provenance_items": 15,
+        "total_items": 15,
+        "novel_items": 10,
+        "duplicate_items": 5,
+        "direct_provenance_items": 12,
         "derived_provenance_items": 3,
         "legacy_unlinked_items": 0,
-        "evidence_per_successful_execution": 3.0
+        "evidence_per_successful_execution": 2.5
       },
       "recommendation": {
         "generated": false,
@@ -665,7 +796,7 @@
       }
     },
     {
-      "evaluation_run_id": "30849e27-c8fd-41f1-8671-19d8162d4ed8",
+      "evaluation_run_id": "5fe046c3-694c-4e5d-8f28-84552d300489",
       "scenario": {
         "scenario_id": "botnet_c2",
         "name": "Botnet Command & Control (Ares C2)",
@@ -676,56 +807,61 @@
       },
       "status": "completed",
       "timing": {
-        "started_at": "2026-11-05T11:11:51.632379+00:00",
-        "completed_at": "2026-11-05T11:11:51.663381+00:00",
-        "total_duration_ms": 31.0
+        "started_at": "2026-11-05T13:13:38.097683+00:00",
+        "completed_at": "2026-11-05T13:13:38.130683+00:00",
+        "total_duration_ms": 33.0
       },
       "investigation": {
-        "investigation_id": "fa168f57-20fc-44e3-9e77-0b633549b61f",
+        "investigation_id": "230164cd-a32f-4241-96b6-d46d3a9986a0",
         "initial_confidence": 0.15,
-        "final_confidence": 0.5963,
-        "confidence_delta": 0.4463,
+        "final_confidence": 0.2428,
+        "confidence_delta": 0.0928,
         "planning_cycles": 6,
         "termination_reason": "max_cycles_reached",
+        "termination_classification": "safety_bound",
         "final_status": "investigating"
       },
       "planner": {
         "total_selections": 6,
-        "unique_capabilities": 2,
-        "capability_diversity": 0.3333,
-        "replanning_events": 0,
-        "capability_revisits": 0,
-        "revisit_sequences": [],
+        "unique_capabilities": 3,
+        "capability_diversity": 0.5,
+        "replanning_events": 2,
+        "capability_revisits": 3,
+        "revisit_sequences": [
+          "response.execute -> investigation.execute",
+          "detection.execute -> response.execute",
+          "response.execute -> investigation.execute"
+        ],
         "confidence_progression": [
           {
             "cycle": 1,
-            "confidence": 0.1906,
-            "delta": 0.0406
+            "confidence": 0.1751,
+            "delta": 0.0251
           },
           {
             "cycle": 2,
-            "confidence": 0.2489,
-            "delta": 0.0583
+            "confidence": 0.2159,
+            "delta": 0.0408
           },
           {
             "cycle": 3,
-            "confidence": 0.3195,
-            "delta": 0.0706
+            "confidence": 0.2159,
+            "delta": 0.0
           },
           {
             "cycle": 4,
-            "confidence": 0.403,
-            "delta": 0.0835
+            "confidence": 0.2428,
+            "delta": 0.0269
           },
           {
             "cycle": 5,
-            "confidence": 0.4971,
-            "delta": 0.0941
+            "confidence": 0.2428,
+            "delta": 0.0
           },
           {
             "cycle": 6,
-            "confidence": 0.5963,
-            "delta": 0.0992
+            "confidence": 0.2428,
+            "delta": 0.0
           }
         ],
         "execution_trace": [
@@ -737,81 +873,105 @@
             "observation": "Investigation worker validated hypothesis 'Malicious Macro Execution with Encoded PowerShell Reverse Shell' against RAG knowledge base. Stance: SUPPORTS (Confidence: 0.88).",
             "unresolved_question": "Evaluate telemetry anomalies for Botnet Command & Control (Ares C2)",
             "confidence_before": 0.15,
-            "confidence_after": 0.1906,
-            "confidence_delta": 0.0406,
+            "confidence_after": 0.1751,
+            "confidence_delta": 0.0251,
             "latency_ms": 0,
             "evidence_gained": 1,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 1,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 2,
             "selected_worker": "response",
             "selected_capability": "response.execute",
-            "utility_score": 1.0,
+            "utility_score": 0.95,
             "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.1906,
-            "confidence_after": 0.2489,
-            "confidence_delta": 0.0583,
+            "confidence_before": 0.1751,
+            "confidence_after": 0.2159,
+            "confidence_delta": 0.0408,
             "latency_ms": 0,
             "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 4,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 3,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
+            "selected_worker": "investigation",
+            "selected_capability": "investigation.execute",
+            "utility_score": 0.12,
+            "observation": "Investigation worker validated hypothesis 'Malicious Macro Execution with Encoded PowerShell Reverse Shell' against RAG knowledge base. Stance: SUPPORTS (Confidence: 0.88).",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.2489,
-            "confidence_after": 0.3195,
-            "confidence_delta": 0.0706,
+            "confidence_before": 0.2159,
+            "confidence_after": 0.2159,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 1,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 4,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
+            "selected_worker": "detection",
+            "selected_capability": "detection.execute",
+            "utility_score": 0.05,
+            "observation": "[REPLAN] Pivoted from 'investigation' to 'detection'. Selected 'detection' (Score: 0.0500, Raw: 0.0500, RepeatPenalty: 1.0).",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.3195,
-            "confidence_after": 0.403,
-            "confidence_delta": 0.0835,
+            "confidence_before": 0.2159,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0269,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 1,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "replan",
+            "is_replanning": true,
+            "replan_reason": "Strategy 'investigation' yielded no novel evidence for 1 cycle(s). Initiating explicit strategy pivot."
           },
           {
             "cycle": 5,
             "selected_worker": "response",
             "selected_capability": "response.execute",
-            "utility_score": 1.0,
+            "utility_score": 0.95,
             "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
-            "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.403,
-            "confidence_after": 0.4971,
-            "confidence_delta": 0.0941,
+            "unresolved_question": "Proceed to investigation following detection findings",
+            "confidence_before": 0.2428,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
             "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 4,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 6,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
-            "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.4971,
-            "confidence_after": 0.5963,
-            "confidence_delta": 0.0992,
+            "selected_worker": "investigation",
+            "selected_capability": "investigation.execute",
+            "utility_score": 0.12,
+            "observation": "[REPLAN] Pivoted from 'response' to 'investigation'. Selected 'investigation' (Score: 0.1200, Raw: 0.1200, RepeatPenalty: 1.0).",
+            "unresolved_question": "Proceed to investigation following detection findings",
+            "confidence_before": 0.2428,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 1,
+            "decision_type": "replan",
+            "is_replanning": true,
+            "replan_reason": "Strategy 'response' yielded no novel evidence for 1 cycle(s). Initiating explicit strategy pivot."
           }
         ]
       },
@@ -825,6 +985,32 @@
           {
             "worker_type": "investigation",
             "capability_name": "investigation.execute",
+            "total_executions": 3,
+            "successful_executions": 3,
+            "failed_executions": 0,
+            "partial_executions": 0,
+            "success_rate_percent": 100.0,
+            "sample_size_repr": "100.0% (3/3 executions)",
+            "average_latency_ms": 0.0,
+            "total_evidence_produced": 3,
+            "evidence_yield_per_execution": 1.0
+          },
+          {
+            "worker_type": "response",
+            "capability_name": "response.execute",
+            "total_executions": 2,
+            "successful_executions": 2,
+            "failed_executions": 0,
+            "partial_executions": 0,
+            "success_rate_percent": 100.0,
+            "sample_size_repr": "100.0% (2/2 executions)",
+            "average_latency_ms": 0.0,
+            "total_evidence_produced": 8,
+            "evidence_yield_per_execution": 4.0
+          },
+          {
+            "worker_type": "detection",
+            "capability_name": "detection.execute",
             "total_executions": 1,
             "successful_executions": 1,
             "failed_executions": 0,
@@ -834,28 +1020,17 @@
             "average_latency_ms": 0.0,
             "total_evidence_produced": 1,
             "evidence_yield_per_execution": 1.0
-          },
-          {
-            "worker_type": "response",
-            "capability_name": "response.execute",
-            "total_executions": 5,
-            "successful_executions": 5,
-            "failed_executions": 0,
-            "partial_executions": 0,
-            "success_rate_percent": 100.0,
-            "sample_size_repr": "100.0% (5/5 executions)",
-            "average_latency_ms": 0.0,
-            "total_evidence_produced": 20,
-            "evidence_yield_per_execution": 4.0
           }
         ]
       },
       "evidence": {
-        "total_items": 26,
-        "direct_provenance_items": 21,
+        "total_items": 17,
+        "novel_items": 11,
+        "duplicate_items": 6,
+        "direct_provenance_items": 12,
         "derived_provenance_items": 5,
         "legacy_unlinked_items": 0,
-        "evidence_per_successful_execution": 4.33
+        "evidence_per_successful_execution": 2.83
       },
       "recommendation": {
         "generated": false,
@@ -873,7 +1048,7 @@
       }
     },
     {
-      "evaluation_run_id": "3621e931-68c2-4598-8b55-140ab3d3474b",
+      "evaluation_run_id": "51ec097d-06da-4d89-8207-779e070ddb3f",
       "scenario": {
         "scenario_id": "dos_goldeneye",
         "name": "Denial of Service (GoldenEye & Slowloris)",
@@ -884,56 +1059,61 @@
       },
       "status": "completed",
       "timing": {
-        "started_at": "2026-11-05T11:11:51.668496+00:00",
-        "completed_at": "2026-11-05T11:11:51.698595+00:00",
-        "total_duration_ms": 30.1
+        "started_at": "2026-11-05T13:13:38.134768+00:00",
+        "completed_at": "2026-11-05T13:13:38.169116+00:00",
+        "total_duration_ms": 34.35
       },
       "investigation": {
-        "investigation_id": "0dca0428-d084-47b1-811f-d4451c01f70c",
+        "investigation_id": "45263102-07c2-47fc-9b85-f2e5bd8bf143",
         "initial_confidence": 0.15,
-        "final_confidence": 0.5963,
-        "confidence_delta": 0.4463,
+        "final_confidence": 0.2428,
+        "confidence_delta": 0.0928,
         "planning_cycles": 6,
         "termination_reason": "max_cycles_reached",
+        "termination_classification": "safety_bound",
         "final_status": "investigating"
       },
       "planner": {
         "total_selections": 6,
-        "unique_capabilities": 2,
-        "capability_diversity": 0.3333,
-        "replanning_events": 0,
-        "capability_revisits": 0,
-        "revisit_sequences": [],
+        "unique_capabilities": 3,
+        "capability_diversity": 0.5,
+        "replanning_events": 2,
+        "capability_revisits": 3,
+        "revisit_sequences": [
+          "response.execute -> investigation.execute",
+          "detection.execute -> response.execute",
+          "response.execute -> investigation.execute"
+        ],
         "confidence_progression": [
           {
             "cycle": 1,
-            "confidence": 0.1906,
-            "delta": 0.0406
+            "confidence": 0.1751,
+            "delta": 0.0251
           },
           {
             "cycle": 2,
-            "confidence": 0.2489,
-            "delta": 0.0583
+            "confidence": 0.2159,
+            "delta": 0.0408
           },
           {
             "cycle": 3,
-            "confidence": 0.3195,
-            "delta": 0.0706
+            "confidence": 0.2159,
+            "delta": 0.0
           },
           {
             "cycle": 4,
-            "confidence": 0.403,
-            "delta": 0.0835
+            "confidence": 0.2428,
+            "delta": 0.0269
           },
           {
             "cycle": 5,
-            "confidence": 0.4971,
-            "delta": 0.0941
+            "confidence": 0.2428,
+            "delta": 0.0
           },
           {
             "cycle": 6,
-            "confidence": 0.5963,
-            "delta": 0.0992
+            "confidence": 0.2428,
+            "delta": 0.0
           }
         ],
         "execution_trace": [
@@ -945,81 +1125,105 @@
             "observation": "Investigation worker validated hypothesis 'Malicious Macro Execution with Encoded PowerShell Reverse Shell' against RAG knowledge base. Stance: SUPPORTS (Confidence: 0.88).",
             "unresolved_question": "Evaluate telemetry anomalies for Denial of Service (GoldenEye & Slowloris)",
             "confidence_before": 0.15,
-            "confidence_after": 0.1906,
-            "confidence_delta": 0.0406,
+            "confidence_after": 0.1751,
+            "confidence_delta": 0.0251,
             "latency_ms": 0,
             "evidence_gained": 1,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 1,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 2,
             "selected_worker": "response",
             "selected_capability": "response.execute",
-            "utility_score": 1.0,
+            "utility_score": 0.95,
             "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.1906,
-            "confidence_after": 0.2489,
-            "confidence_delta": 0.0583,
+            "confidence_before": 0.1751,
+            "confidence_after": 0.2159,
+            "confidence_delta": 0.0408,
             "latency_ms": 0,
             "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 4,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 3,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
+            "selected_worker": "investigation",
+            "selected_capability": "investigation.execute",
+            "utility_score": 0.12,
+            "observation": "Investigation worker validated hypothesis 'Malicious Macro Execution with Encoded PowerShell Reverse Shell' against RAG knowledge base. Stance: SUPPORTS (Confidence: 0.88).",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.2489,
-            "confidence_after": 0.3195,
-            "confidence_delta": 0.0706,
+            "confidence_before": 0.2159,
+            "confidence_after": 0.2159,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 1,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 4,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
+            "selected_worker": "detection",
+            "selected_capability": "detection.execute",
+            "utility_score": 0.05,
+            "observation": "[REPLAN] Pivoted from 'investigation' to 'detection'. Selected 'detection' (Score: 0.0500, Raw: 0.0500, RepeatPenalty: 1.0).",
             "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.3195,
-            "confidence_after": 0.403,
-            "confidence_delta": 0.0835,
+            "confidence_before": 0.2159,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0269,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 1,
+            "duplicate_evidence_gained": 0,
+            "decision_type": "replan",
+            "is_replanning": true,
+            "replan_reason": "Strategy 'investigation' yielded no novel evidence for 1 cycle(s). Initiating explicit strategy pivot."
           },
           {
             "cycle": 5,
             "selected_worker": "response",
             "selected_capability": "response.execute",
-            "utility_score": 1.0,
+            "utility_score": 0.95,
             "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
-            "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.403,
-            "confidence_after": 0.4971,
-            "confidence_delta": 0.0941,
+            "unresolved_question": "Proceed to investigation following detection findings",
+            "confidence_before": 0.2428,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
             "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 4,
+            "decision_type": "continue_investigation",
+            "is_replanning": false,
+            "replan_reason": null
           },
           {
             "cycle": 6,
-            "selected_worker": "response",
-            "selected_capability": "response.execute",
-            "utility_score": 1.0,
-            "observation": "Response worker generated 4 prioritized containment actions with risk/impact evaluations. Mandatory human approval enforced.",
-            "unresolved_question": "Proceed to reporting following investigation findings",
-            "confidence_before": 0.4971,
-            "confidence_after": 0.5963,
-            "confidence_delta": 0.0992,
+            "selected_worker": "investigation",
+            "selected_capability": "investigation.execute",
+            "utility_score": 0.12,
+            "observation": "[REPLAN] Pivoted from 'response' to 'investigation'. Selected 'investigation' (Score: 0.1200, Raw: 0.1200, RepeatPenalty: 1.0).",
+            "unresolved_question": "Proceed to investigation following detection findings",
+            "confidence_before": 0.2428,
+            "confidence_after": 0.2428,
+            "confidence_delta": 0.0,
             "latency_ms": 0,
-            "evidence_gained": 4,
-            "decision_type": "continue_investigation"
+            "evidence_gained": 1,
+            "novel_evidence_gained": 0,
+            "duplicate_evidence_gained": 1,
+            "decision_type": "replan",
+            "is_replanning": true,
+            "replan_reason": "Strategy 'response' yielded no novel evidence for 1 cycle(s). Initiating explicit strategy pivot."
           }
         ]
       },
@@ -1033,6 +1237,32 @@
           {
             "worker_type": "investigation",
             "capability_name": "investigation.execute",
+            "total_executions": 3,
+            "successful_executions": 3,
+            "failed_executions": 0,
+            "partial_executions": 0,
+            "success_rate_percent": 100.0,
+            "sample_size_repr": "100.0% (3/3 executions)",
+            "average_latency_ms": 0.0,
+            "total_evidence_produced": 3,
+            "evidence_yield_per_execution": 1.0
+          },
+          {
+            "worker_type": "response",
+            "capability_name": "response.execute",
+            "total_executions": 2,
+            "successful_executions": 2,
+            "failed_executions": 0,
+            "partial_executions": 0,
+            "success_rate_percent": 100.0,
+            "sample_size_repr": "100.0% (2/2 executions)",
+            "average_latency_ms": 0.0,
+            "total_evidence_produced": 8,
+            "evidence_yield_per_execution": 4.0
+          },
+          {
+            "worker_type": "detection",
+            "capability_name": "detection.execute",
             "total_executions": 1,
             "successful_executions": 1,
             "failed_executions": 0,
@@ -1042,28 +1272,17 @@
             "average_latency_ms": 0.0,
             "total_evidence_produced": 1,
             "evidence_yield_per_execution": 1.0
-          },
-          {
-            "worker_type": "response",
-            "capability_name": "response.execute",
-            "total_executions": 5,
-            "successful_executions": 5,
-            "failed_executions": 0,
-            "partial_executions": 0,
-            "success_rate_percent": 100.0,
-            "sample_size_repr": "100.0% (5/5 executions)",
-            "average_latency_ms": 0.0,
-            "total_evidence_produced": 20,
-            "evidence_yield_per_execution": 4.0
           }
         ]
       },
       "evidence": {
-        "total_items": 26,
-        "direct_provenance_items": 21,
+        "total_items": 17,
+        "novel_items": 11,
+        "duplicate_items": 6,
+        "direct_provenance_items": 12,
         "derived_provenance_items": 5,
         "legacy_unlinked_items": 0,
-        "evidence_per_successful_execution": 4.33
+        "evidence_per_successful_execution": 2.83
       },
       "recommendation": {
         "generated": false,

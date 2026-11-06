@@ -1,0 +1,57 @@
+{
+  "identical_state_reproducibility": {
+    "runs": 10,
+    "zero_variance_confirmed": true,
+    "selected_worker": "correlation",
+    "utility_score": 1.6
+  },
+  "counterfactual_tests": {
+    "evidence_volume": {
+      "changed_variable": "evidence_count: 2 -> 8",
+      "baseline_worker": "correlation",
+      "counterfactual_worker": "correlation",
+      "score_delta": 4.8,
+      "explanation": "Correlation utility scales directly with evidence volume when graph density is low."
+    },
+    "novel_vs_duplicate": {
+      "changed_variable": "evidence_type: novel vs duplicate",
+      "baseline_effect": "Novel evidence resets cycles_since_meaningful_progress to 0 and increases confidence.",
+      "counterfactual_effect": "Duplicate evidence increments stagnation counter and produces zero confidence delta.",
+      "verified_in_invariants": true
+    },
+    "graph_density": {
+      "changed_variable": "graph_density: 0.2 -> 1.0",
+      "baseline_worker": "correlation",
+      "counterfactual_worker": "investigation",
+      "correlation_utility_change": "1.6 -> 0.0",
+      "explanation": "Saturated graph density completely zeroes out correlation utility (factor = 1 - 1.0 = 0.0)."
+    },
+    "unresolved_contradictions": {
+      "changed_variable": "has_unresolved_contradictions: False -> True",
+      "baseline_worker": "correlation",
+      "counterfactual_worker": "correlation",
+      "reporting_utility_change": "0.93 -> 0.0",
+      "explanation": "Contradictions actively suppress reporting to 0.0 and boost investigation to 0.90."
+    },
+    "hypothesis_confidence": {
+      "changed_variable": "hypotheses_confidences: [] -> [0.90]",
+      "investigation_utility_change": "0.8 -> 0.1",
+      "explanation": "High hypothesis confidence reduces investigation utility (1.0 - 0.90 = 0.10)."
+    },
+    "worker_execution_history": {
+      "changed_variable": "consecutive_worker_count: 0 -> 1",
+      "investigation_utility_change": "0.8 -> 0.2",
+      "explanation": "Immediate 0.25 penalty factor applies to repeat selection of same worker."
+    },
+    "replanning_state": {
+      "changed_variable": "is_replanning: False -> True",
+      "investigation_utility_change": "0.8 -> 0.0",
+      "explanation": "Replanning completely zeroes out the stagnated worker (0.0) forcing an immediate pivot."
+    },
+    "response_formulation_state": {
+      "changed_variable": "has_formulated_response: False -> True",
+      "response_utility_change": "0.95 -> 0.05",
+      "explanation": "Once containment actions are formulated, response utility collapses from 0.95 to 0.05."
+    }
+  }
+}

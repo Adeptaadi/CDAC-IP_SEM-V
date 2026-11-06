@@ -1,0 +1,51 @@
+{
+  "expected_calibration_error": {
+    "formula": "sum((|Bm| / N) * |acc(Bm) - conf(Bm)|)",
+    "expected": 0.2,
+    "actual": 0.2,
+    "discrepancy": 0.0,
+    "status": "VERIFIED"
+  },
+  "planner_routing_precision": {
+    "formula": "count(effective_actions) / count(decisions)",
+    "expected": 0.6667,
+    "actual": 0.6667,
+    "discrepancy": 0.0,
+    "status": "VERIFIED"
+  },
+  "replanning_effectiveness": {
+    "formula": "count(improved_replans) / count(replans)",
+    "expected": 0.5,
+    "actual": 0.5,
+    "discrepancy": 0.0,
+    "status": "VERIFIED"
+  },
+  "evidence_coverage": {
+    "formula": "|E_found \u2229 E_gold| / |E_gold|",
+    "expected": 0.6667,
+    "actual": 0.6667,
+    "discrepancy": 0.0,
+    "status": "VERIFIED"
+  },
+  "citation_coverage": {
+    "formula": "count(claims_with_verified_citations) / count(claims)",
+    "expected": 0.5,
+    "actual": 0.5,
+    "discrepancy": 0.0,
+    "status": "VERIFIED"
+  },
+  "hallucination_rate": {
+    "formula": "1.0 - citation_coverage",
+    "expected": 0.5,
+    "actual": 0.5,
+    "discrepancy": 0.0,
+    "status": "VERIFIED"
+  },
+  "report_completeness": {
+    "formula": "count(present_required_sections) / 7",
+    "expected": 1.0,
+    "actual": 1.0,
+    "discrepancy": 0.0,
+    "status": "VERIFIED"
+  }
+}

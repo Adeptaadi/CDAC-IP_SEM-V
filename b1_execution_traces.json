@@ -1,0 +1,1772 @@
+{
+  "timestamp": "2026-11-05T13:13:13.552496+00:00",
+  "summary": "Phase B1 Behavioral Acceptance & Adversarial Validation Traces",
+  "controlled_scenarios": {
+    "scenario_1_productive": {
+      "scenario": "Productive Investigation",
+      "cycles": [
+        {
+          "investigation_id": "7cce2309-f0c6-4da0-8f15-d15084e8ecc3",
+          "scenario": "Scenario 1 (Productive)",
+          "cycle": 1,
+          "available_workers": [
+            "detection",
+            "correlation",
+            "investigation",
+            "reporting",
+            "response"
+          ],
+          "selected_worker": "detection",
+          "base_utilities": {
+            "detection": 1.0,
+            "correlation": 0.0,
+            "investigation": 0.8,
+            "reporting": 0.0,
+            "response": 0.0
+          },
+          "effective_utilities": {
+            "detection": 1.0,
+            "correlation": 0.0,
+            "investigation": 0.8,
+            "reporting": 0.0,
+            "response": 0.0
+          },
+          "previous_worker_history": [],
+          "evidence_produced": 1,
+          "novel_evidence_count": 1,
+          "duplicate_evidence_count": 0,
+          "hypothesis_before": [],
+          "hypothesis_after": [],
+          "confidence_before": 0.15,
+          "confidence_after": 0.1635,
+          "confidence_delta": 0.0135,
+          "stagnation_counter": 0,
+          "is_replanning": false,
+          "termination_state": "investigating"
+        },
+        {
+          "investigation_id": "7cce2309-f0c6-4da0-8f15-d15084e8ecc3",
+          "scenario": "Scenario 1 (Productive)",
+          "cycle": 2,
+          "available_workers": [
+            "detection",
+            "correlation",
+            "investigation",
+            "reporting",
+            "response"
+          ],
+          "selected_worker": "investigation",
+          "base_utilities": {
+            "detection": 0.4,
+            "correlation": 0.0,
+            "investigation": 0.8,
+            "reporting": 0.0,
+            "response": 0.0
+          },
+          "effective_utilities": {
+            "detection": 0.1,
+            "correlation": 0.0,
+            "investigation": 0.8,
+            "reporting": 0.0,
+            "response": 0.0
+          },
+          "previous_worker_history": [
+            "detection"
+          ],
+          "evidence_produced": 1,
+          "novel_evidence_count": 1,
+          "duplicate_evidence_count": 0,
+          "hypothesis_before": [],
+          "hypothesis_after": [
+            "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+          ],
+          "confidence_before": 0.1635,
+          "confidence_after": 0.2104,
+          "confidence_delta": 0.0469,
+          "stagnation_counter": 0,
+          "is_replanning": false,
+          "termination_state": "investigating"
+        },
+        {
+          "investigation_id": "7cce2309-f0c6-4da0-8f15-d15084e8ecc3",
+          "scenario": "Scenario 1 (Productive)",
+          "cycle": 3,
+          "available_workers": [
+            "detection",
+            "correlation",
+            "investigation",
+            "reporting",
+            "response"
+          ],
+          "selected_worker": "correlation",
+          "base_utilities": {
+            "detection": 0.05,
+            "correlation": 1.2,
+            "investigation": 0.12,
+            "reporting": 0.0,
+            "response": 0.95
+          },
+          "effective_utilities": {
+            "detection": 0.05,
+            "correlation": 1.2,
+            "investigation": 0.03,
+            "reporting": 0.0,
+            "response": 0.95
+          },
+          "previous_worker_history": [
+            "detection",
+            "investigation"
+          ],
+          "evidence_produced": 1,
+          "novel_evidence_count": 1,
+          "duplicate_evidence_count": 0,
+          "hypothesis_before": [
+            "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+          ],
+          "hypothesis_after": [
+            "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+          ],
+          "confidence_before": 0.2104,
+          "confidence_after": 0.2474,
+          "confidence_delta": 0.037,
+          "stagnation_counter": 0,
+          "is_replanning": false,
+          "termination_state": "investigating"
+        },
+        {
+          "investigation_id": "7cce2309-f0c6-4da0-8f15-d15084e8ecc3",
+          "scenario": "Scenario 1 (Productive)",
+          "cycle": 4,
+          "available_workers": [
+            "detection",
+            "correlation",
+            "investigation",
+            "reporting",
+            "response"
+          ],
+          "selected_worker": "response",
+          "base_utilities": {
+            "detection": 0.05,
+            "correlation": 1.2,
+            "investigation": 0.12,
+            "reporting": 0.0,
+            "response": 0.95
+          },
+          "effective_utilities": {
+            "detection": 0.05,
+            "correlation": 0.3,
+            "investigation": 0.12,
+            "reporting": 0.0,
+            "response": 0.95
+          },
+          "previous_worker_history": [
+            "detection",
+            "investigation",
+            "correlation"
+          ],
+          "evidence_produced": 4,
+          "novel_evidence_count": 4,
+          "duplicate_evidence_count": 0,
+          "hypothesis_before": [
+            "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+          ],
+          "hypothesis_after": [
+            "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+          ],
+          "confidence_before": 0.2474,
+          "confidence_after": 0.2989,
+          "confidence_delta": 0.0515,
+          "stagnation_counter": 0,
+          "is_replanning": false,
+          "termination_state": "investigating"
+        }
+      ],
+      "final_confidence": 0.2989
+    },
+    "scenario_2_duplicate_response": {
+      "scenario": "Duplicate Response Lock Prevention",
+      "cycles": [
+        {
+          "investigation_id": "d87595a0-7d39-40fc-be0d-0e224355b8cb",
+          "scenario": "Scenario 2 (Duplicate Response)",
+          "cycle": 1,
+          "available_workers": [
+            "detection",
+            "correlation",
+            "investigation",
+            "reporting",
+            "response"
+          ],
+          "selected_worker": "detection",
+          "base_utilities": {
+            "detection": 1.0,
+            "correlation": 0.0,
+            "investigation": 0.15,
+            "reporting": 0.0,
+            "response": 0.95
+          },
+          "effective_utilities": {
+            "detection": 1.0,
+            "correlation": 0.0,
+            "investigation": 0.15,
+            "reporting": 0.0,
+            "response": 0.95
+          },
+          "previous_worker_history": [],
+          "evidence_produced": 1,
+          "novel_evidence_count": 1,
+          "duplicate_evidence_count": 0,
+          "hypothesis_before": [
+            "Lateral Movement via WMI"
+          ],
+          "hypothesis_after": [
+            "Lateral Movement via WMI"
+          ],
+          "confidence_before": 0.35,
+          "confidence_after": 0.3737,
+          "confidence_delta": 0.0237,
+          "stagnation_counter": 0,
+          "is_replanning": false,
+          "termination_state": "investigating"
+        },
+        {
+          "investigation_id": "d87595a0-7d39-40fc-be0d-0e224355b8cb",
+          "scenario": "Scenario 2 (Duplicate Response)",
+          "cycle": 2,
+          "available_workers": [
+            "detection",
+            "correlation",
+            "investigation",
+            "reporting",
+            "response"
+          ],
+          "selected_worker": "response",
+          "base_utilities": {
+            "detection": 0.4,
+            "correlation": 0.0,
+            "investigation": 0.15,
+            "reporting": 0.0,
+            "response": 0.95
+          },
+          "effective_utilities": {
+            "detection": 0.1,
+            "correlation": 0.0,
+            "investigation": 0.15,
+            "reporting": 0.0,
+            "response": 0.95
+          },
+          "previous_worker_history": [
+            "detection"
+          ],
+          "evidence_produced": 4,
+          "novel_evidence_count": 4,
+          "duplicate_evidence_count": 0,
+          "hypothesis_before": [
+            "Lateral Movement via WMI"
+          ],
+          "hypothesis_after": [
+            "Lateral Movement via WMI"
+          ],
+          "confidence_before": 0.3737,
+          "confidence_after": 0.4363,
+          "confidence_delta": 0.0626,
+          "stagnation_counter": 0,
+          "is_replanning": false,
+          "termination_state": "investigating"
+        },
+        {
+          "investigation_id": "d87595a0-7d39-40fc-be0d-0e224355b8cb",
+          "scenario": "Scenario 2 (Duplicate Response)",
+          "cycle": 3,
+          "available_workers": [
+            "detection",
+            "correlation",
+            "investigation",
+            "reporting",
+            "response"
+          ],
+          "selected_worker": "investigation",
+          "base_utilities": {
+            "detection": 0.05,
+            "correlation": 0.0,
+            "investigation": 0.15,
+            "reporting": 0.0,
+            "response": 0.05
+          },
+          "effective_utilities": {
+            "detection": 0.05,
+            "correlation": 0.0,
+            "investigation": 0.15,
+            "reporting": 0.0,
+            "response": 0.0125
+          },
+          "previous_worker_history": [
+            "detection",
+            "response"
+          ],
+          "evidence_produced": 1,
+          "novel_evidence_count": 1,
+          "duplicate_evidence_count": 0,
+          "hypothesis_before": [
+            "Lateral Movement via WMI"
+          ],
+          "hypothesis_after": [
+            "Lateral Movement via WMI"
+          ],
+          "confidence_before": 0.4363,
+          "confidence_after": 0.4822,
+          "confidence_delta": 0.0459,
+          "stagnation_counter": 0,
+          "is_replanning": false,
+          "termination_state": "investigating"
+        },
+        {
+          "investigation_id": "d87595a0-7d39-40fc-be0d-0e224355b8cb",
+          "scenario": "Scenario 2 (Duplicate Response)",
+          "cycle": 4,
+          "available_workers": [
+            "detection",
+            "correlation",
+            "investigation",
+            "reporting",
+            "response"
+          ],
+          "selected_worker": "response",
+          "base_utilities": {
+            "detection": 0.05,
+            "correlation": 0.0,
+            "investigation": 0.12,
+            "reporting": 0.0,
+            "response": 0.95
+          },
+          "effective_utilities": {
+            "detection": 0.05,
+            "correlation": 0.0,
+            "investigation": 0.03,
+            "reporting": 0.0,
+            "response": 0.95
+          },
+          "previous_worker_history": [
+            "detection",
+            "response",
+            "investigation"
+          ],
+          "evidence_produced": 4,
+          "novel_evidence_count": 0,
+          "duplicate_evidence_count": 4,
+          "hypothesis_before": [
+            "Lateral Movement via WMI"
+          ],
+          "hypothesis_after": [
+            "Lateral Movement via WMI"
+          ],
+          "confidence_before": 0.4822,
+          "confidence_after": 0.4822,
+          "confidence_delta": 0.0,
+          "stagnation_counter": 1,
+          "is_replanning": false,
+          "termination_state": "investigating"
+        }
+      ]
+    },
+    "scenario_3_worker_failure": {
+      "scenario": "Worker Execution Failure",
+      "cycles": [
+        {
+          "investigation_id": "36cb0606-b5ca-4b98-a946-5c4a362109e2",
+          "scenario": "Scenario 3 (Worker Failure)",
+          "cycle": 1,
+          "available_workers": [
+            "detection",
+            "correlation",
+            "investigation",
+            "reporting",
+            "response"
+          ],
+          "selected_worker": "detection",
+          "base_utilities": {
+            "detection": 1.0,
+            "correlation": 0.0,
+            "investigation": 0.8,
+            "reporting": 0.0,
+            "response": 0.0
+          },
+          "effective_utilities": {
+            "detection": 1.0,
+            "correlation": 0.0,
+            "investigation": 0.8,
+            "reporting": 0.0,
+            "response": 0.0
+          },
+          "previous_worker_history": [],
+          "evidence_produced": 0,
+          "novel_evidence_count": 0,
+          "duplicate_evidence_count": 0,
+          "hypothesis_before": [],
+          "hypothesis_after": [],
+          "confidence_before": 0.3,
+          "confidence_after": 0.2845,
+          "confidence_delta": -0.0155,
+          "stagnation_counter": 1,
+          "is_replanning": false,
+          "termination_state": "investigating",
+          "worker_execution_status": "failed"
+        }
+      ],
+      "persisted_status": "failed"
+    },
+    "scenario_4_contradictory_evidence": {
+      "scenario": "Contradictory Evidence",
+      "completion_blocked": true,
+      "selected_worker": "investigation",
+      "investigation_score": 0.9,
+      "confidence_engine_has_contradiction_penalty": false
+    },
+    "scenario_5_replanning_recovery": {
+      "scenario": "Replanning Recovery",
+      "cycles": [
+        {
+          "investigation_id": "0556294f-b442-42b3-b483-022a0a400041",
+          "scenario": "Scenario 5 (Replanning Recovery)",
+          "cycle": 1,
+          "available_workers": [
+            "detection",
+            "correlation",
+            "investigation",
+            "reporting",
+            "response"
+          ],
+          "selected_worker": "correlation",
+          "base_utilities": {
+            "detection": 0.5,
+            "correlation": 1.2,
+            "investigation": 0.8,
+            "reporting": 0.0,
+            "response": 0.0
+          },
+          "effective_utilities": {
+            "detection": 0.5,
+            "correlation": 1.2,
+            "investigation": 0.8,
+            "reporting": 0.0,
+            "response": 0.0
+          },
+          "previous_worker_history": [],
+          "evidence_produced": 0,
+          "novel_evidence_count": 0,
+          "duplicate_evidence_count": 0,
+          "hypothesis_before": [],
+          "hypothesis_after": [],
+          "confidence_before": 0.2,
+          "confidence_after": 0.2,
+          "confidence_delta": 0.0,
+          "stagnation_counter": 1,
+          "is_replanning": false,
+          "termination_state": "investigating"
+        },
+        {
+          "investigation_id": "0556294f-b442-42b3-b483-022a0a400041",
+          "scenario": "Scenario 5 (Replanning Recovery)",
+          "cycle": 2,
+          "available_workers": [
+            "detection",
+            "correlation",
+            "investigation",
+            "reporting",
+            "response"
+          ],
+          "selected_worker": "investigation",
+          "base_utilities": {
+            "detection": 0.4,
+            "correlation": 0.0,
+            "investigation": 0.8,
+            "reporting": 0.0,
+            "response": 0.0
+          },
+          "effective_utilities": {
+            "detection": 0.4,
+            "correlation": 0.0,
+            "investigation": 0.8,
+            "reporting": 0.0,
+            "response": 0.0
+          },
+          "previous_worker_history": [
+            "correlation"
+          ],
+          "evidence_produced": 1,
+          "novel_evidence_count": 1,
+          "duplicate_evidence_count": 0,
+          "hypothesis_before": [],
+          "hypothesis_after": [
+            "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+          ],
+          "confidence_before": 0.2,
+          "confidence_after": 0.2403,
+          "confidence_delta": 0.0403,
+          "stagnation_counter": 0,
+          "is_replanning": true,
+          "termination_state": "investigating"
+        }
+      ]
+    },
+    "scenario_6_long_run_convergence": {
+      "scenario": "Long-Run Convergence",
+      "total_cycles_executed": 10,
+      "final_status": "escalated",
+      "final_confidence": 0.2368,
+      "termination_classification": "stagnation_escalation"
+    }
+  },
+  "threshold_sensitivity": {
+    "max_planning_cycles": {
+      "max_cycles_3": {
+        "cycles_run": 3,
+        "final_confidence": 0.2474,
+        "final_status": "investigating",
+        "unique_workers": 3
+      },
+      "max_cycles_6": {
+        "cycles_run": 6,
+        "final_confidence": 0.3318,
+        "final_status": "investigating",
+        "unique_workers": 4
+      },
+      "max_cycles_10": {
+        "cycles_run": 9,
+        "final_confidence": 0.3301,
+        "final_status": "escalated",
+        "unique_workers": 4
+      },
+      "max_cycles_15": {
+        "cycles_run": 9,
+        "final_confidence": 0.3301,
+        "final_status": "escalated",
+        "unique_workers": 4
+      }
+    },
+    "repeat_penalty_multiplier": {
+      "penalty_0.1": {
+        "effective_detection_score": 0.1,
+        "alternative_investigation_score": 0.8,
+        "selected_winner": "investigation",
+        "prevents_repeat_lock": true
+      },
+      "penalty_0.25": {
+        "effective_detection_score": 0.25,
+        "alternative_investigation_score": 0.8,
+        "selected_winner": "investigation",
+        "prevents_repeat_lock": true
+      },
+      "penalty_0.5": {
+        "effective_detection_score": 0.5,
+        "alternative_investigation_score": 0.8,
+        "selected_winner": "investigation",
+        "prevents_repeat_lock": true
+      },
+      "penalty_0.8": {
+        "effective_detection_score": 0.8,
+        "alternative_investigation_score": 0.8,
+        "selected_winner": "detection",
+        "prevents_repeat_lock": false
+      }
+    },
+    "confidence_reachability": {
+      "initial_confidence": 0.15,
+      "target_threshold": 0.85,
+      "cycles_required_under_ideal_evidence": 7,
+      "achieved_target": true,
+      "trajectory": [
+        0.15,
+        0.2332,
+        0.3434,
+        0.4704,
+        0.5995,
+        0.7151,
+        0.8075,
+        0.8749
+      ]
+    },
+    "stagnation_cycle_limit": {
+      "limit_1": {
+        "triggers_replan_at_cycle": 1,
+        "triggers_escalation_at_cycle": 1,
+        "behavioral_characteristic": "Aggressive/premature escalation"
+      },
+      "limit_2": {
+        "triggers_replan_at_cycle": 1,
+        "triggers_escalation_at_cycle": 2,
+        "behavioral_characteristic": "Balanced 1-replan retry before escalation"
+      },
+      "limit_3": {
+        "triggers_replan_at_cycle": 1,
+        "triggers_escalation_at_cycle": 3,
+        "behavioral_characteristic": "Balanced 1-replan retry before escalation"
+      },
+      "limit_4": {
+        "triggers_replan_at_cycle": 1,
+        "triggers_escalation_at_cycle": 4,
+        "behavioral_characteristic": "Sluggish escalation / wasted cycles"
+      }
+    }
+  },
+  "blind_evaluation": {
+    "scenarios": [
+      {
+        "scenario_id": "brute_force",
+        "scenario_name": "SSH & FTP Credential Brute Force",
+        "gold_hypothesis": "External attacker executed dictionary attack against SSH/FTP, resulting in successful unauthorized authentication.",
+        "gold_techniques": [
+          "T1110.001",
+          "T1078"
+        ],
+        "seeded_mode": {
+          "hypotheses_preserved": 2,
+          "final_confidence": 0.3249,
+          "status": "investigating"
+        },
+        "blind_mode": {
+          "hypotheses_formulated": 1,
+          "discovered_labels": [
+            "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+          ],
+          "discovered_techniques": [
+            "T1059.001"
+          ],
+          "exact_gold_discovered": false,
+          "technique_coverage": 0.0,
+          "final_confidence": 0.3444,
+          "status": "investigating"
+        }
+      },
+      {
+        "scenario_id": "dos_goldeneye",
+        "scenario_name": "Denial of Service (GoldenEye & Slowloris)",
+        "gold_hypothesis": "Distributed nodes conducted Slowloris/GoldenEye HTTP starvation attack against port 80.",
+        "gold_techniques": [
+          "T1498.001",
+          "T1499.003"
+        ],
+        "seeded_mode": {
+          "hypotheses_preserved": 2,
+          "final_confidence": 0.3127,
+          "status": "investigating"
+        },
+        "blind_mode": {
+          "hypotheses_formulated": 1,
+          "discovered_labels": [
+            "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+          ],
+          "discovered_techniques": [
+            "T1059.001"
+          ],
+          "exact_gold_discovered": false,
+          "technique_coverage": 0.0,
+          "final_confidence": 0.3318,
+          "status": "investigating"
+        }
+      },
+      {
+        "scenario_id": "botnet_c2",
+        "scenario_name": "Botnet Command & Control (Ares C2)",
+        "gold_hypothesis": "Internal nodes compromised by Ares botnet establishing periodic C2 beaconing connections to remote IP.",
+        "gold_techniques": [
+          "T1071.001",
+          "T1573.001"
+        ],
+        "seeded_mode": {
+          "hypotheses_preserved": 2,
+          "final_confidence": 0.3127,
+          "status": "investigating"
+        },
+        "blind_mode": {
+          "hypotheses_formulated": 1,
+          "discovered_labels": [
+            "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+          ],
+          "discovered_techniques": [
+            "T1059.001"
+          ],
+          "exact_gold_discovered": false,
+          "technique_coverage": 0.0,
+          "final_confidence": 0.3318,
+          "status": "investigating"
+        }
+      },
+      {
+        "scenario_id": "infiltration",
+        "scenario_name": "Infiltration & Lateral Movement",
+        "gold_hypothesis": "Malicious macro/payload executed powershell.exe establishing a reverse shell, subsequently scanning subnet 192.168.1.0/24 for lateral movement.",
+        "gold_techniques": [
+          "T1566.001",
+          "T1059.001",
+          "T1046",
+          "T1021.002"
+        ],
+        "seeded_mode": {
+          "hypotheses_preserved": 2,
+          "final_confidence": 0.3127,
+          "status": "investigating"
+        },
+        "blind_mode": {
+          "hypotheses_formulated": 1,
+          "discovered_labels": [
+            "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+          ],
+          "discovered_techniques": [
+            "T1059.001"
+          ],
+          "exact_gold_discovered": false,
+          "technique_coverage": 0.25,
+          "final_confidence": 0.3318,
+          "status": "investigating"
+        }
+      },
+      {
+        "scenario_id": "web_attacks",
+        "scenario_name": "Web Application Exploitation (SQLi / XSS)",
+        "gold_hypothesis": "Attacker exploited input validation vulnerabilities in web app, attempting SQL injection to extract backend records.",
+        "gold_techniques": [
+          "T1190",
+          "T1041"
+        ],
+        "seeded_mode": {
+          "hypotheses_preserved": 2,
+          "final_confidence": 0.3259,
+          "status": "investigating"
+        },
+        "blind_mode": {
+          "hypotheses_formulated": 1,
+          "discovered_labels": [
+            "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+          ],
+          "discovered_techniques": [
+            "T1059.001"
+          ],
+          "exact_gold_discovered": false,
+          "technique_coverage": 0.0,
+          "final_confidence": 0.3453,
+          "status": "investigating"
+        }
+      }
+    ]
+  },
+  "adversarial_tests": {
+    "evidence_hashing_collision": {
+      "hash_1": "3ff4f4e0d74081fa90d6292d8e674854868ee6e83a8caa83b450e0b83c0c04cf",
+      "hash_2": "66fb804026bdccab3e0482783a9dfed564ded3fa3260c7a9bd794137f9625c67",
+      "collision": false,
+      "passed": true
+    },
+    "normalization_robustness": {
+      "hash_original": "3ff4f4e0d74081fa90d6292d8e674854868ee6e83a8caa83b450e0b83c0c04cf",
+      "hash_normalized": "3ff4f4e0d74081fa90d6292d8e674854868ee6e83a8caa83b450e0b83c0c04cf",
+      "correctly_collapsed": true,
+      "passed": true
+    },
+    "replan_ping_pong_check": {
+      "stalled_worker": "investigation",
+      "pivoted_to": "correlation",
+      "investigation_excluded": true,
+      "selected_alternative": true
+    }
+  },
+  "cycle_by_cycle_execution_traces": [
+    {
+      "investigation_id": "7cce2309-f0c6-4da0-8f15-d15084e8ecc3",
+      "scenario": "Scenario 1 (Productive)",
+      "cycle": 1,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "detection",
+      "base_utilities": {
+        "detection": 1.0,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "effective_utilities": {
+        "detection": 1.0,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "previous_worker_history": [],
+      "evidence_produced": 1,
+      "novel_evidence_count": 1,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [],
+      "hypothesis_after": [],
+      "confidence_before": 0.15,
+      "confidence_after": 0.1635,
+      "confidence_delta": 0.0135,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "investigating"
+    },
+    {
+      "investigation_id": "7cce2309-f0c6-4da0-8f15-d15084e8ecc3",
+      "scenario": "Scenario 1 (Productive)",
+      "cycle": 2,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "investigation",
+      "base_utilities": {
+        "detection": 0.4,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "effective_utilities": {
+        "detection": 0.1,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "previous_worker_history": [
+        "detection"
+      ],
+      "evidence_produced": 1,
+      "novel_evidence_count": 1,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.1635,
+      "confidence_after": 0.2104,
+      "confidence_delta": 0.0469,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "investigating"
+    },
+    {
+      "investigation_id": "7cce2309-f0c6-4da0-8f15-d15084e8ecc3",
+      "scenario": "Scenario 1 (Productive)",
+      "cycle": 3,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "correlation",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 1.2,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "effective_utilities": {
+        "detection": 0.05,
+        "correlation": 1.2,
+        "investigation": 0.03,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "previous_worker_history": [
+        "detection",
+        "investigation"
+      ],
+      "evidence_produced": 1,
+      "novel_evidence_count": 1,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.2104,
+      "confidence_after": 0.2474,
+      "confidence_delta": 0.037,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "investigating"
+    },
+    {
+      "investigation_id": "7cce2309-f0c6-4da0-8f15-d15084e8ecc3",
+      "scenario": "Scenario 1 (Productive)",
+      "cycle": 4,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "response",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 1.2,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "effective_utilities": {
+        "detection": 0.05,
+        "correlation": 0.3,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "previous_worker_history": [
+        "detection",
+        "investigation",
+        "correlation"
+      ],
+      "evidence_produced": 4,
+      "novel_evidence_count": 4,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.2474,
+      "confidence_after": 0.2989,
+      "confidence_delta": 0.0515,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "investigating"
+    },
+    {
+      "investigation_id": "d87595a0-7d39-40fc-be0d-0e224355b8cb",
+      "scenario": "Scenario 2 (Duplicate Response)",
+      "cycle": 1,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "detection",
+      "base_utilities": {
+        "detection": 1.0,
+        "correlation": 0.0,
+        "investigation": 0.15,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "effective_utilities": {
+        "detection": 1.0,
+        "correlation": 0.0,
+        "investigation": 0.15,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "previous_worker_history": [],
+      "evidence_produced": 1,
+      "novel_evidence_count": 1,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [
+        "Lateral Movement via WMI"
+      ],
+      "hypothesis_after": [
+        "Lateral Movement via WMI"
+      ],
+      "confidence_before": 0.35,
+      "confidence_after": 0.3737,
+      "confidence_delta": 0.0237,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "investigating"
+    },
+    {
+      "investigation_id": "d87595a0-7d39-40fc-be0d-0e224355b8cb",
+      "scenario": "Scenario 2 (Duplicate Response)",
+      "cycle": 2,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "response",
+      "base_utilities": {
+        "detection": 0.4,
+        "correlation": 0.0,
+        "investigation": 0.15,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "effective_utilities": {
+        "detection": 0.1,
+        "correlation": 0.0,
+        "investigation": 0.15,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "previous_worker_history": [
+        "detection"
+      ],
+      "evidence_produced": 4,
+      "novel_evidence_count": 4,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [
+        "Lateral Movement via WMI"
+      ],
+      "hypothesis_after": [
+        "Lateral Movement via WMI"
+      ],
+      "confidence_before": 0.3737,
+      "confidence_after": 0.4363,
+      "confidence_delta": 0.0626,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "investigating"
+    },
+    {
+      "investigation_id": "d87595a0-7d39-40fc-be0d-0e224355b8cb",
+      "scenario": "Scenario 2 (Duplicate Response)",
+      "cycle": 3,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "investigation",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.15,
+        "reporting": 0.0,
+        "response": 0.05
+      },
+      "effective_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.15,
+        "reporting": 0.0,
+        "response": 0.0125
+      },
+      "previous_worker_history": [
+        "detection",
+        "response"
+      ],
+      "evidence_produced": 1,
+      "novel_evidence_count": 1,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [
+        "Lateral Movement via WMI"
+      ],
+      "hypothesis_after": [
+        "Lateral Movement via WMI"
+      ],
+      "confidence_before": 0.4363,
+      "confidence_after": 0.4822,
+      "confidence_delta": 0.0459,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "investigating"
+    },
+    {
+      "investigation_id": "d87595a0-7d39-40fc-be0d-0e224355b8cb",
+      "scenario": "Scenario 2 (Duplicate Response)",
+      "cycle": 4,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "response",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "effective_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.03,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "previous_worker_history": [
+        "detection",
+        "response",
+        "investigation"
+      ],
+      "evidence_produced": 4,
+      "novel_evidence_count": 0,
+      "duplicate_evidence_count": 4,
+      "hypothesis_before": [
+        "Lateral Movement via WMI"
+      ],
+      "hypothesis_after": [
+        "Lateral Movement via WMI"
+      ],
+      "confidence_before": 0.4822,
+      "confidence_after": 0.4822,
+      "confidence_delta": 0.0,
+      "stagnation_counter": 1,
+      "is_replanning": false,
+      "termination_state": "investigating"
+    },
+    {
+      "investigation_id": "36cb0606-b5ca-4b98-a946-5c4a362109e2",
+      "scenario": "Scenario 3 (Worker Failure)",
+      "cycle": 1,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "detection",
+      "base_utilities": {
+        "detection": 1.0,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "effective_utilities": {
+        "detection": 1.0,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "previous_worker_history": [],
+      "evidence_produced": 0,
+      "novel_evidence_count": 0,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [],
+      "hypothesis_after": [],
+      "confidence_before": 0.3,
+      "confidence_after": 0.2845,
+      "confidence_delta": -0.0155,
+      "stagnation_counter": 1,
+      "is_replanning": false,
+      "termination_state": "investigating",
+      "worker_execution_status": "failed"
+    },
+    {
+      "investigation_id": "a451a692-2704-4648-8f9d-5b3616e866f8",
+      "scenario": "Scenario 4 (Contradictory Evidence)",
+      "cycle": 3,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "investigation",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.9,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "effective_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.9,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "previous_worker_history": [],
+      "evidence_produced": 1,
+      "novel_evidence_count": 1,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [
+        "Data Exfiltration over DNS"
+      ],
+      "hypothesis_after": [
+        "Data Exfiltration over DNS"
+      ],
+      "confidence_before": 0.88,
+      "confidence_after": 0.88,
+      "confidence_delta": 0.0,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "blocked_due_to_contradiction",
+      "has_unresolved_contradictions": true,
+      "completion_blocked": true,
+      "selected_investigation_worker": true,
+      "confidence_engine_has_contradiction_delta": false
+    },
+    {
+      "investigation_id": "0556294f-b442-42b3-b483-022a0a400041",
+      "scenario": "Scenario 5 (Replanning Recovery)",
+      "cycle": 1,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "correlation",
+      "base_utilities": {
+        "detection": 0.5,
+        "correlation": 1.2,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "effective_utilities": {
+        "detection": 0.5,
+        "correlation": 1.2,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "previous_worker_history": [],
+      "evidence_produced": 0,
+      "novel_evidence_count": 0,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [],
+      "hypothesis_after": [],
+      "confidence_before": 0.2,
+      "confidence_after": 0.2,
+      "confidence_delta": 0.0,
+      "stagnation_counter": 1,
+      "is_replanning": false,
+      "termination_state": "investigating"
+    },
+    {
+      "investigation_id": "0556294f-b442-42b3-b483-022a0a400041",
+      "scenario": "Scenario 5 (Replanning Recovery)",
+      "cycle": 2,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "investigation",
+      "base_utilities": {
+        "detection": 0.4,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "effective_utilities": {
+        "detection": 0.4,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "previous_worker_history": [
+        "correlation"
+      ],
+      "evidence_produced": 1,
+      "novel_evidence_count": 1,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.2,
+      "confidence_after": 0.2403,
+      "confidence_delta": 0.0403,
+      "stagnation_counter": 0,
+      "is_replanning": true,
+      "termination_state": "investigating"
+    },
+    {
+      "investigation_id": "d8bb5fb4-1851-41b8-8dcf-56e06789e924",
+      "scenario": "Scenario 6 (Long-Run 15 Cycles)",
+      "cycle": 1,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "detection",
+      "base_utilities": {
+        "detection": 1.0,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "effective_utilities": {
+        "detection": 1.0,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "previous_worker_history": [],
+      "evidence_produced": 1,
+      "novel_evidence_count": 1,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [],
+      "hypothesis_after": [],
+      "confidence_before": 0.1,
+      "confidence_after": 0.1096,
+      "confidence_delta": 0.0096,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "investigating",
+      "termination_classification": null
+    },
+    {
+      "investigation_id": "d8bb5fb4-1851-41b8-8dcf-56e06789e924",
+      "scenario": "Scenario 6 (Long-Run 15 Cycles)",
+      "cycle": 2,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "investigation",
+      "base_utilities": {
+        "detection": 0.4,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "effective_utilities": {
+        "detection": 0.1,
+        "correlation": 0.0,
+        "investigation": 0.8,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "previous_worker_history": [
+        "detection"
+      ],
+      "evidence_produced": 1,
+      "novel_evidence_count": 1,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.1096,
+      "confidence_after": 0.1437,
+      "confidence_delta": 0.0341,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "investigating",
+      "termination_classification": null
+    },
+    {
+      "investigation_id": "d8bb5fb4-1851-41b8-8dcf-56e06789e924",
+      "scenario": "Scenario 6 (Long-Run 15 Cycles)",
+      "cycle": 3,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "correlation",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 1.2,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "effective_utilities": {
+        "detection": 0.05,
+        "correlation": 1.2,
+        "investigation": 0.03,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "previous_worker_history": [
+        "detection",
+        "investigation"
+      ],
+      "evidence_produced": 1,
+      "novel_evidence_count": 1,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.1437,
+      "confidence_after": 0.1715,
+      "confidence_delta": 0.0278,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "investigating",
+      "termination_classification": null
+    },
+    {
+      "investigation_id": "d8bb5fb4-1851-41b8-8dcf-56e06789e924",
+      "scenario": "Scenario 6 (Long-Run 15 Cycles)",
+      "cycle": 4,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "response",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 1.2,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "effective_utilities": {
+        "detection": 0.05,
+        "correlation": 0.3,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "previous_worker_history": [
+        "detection",
+        "investigation",
+        "correlation"
+      ],
+      "evidence_produced": 4,
+      "novel_evidence_count": 4,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.1715,
+      "confidence_after": 0.2116,
+      "confidence_delta": 0.0401,
+      "stagnation_counter": 0,
+      "is_replanning": false,
+      "termination_state": "investigating",
+      "termination_classification": null
+    },
+    {
+      "investigation_id": "d8bb5fb4-1851-41b8-8dcf-56e06789e924",
+      "scenario": "Scenario 6 (Long-Run 15 Cycles)",
+      "cycle": 5,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "investigation",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.05
+      },
+      "effective_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.0125
+      },
+      "previous_worker_history": [
+        "detection",
+        "investigation",
+        "correlation",
+        "response"
+      ],
+      "evidence_produced": 1,
+      "novel_evidence_count": 0,
+      "duplicate_evidence_count": 1,
+      "hypothesis_before": [],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.2116,
+      "confidence_after": 0.2116,
+      "confidence_delta": 0.0,
+      "stagnation_counter": 1,
+      "is_replanning": false,
+      "termination_state": "investigating",
+      "termination_classification": null
+    },
+    {
+      "investigation_id": "d8bb5fb4-1851-41b8-8dcf-56e06789e924",
+      "scenario": "Scenario 6 (Long-Run 15 Cycles)",
+      "cycle": 6,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "detection",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.0,
+        "reporting": 0.0,
+        "response": 0.05
+      },
+      "effective_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.0,
+        "reporting": 0.0,
+        "response": 0.05
+      },
+      "previous_worker_history": [
+        "detection",
+        "investigation",
+        "correlation",
+        "response",
+        "investigation"
+      ],
+      "evidence_produced": 1,
+      "novel_evidence_count": 1,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.2116,
+      "confidence_after": 0.2382,
+      "confidence_delta": 0.0266,
+      "stagnation_counter": 0,
+      "is_replanning": true,
+      "termination_state": "investigating",
+      "termination_classification": null
+    },
+    {
+      "investigation_id": "d8bb5fb4-1851-41b8-8dcf-56e06789e924",
+      "scenario": "Scenario 6 (Long-Run 15 Cycles)",
+      "cycle": 7,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "response",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "effective_utilities": {
+        "detection": 0.0125,
+        "correlation": 0.0,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.95
+      },
+      "previous_worker_history": [
+        "detection",
+        "investigation",
+        "correlation",
+        "response",
+        "investigation",
+        "detection"
+      ],
+      "evidence_produced": 4,
+      "novel_evidence_count": 0,
+      "duplicate_evidence_count": 4,
+      "hypothesis_before": [],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.2382,
+      "confidence_after": 0.2382,
+      "confidence_delta": 0.0,
+      "stagnation_counter": 1,
+      "is_replanning": false,
+      "termination_state": "investigating",
+      "termination_classification": null
+    },
+    {
+      "investigation_id": "d8bb5fb4-1851-41b8-8dcf-56e06789e924",
+      "scenario": "Scenario 6 (Long-Run 15 Cycles)",
+      "cycle": 8,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "investigation",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "effective_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.0
+      },
+      "previous_worker_history": [
+        "detection",
+        "investigation",
+        "correlation",
+        "response",
+        "investigation",
+        "detection",
+        "response"
+      ],
+      "evidence_produced": 1,
+      "novel_evidence_count": 0,
+      "duplicate_evidence_count": 1,
+      "hypothesis_before": [],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.2382,
+      "confidence_after": 0.2382,
+      "confidence_delta": 0.0,
+      "stagnation_counter": 2,
+      "is_replanning": true,
+      "termination_state": "investigating",
+      "termination_classification": null
+    },
+    {
+      "investigation_id": "d8bb5fb4-1851-41b8-8dcf-56e06789e924",
+      "scenario": "Scenario 6 (Long-Run 15 Cycles)",
+      "cycle": 9,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "detection",
+      "base_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.0,
+        "reporting": 0.0,
+        "response": 0.05
+      },
+      "effective_utilities": {
+        "detection": 0.05,
+        "correlation": 0.0,
+        "investigation": 0.0,
+        "reporting": 0.0,
+        "response": 0.05
+      },
+      "previous_worker_history": [
+        "detection",
+        "investigation",
+        "correlation",
+        "response",
+        "investigation",
+        "detection",
+        "response",
+        "investigation"
+      ],
+      "evidence_produced": 1,
+      "novel_evidence_count": 0,
+      "duplicate_evidence_count": 1,
+      "hypothesis_before": [],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.2382,
+      "confidence_after": 0.2368,
+      "confidence_delta": -0.0014,
+      "stagnation_counter": 3,
+      "is_replanning": true,
+      "termination_state": "investigating",
+      "termination_classification": null
+    },
+    {
+      "investigation_id": "d8bb5fb4-1851-41b8-8dcf-56e06789e924",
+      "scenario": "Scenario 6 (Long-Run 15 Cycles)",
+      "cycle": 10,
+      "available_workers": [
+        "detection",
+        "correlation",
+        "investigation",
+        "reporting",
+        "response"
+      ],
+      "selected_worker": "investigation",
+      "base_utilities": {
+        "detection": 0.0,
+        "correlation": 0.0,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.05
+      },
+      "effective_utilities": {
+        "detection": 0.0,
+        "correlation": 0.0,
+        "investigation": 0.12,
+        "reporting": 0.0,
+        "response": 0.05
+      },
+      "previous_worker_history": [
+        "detection",
+        "investigation",
+        "correlation",
+        "response",
+        "investigation",
+        "detection",
+        "response",
+        "investigation",
+        "detection"
+      ],
+      "evidence_produced": 0,
+      "novel_evidence_count": 0,
+      "duplicate_evidence_count": 0,
+      "hypothesis_before": [],
+      "hypothesis_after": [
+        "Malicious Macro Execution with Encoded PowerShell Reverse Shell"
+      ],
+      "confidence_before": 0.2368,
+      "confidence_after": 0.2368,
+      "confidence_delta": 0.0,
+      "stagnation_counter": 3,
+      "is_replanning": true,
+      "termination_state": "escalated",
+      "termination_classification": "stagnation_escalation"
+    }
+  ]
+}

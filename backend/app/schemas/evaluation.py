@@ -22,7 +22,11 @@ class PlannerTraceStep(BaseModel):
     confidence_delta: float
     latency_ms: Optional[int] = None
     evidence_gained: int = 0
+    novel_evidence_gained: int = 0
+    duplicate_evidence_gained: int = 0
     decision_type: str = "continue_investigation"
+    is_replanning: bool = False
+    replan_reason: Optional[str] = None
 
 
 class WorkerEvaluationMetric(BaseModel):
@@ -63,6 +67,7 @@ class InvestigationEvaluationMetrics(BaseModel):
     confidence_delta: Optional[float] = None
     planning_cycles: int
     termination_reason: Optional[str] = None
+    termination_classification: Optional[str] = None
     final_status: str
 
 
@@ -88,6 +93,8 @@ class AgentExecutionMetrics(BaseModel):
 
 class EvidenceEvaluationMetrics(BaseModel):
     total_items: int
+    novel_items: int = 0
+    duplicate_items: int = 0
     direct_provenance_items: int
     derived_provenance_items: int
     legacy_unlinked_items: int
@@ -108,6 +115,8 @@ class BenchmarkAccuracyScores(BaseModel):
     evidence_coverage: float
     hallucination_rate: float
     expected_calibration_error: float
+    mitre_precision: Optional[float] = None
+    hypothesis_discovery_accuracy: Optional[float] = None
 
 
 class ScenarioEvaluationResult(BaseModel):
