@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { History, Search, Filter, Play, ExternalLink } from 'lucide-react';
+import { History, Search, Filter, Play, ExternalLink, RefreshCw } from 'lucide-react';
 import { workspaceClient } from '../api/workspaceClient';
 import { InvestigationSummary } from '../types/workspace';
 import { Button } from '../components/ui/Button';
@@ -43,17 +43,29 @@ export const HistoryPage: React.FC = () => {
   return (
     <div className="flex-1 p-6 max-w-6xl mx-auto w-full space-y-6">
       {/* Header */}
-      <div className="border-b border-zinc-800 pb-4">
-        <div className="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-wider mb-1">
-          <History className="w-4 h-4 text-blue-500" />
-          <span>Case Archive & Audit Catalog</span>
+      <div className="border-b border-zinc-800 pb-4 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-wider mb-1">
+            <History className="w-4 h-4 text-blue-500" />
+            <span>Case Archive & Audit Catalog</span>
+          </div>
+          <h1 className="text-xl font-bold text-zinc-100 tracking-tight">
+            Historical Investigations
+          </h1>
+          <p className="text-xs text-zinc-400 mt-1">
+            Review completed cases, inspect final outcomes, and launch deterministic investigation replay.
+          </p>
         </div>
-        <h1 className="text-xl font-bold text-zinc-100 tracking-tight">
-          Historical Investigations
-        </h1>
-        <p className="text-xs text-zinc-400 mt-1">
-          Review completed cases, inspect final outcomes, and launch deterministic investigation replay.
-        </p>
+
+        <Button
+          variant="secondary"
+          size="sm"
+          icon={<RefreshCw className="w-3.5 h-3.5" />}
+          isLoading={isLoading}
+          onClick={fetchHistory}
+        >
+          Refresh Archive
+        </Button>
       </div>
 
       {/* Filter and Search Bar */}
@@ -123,7 +135,18 @@ export const HistoryPage: React.FC = () => {
                     <div className="font-mono text-[10px] text-zinc-500">{inv.investigation_id.slice(0, 12)}...</div>
                   </td>
                   <td className="p-3">
-                    <Badge variant={inv.status === 'active' ? 'violet' : 'neutral'} size="sm">
+                    <Badge
+                      variant={
+                        inv.status === 'completed'
+                          ? 'success'
+                          : inv.status === 'awaiting_review'
+                          ? 'high'
+                          : inv.status === 'investigating' || inv.status === 'active'
+                          ? 'info'
+                          : 'neutral'
+                      }
+                      size="sm"
+                    >
                       {inv.status}
                     </Badge>
                   </td>

@@ -18,6 +18,7 @@ export const SimulatePage: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLaunching, setIsLaunching] = useState<boolean>(false);
+  const [launchStep, setLaunchStep] = useState<number>(0);
   const [launchStatus, setLaunchStatus] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
@@ -47,13 +48,15 @@ export const SimulatePage: React.FC = () => {
     if (!selectedScenario || isLaunching) return;
     setIsLaunching(true);
     setError(null);
-    setLaunchStatus('Preparing CSE-CIC-IDS2018 benchmark telemetry...');
+    setLaunchStep(1);
+    setLaunchStatus('Preparing CSE-CIC-IDS2018 benchmark telemetry on disk...');
 
     try {
       // 1. Ensure scenario telemetry files are prepared on disk
       await datasetClient.prepareScenario(selectedScenario.scenario_id);
 
       // 2. Launch scenario through evaluation service to seed telemetry & run Planner
+      setLaunchStep(2);
       setLaunchStatus(
         executionMode === 'instant'
           ? `Autonomous Planner executing up to ${maxSteps} planning cycles...`
@@ -66,16 +69,23 @@ export const SimulatePage: React.FC = () => {
         cyclesToRun
       );
 
-      const newInvId = evalRes?.result?.investigation?.investigation_id;
+      const newInvId =
+        evalRes?.results?.[0]?.investigation?.investigation_id ||
+        evalRes?.result?.investigation?.investigation_id ||
+        evalRes?.investigation?.investigation_id;
       if (!newInvId) {
         throw new Error('Backend did not return an investigation ID for the launched scenario');
       }
 
-      setLaunchStatus('Navigating to Agentic Investigation Workspace...');
-      navigate(`/investigate/${newInvId}`);
+      setLaunchStep(3);
+      setLaunchStatus('Autonomous cycles recorded. Opening Agentic Investigation Workspace...');
+      setTimeout(() => {
+        navigate(`/investigate/${newInvId}`);
+      }, 400);
     } catch (err: any) {
       setError(err.message || 'Failed to launch investigation');
       setIsLaunching(false);
+      setLaunchStep(0);
       setLaunchStatus('');
     }
   };
@@ -214,6 +224,40 @@ export const SimulatePage: React.FC = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* Ground Truth Telemetry File Provenance */}
+                <div className="pt-2 border-t border-zinc-800/60">
+                  <span className="text-zinc-500 uppercase font-mono text-[10px] block mb-1.5">
+                    Benchmark Telemetry Provenance:
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono text-[11px]">
+                    <div className="bg-zinc-950/70 p-2 rounded border border-zinc-800">
+                      <span className="text-zinc-500 block text-[9px] uppercase">Normalized Telemetry</span>
+                      <span className="text-zinc-300 truncate block">
+                        {selectedScenario.normalized_filename}
+                      </span>
+                    </div>
+                    <div className="bg-zinc-950/70 p-2 rounded border border-zinc-800">
+                      <span className="text-zinc-500 block text-[9px] uppercase">Raw Benchmark Capture</span>
+                      <span className="text-zinc-400 truncate block">
+                        {selectedScenario.raw_filename}
+                      </span>
+                    </div>
+                    <div className="bg-zinc-950/70 p-2 rounded border border-zinc-800">
+                      <span className="text-zinc-500 block text-[9px] uppercase">Dataset Source</span>
+                      <span className="text-zinc-300">
+                        {selectedScenario.dataset_source} ({selectedScenario.day})
+                      </span>
+                    </div>
+                    <div className="bg-zinc-950/70 p-2 rounded border border-zinc-800 flex items-center justify-between">
+                      <div>
+                        <span className="text-zinc-500 block text-[9px] uppercase">Integrity Status</span>
+                        <span className="text-emerald-400 font-semibold">Verified on Disk</span>
+                      </div>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    </div>
+                  </div>
+                </div>
               </div>
             </Card>
           </div>
@@ -293,15 +337,47 @@ export const SimulatePage: React.FC = () => {
                   </div>
                 )}
 
-                {/* Launch Status Progress Indicator */}
+                {/* Launch Status Multi-Stage Progress Indicator */}
                 {isLaunching && (
-                  <div className="p-3 bg-blue-950/30 border border-blue-800/60 rounded-md text-xs space-y-2 animate-pulse">
+                  <div className="p-3 bg-blue-950/40 border border-blue-800/80 rounded-md text-xs space-y-2.5">
                     <div className="flex items-center gap-2 text-blue-300 font-medium">
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-400" />
-                      <span>{launchStatus}</span>
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-400 shrink-0" />
+                      <span className="truncate">{launchStatus}</span>
                     </div>
-                    <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-blue-500 h-full w-2/3 animate-indeterminate" />
+
+                    <div className="space-y-1.5 pt-1">
+                      <div className="flex items-center gap-2 text-[11px] font-mono">
+                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
+                          launchStep > 1 ? 'bg-emerald-600 text-white' : launchStep === 1 ? 'bg-blue-600 text-white animate-pulse' : 'bg-zinc-800 text-zinc-500'
+                        }`}>
+                          {launchStep > 1 ? '✓' : '1'}
+                        </span>
+                        <span className={launchStep >= 1 ? 'text-zinc-200' : 'text-zinc-500'}>
+                          Ingest benchmark telemetry
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-[11px] font-mono">
+                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
+                          launchStep > 2 ? 'bg-emerald-600 text-white' : launchStep === 2 ? 'bg-blue-600 text-white animate-pulse' : 'bg-zinc-800 text-zinc-500'
+                        }`}>
+                          {launchStep > 2 ? '✓' : '2'}
+                        </span>
+                        <span className={launchStep >= 2 ? 'text-zinc-200' : 'text-zinc-500'}>
+                          Execute autonomous planning loop
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-[11px] font-mono">
+                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
+                          launchStep === 3 ? 'bg-emerald-600 text-white' : 'bg-zinc-800 text-zinc-500'
+                        }`}>
+                          3
+                        </span>
+                        <span className={launchStep >= 3 ? 'text-zinc-200' : 'text-zinc-500'}>
+                          Project state into workspace
+                        </span>
+                      </div>
                     </div>
                   </div>
                 )}

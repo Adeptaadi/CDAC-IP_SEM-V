@@ -21,18 +21,27 @@ export const KnowledgePage: React.FC = () => {
       .finally(() => setIsLoadingStats(false));
   }, []);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
+  const executeQuery = async (searchQuery: string) => {
+    if (!searchQuery.trim()) return;
     setIsSearching(true);
     try {
-      const res = await systemClient.queryKnowledge(query, 4);
+      const res = await systemClient.queryKnowledge(searchQuery, 4);
       setQueryResult(res);
     } catch (e: any) {
       console.error('Knowledge query failed', e);
     } finally {
       setIsSearching(false);
     }
+  };
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    executeQuery(query);
+  };
+
+  const handleSelectSample = (sample: string) => {
+    setQuery(sample);
+    executeQuery(sample);
   };
 
   return (
@@ -96,6 +105,26 @@ export const KnowledgePage: React.FC = () => {
             Search Vectors
           </Button>
         </form>
+
+        {/* Quick Sample Query Suggestions for Demonstration */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-2">
+          <span className="text-[10px] font-mono text-zinc-500 uppercase mr-1">Demo Queries:</span>
+          {[
+            'PowerShell encoded download cradle',
+            'GoldenEye HTTP denial of service',
+            'SSH brute force authentication failure',
+            'Lateral movement SMB port 445',
+          ].map((sample) => (
+            <button
+              key={sample}
+              type="button"
+              onClick={() => handleSelectSample(sample)}
+              className="text-[10px] font-mono bg-zinc-950 text-zinc-400 hover:text-blue-300 hover:border-blue-500/60 px-2 py-0.5 rounded border border-zinc-800 transition-colors"
+            >
+              {sample}
+            </button>
+          ))}
+        </div>
 
         {queryResult && (
           <div className="mt-4 pt-4 border-t border-zinc-800 space-y-3">

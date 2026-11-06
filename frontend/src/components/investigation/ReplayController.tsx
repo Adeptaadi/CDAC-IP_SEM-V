@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import {
@@ -37,6 +37,32 @@ export const ReplayController: React.FC<ReplayControllerProps> = ({
   onChangeSpeed,
   onExitReplay,
 }) => {
+  // Keyboard navigation shortcuts for presentation/demo
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't intercept if user is typing in an input or textarea
+      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) {
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        onPrevious();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        onNext();
+      } else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        onTogglePlay();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        onExitReplay();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onPrevious, onNext, onTogglePlay, onExitReplay]);
+
   // Current step details
   const activeStep = currentCycle > 0 ? steps[currentCycle - 1] : null;
 
@@ -149,6 +175,10 @@ export const ReplayController: React.FC<ReplayControllerProps> = ({
 
         {/* Right: Exit Replay / Return to Live Mode */}
         <div className="flex items-center gap-2">
+          <span className="hidden xl:inline text-[10px] font-mono text-zinc-500 bg-zinc-900/80 px-2 py-1 rounded border border-zinc-800">
+            [← / → Navigate · Space Play · Esc Exit]
+          </span>
+
           <Button
             variant="ghost"
             size="sm"

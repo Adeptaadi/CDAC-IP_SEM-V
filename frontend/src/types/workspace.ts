@@ -153,8 +153,9 @@ export interface InvestigationSummary {
   title: string;
   status: string;
   confidence: number;
+  current_confidence?: number;
   confidence_state: ConfidenceState;
-  state_version: number;
+  state_version?: number;
   planning_cycle_count: number;
   created_at: string;
   updated_at?: string | null;

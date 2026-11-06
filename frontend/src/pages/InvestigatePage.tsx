@@ -140,6 +140,19 @@ export const InvestigatePage: React.FC = () => {
     };
   }, [isReplayMode, isPlaying, workspace, replaySpeed, setSearchParams]);
 
+  // Live polling for active investigations (strictly disabled in replay mode)
+  useEffect(() => {
+    let pollInterval: any = null;
+    if (!isReplayMode && routeInvestigationId && workspace?.threat.status === 'investigating') {
+      pollInterval = setInterval(() => {
+        fetchWorkspace(routeInvestigationId, true);
+      }, 3500);
+    }
+    return () => {
+      if (pollInterval) clearInterval(pollInterval);
+    };
+  }, [isReplayMode, routeInvestigationId, workspace?.threat.status, fetchWorkspace]);
+
   // Replay Controller Handlers
   const handleSelectCycle = (cycle: number) => {
     setReplayCycle(cycle);
@@ -412,11 +425,12 @@ export const InvestigatePage: React.FC = () => {
       {/* 1. LEVEL 0 COMMAND ANCHOR (STICKY TOP BAR)                                */}
       {/* ========================================================================= */}
       <section
-        className={`bg-zinc-950 border-b p-4 shrink-0 space-y-3 shadow-md z-20 ${
+        className={`bg-zinc-950 border-b p-4 shrink-0 shadow-md z-20 ${
           isReplayMode ? 'border-amber-600/30 bg-amber-950/10' : 'border-zinc-800'
         }`}
       >
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-4">
           {/* Threat Title & Target Profile */}
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-md bg-rose-950/80 border border-rose-800 flex items-center justify-center text-rose-400 shrink-0">
@@ -566,22 +580,25 @@ export const InvestigatePage: React.FC = () => {
             isReadOnly={isReplayMode}
           />
         )}
+        </div>
       </section>
 
       {/* ========================================================================= */}
       {/* 2. SUB-VIEW TABS SWITCHER                                                 */}
       {/* ========================================================================= */}
       <div className="bg-zinc-950/80 border-b border-zinc-800 shrink-0">
-        <Tabs
-          tabs={[
-            { id: 'storyline', label: 'Storyline', count: orchestration_history.length },
-            { id: 'activity', label: 'Agent Activity', count: orchestration_history.length },
-            { id: 'evidence', label: 'Evidence Ledger', count: key_findings.length },
-            { id: 'details', label: 'Forensic Diagnostics' },
-          ]}
-          activeTab={activeTab}
-          onChange={setActiveTab}
-        />
+        <div className="max-w-6xl mx-auto px-4">
+          <Tabs
+            tabs={[
+              { id: 'storyline', label: 'Storyline', count: orchestration_history.length },
+              { id: 'activity', label: 'Agent Activity', count: orchestration_history.length },
+              { id: 'evidence', label: 'Evidence Ledger', count: key_findings.length },
+              { id: 'details', label: 'Forensic Diagnostics' },
+            ]}
+            activeTab={activeTab}
+            onChange={setActiveTab}
+          />
+        </div>
       </div>
 
       {/* ========================================================================= */}

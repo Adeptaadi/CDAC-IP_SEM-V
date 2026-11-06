@@ -22,8 +22,8 @@ export const workspaceClient = {
    * Lists investigations for the History archive
    * GET /api/investigations
    */
-  listInvestigations: (limit: number = 50, statusFilter?: string): Promise<InvestigationSummary[]> => {
-    return request<InvestigationSummary[]>({
+  listInvestigations: async (limit: number = 50, statusFilter?: string): Promise<InvestigationSummary[]> => {
+    const list = await request<any[]>({
       method: 'GET',
       url: '/api/investigations',
       params: {
@@ -31,6 +31,10 @@ export const workspaceClient = {
         status_filter: statusFilter,
       },
     });
+    return (list || []).map((item) => ({
+      ...item,
+      confidence: item.confidence ?? item.current_confidence ?? 0,
+    }));
   },
 
   /**
