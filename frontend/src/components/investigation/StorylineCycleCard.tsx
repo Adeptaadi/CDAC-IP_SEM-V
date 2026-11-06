@@ -17,6 +17,7 @@ interface StorylineCycleCardProps {
   isRevisit: boolean;
   isReplan: boolean;
   replanReason?: string | null;
+  isCurrentReplayStep?: boolean;
   onInspect?: () => void;
 }
 
@@ -26,6 +27,7 @@ export const StorylineCycleCard: React.FC<StorylineCycleCardProps> = ({
   isRevisit,
   isReplan,
   replanReason,
+  isCurrentReplayStep = false,
   onInspect,
 }) => {
   const workerName = step.selected_worker || 'system';
@@ -72,7 +74,9 @@ export const StorylineCycleCard: React.FC<StorylineCycleCardProps> = ({
       {/* Main cycle card */}
       <div
         className={`rounded-lg border p-4 transition-all duration-150 ${
-          isReplan
+          isCurrentReplayStep
+            ? 'bg-blue-950/30 border-blue-500 shadow-md ring-1 ring-blue-500/70'
+            : isReplan
             ? 'bg-amber-950/20 border-amber-800/80 hover:border-amber-700'
             : 'bg-zinc-900/70 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/90'
         }`}
@@ -87,6 +91,12 @@ export const StorylineCycleCard: React.FC<StorylineCycleCardProps> = ({
             <Badge variant={workerBadgeVariant} size="sm">
               {workerName.toUpperCase()} AGENT
             </Badge>
+
+            {isCurrentReplayStep && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-500/80 animate-pulse">
+                REPLAY HEAD
+              </span>
+            )}
 
             {isRevisit && (
               <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-violet-950/80 text-violet-300 border border-violet-800/80">

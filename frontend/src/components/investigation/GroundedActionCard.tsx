@@ -16,6 +16,7 @@ interface GroundedActionCardProps {
   onApprove: () => void;
   onReject: () => void;
   onSelectCitation: (findingId: string) => void;
+  isReadOnly?: boolean;
 }
 
 export const GroundedActionCard: React.FC<GroundedActionCardProps> = ({
@@ -24,6 +25,7 @@ export const GroundedActionCard: React.FC<GroundedActionCardProps> = ({
   onApprove,
   onReject,
   onSelectCitation,
+  isReadOnly = false,
 }) => {
   const isPending = recommendation.approval_status === 'pending';
   const isApproved = recommendation.approval_status === 'approved' || humanReview?.decision === 'approve';
@@ -78,7 +80,12 @@ export const GroundedActionCard: React.FC<GroundedActionCardProps> = ({
 
         {/* Human Authorization Gate Buttons */}
         <div className="flex items-center gap-2 shrink-0">
-          {isPending ? (
+          {isReadOnly ? (
+            <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-400 bg-zinc-950 px-3 py-1.5 rounded border border-zinc-800">
+              <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
+              <span>READ-ONLY REPLAY</span>
+            </div>
+          ) : isPending ? (
             <>
               <Button
                 variant="primary"

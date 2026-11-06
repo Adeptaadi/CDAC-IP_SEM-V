@@ -15,12 +15,14 @@ interface EvidenceLedgerViewProps {
   findings: KeyFinding[];
   onSelectFinding: (finding: KeyFinding) => void;
   selectedFindingId?: string | null;
+  newFindingIds?: Set<string>;
 }
 
 export const EvidenceLedgerView: React.FC<EvidenceLedgerViewProps> = ({
   findings,
   onSelectFinding,
   selectedFindingId,
+  newFindingIds,
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedTechnique, setSelectedTechnique] = useState<string>('all');
@@ -181,6 +183,7 @@ export const EvidenceLedgerView: React.FC<EvidenceLedgerViewProps> = ({
         <div className="space-y-2">
           {filteredFindings.map((finding) => {
             const isSelected = selectedFindingId === finding.finding_id;
+            const isNewAtCycle = newFindingIds?.has(finding.finding_id);
             const hasMitre = Boolean(finding.mitre_technique_id);
 
             return (
@@ -190,6 +193,8 @@ export const EvidenceLedgerView: React.FC<EvidenceLedgerViewProps> = ({
                 className={`p-3.5 rounded-lg border cursor-pointer transition-all duration-150 flex items-start justify-between gap-4 ${
                   isSelected
                     ? 'bg-blue-950/40 border-blue-500 shadow-md ring-1 ring-blue-500/50'
+                    : isNewAtCycle
+                    ? 'bg-emerald-950/20 border-emerald-700/80 hover:border-emerald-500 shadow-sm'
                     : 'bg-zinc-900/70 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/90'
                 }`}
               >
@@ -198,6 +203,12 @@ export const EvidenceLedgerView: React.FC<EvidenceLedgerViewProps> = ({
                     <span className="font-mono text-xs font-bold text-blue-400">
                       {finding.finding_id.slice(0, 8)}
                     </span>
+
+                    {isNewAtCycle && (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-600 px-2 py-0.5 rounded font-bold animate-pulse">
+                        NEW AT THIS CYCLE
+                      </span>
+                    )}
 
                     <Badge variant="neutral" size="sm">
                       {finding.source_type}

@@ -19,6 +19,7 @@ interface StorylineViewProps {
   onInspectStep: (step: OrchestrationStep) => void;
   onStepPlanner?: () => void;
   isExecutingStep?: boolean;
+  currentReplayCycle?: number;
 }
 
 export const StorylineView: React.FC<StorylineViewProps> = ({
@@ -29,6 +30,7 @@ export const StorylineView: React.FC<StorylineViewProps> = ({
   onInspectStep,
   onStepPlanner,
   isExecutingStep,
+  currentReplayCycle,
 }) => {
   // Pre-calculate running occurrence count for each step to support honest revisit markers
   const workerCountsSoFar: Record<string, number> = {};
@@ -105,6 +107,7 @@ export const StorylineView: React.FC<StorylineViewProps> = ({
                 isRevisit={isRevisit}
                 isReplan={isReplan}
                 replanReason={replanReason}
+                isCurrentReplayStep={currentReplayCycle === step.cycle}
                 onInspect={() => onInspectStep(step)}
               />
             ))}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { History, Search, Filter } from 'lucide-react';
+import { History, Search, Filter, Play, ExternalLink } from 'lucide-react';
 import { workspaceClient } from '../api/workspaceClient';
 import { InvestigationSummary } from '../types/workspace';
 import { Button } from '../components/ui/Button';
@@ -137,13 +137,24 @@ export const HistoryPage: React.FC = () => {
                     {new Date(inv.created_at).toLocaleDateString()}
                   </td>
                   <td className="p-3 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
+                    <div className="flex items-center justify-end gap-2">
                       <Button
                         variant="secondary"
                         size="sm"
+                        icon={<ExternalLink className="w-3 h-3" />}
                         onClick={() => navigate(`/investigate/${inv.investigation_id}`)}
+                        title="Open normal live workspace"
                       >
-                        Open Workspace
+                        Open
+                      </Button>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        icon={<Play className="w-3 h-3 fill-current" />}
+                        onClick={() => navigate(`/investigate/${inv.investigation_id}?mode=replay`)}
+                        title="Replay historical evolution step-by-step"
+                      >
+                        Replay
                       </Button>
                     </div>
                   </td>

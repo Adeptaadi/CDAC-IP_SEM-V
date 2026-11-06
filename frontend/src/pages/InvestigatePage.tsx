@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ShieldAlert,
   RotateCw,
   Play,
   RefreshCw,
+  RotateCcw,
 } from 'lucide-react';
 import { workspaceClient } from '../api/workspaceClient';
 import { reviewClient } from '../api/reviewClient';
@@ -13,6 +14,8 @@ import {
   KeyFinding,
   OrchestrationStep,
   PlannerDecisionRecord,
+  ThreatSummary,
+  PlannerWorkspaceState,
 } from '../types/workspace';
 import { Card, CardHeader } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -25,10 +28,16 @@ import { AgentActivityView } from '../components/investigation/AgentActivityView
 import { EvidenceLedgerView } from '../components/investigation/EvidenceLedgerView';
 import { GroundedActionCard } from '../components/investigation/GroundedActionCard';
 import { ForensicDrawer } from '../components/investigation/ForensicDrawer';
+import { ReplayController } from '../components/investigation/ReplayController';
 
 export const InvestigatePage: React.FC = () => {
   const { id: routeInvestigationId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Mode from URL query parameter (?mode=replay&cycle=N)
+  const isReplayMode = searchParams.get('mode') === 'replay';
+  const paramCycle = searchParams.get('cycle');
 
   // Workspace Data State
   const [workspace, setWorkspace] = useState<InvestigationWorkspaceProjection | null>(null);
@@ -50,6 +59,11 @@ export const InvestigatePage: React.FC = () => {
   const [selectedFinding, setSelectedFinding] = useState<KeyFinding | null>(null);
   const [selectedStep, setSelectedStep] = useState<OrchestrationStep | null>(null);
 
+  // Replay State
+  const [replayCycle, setReplayCycle] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [replaySpeed, setReplaySpeed] = useState<number>(1500);
+
   const fetchWorkspace = useCallback(async (investigationId: string, silent: boolean = false) => {
     if (!silent) setIsLoading(true);
     setError(null);
@@ -67,12 +81,11 @@ export const InvestigatePage: React.FC = () => {
     }
   }, []);
 
-  // If no ID is provided in route, pick the most recent investigation or prompt selection
+  // If no ID is provided in route, pick the most recent investigation
   useEffect(() => {
     if (routeInvestigationId) {
       fetchWorkspace(routeInvestigationId);
     } else {
-      // Find latest investigation
       workspaceClient
         .listInvestigations(1)
         .then((list) => {
@@ -89,9 +102,87 @@ export const InvestigatePage: React.FC = () => {
     }
   }, [routeInvestigationId, fetchWorkspace, navigate]);
 
-  // Handle single autonomous step execution
+  // Sync replay cycle state when replay mode or cycle param changes
+  useEffect(() => {
+    if (isReplayMode && workspace) {
+      const total = workspace.orchestration_history.length;
+      if (paramCycle !== null && paramCycle !== undefined) {
+        const parsed = parseInt(paramCycle, 10);
+        if (!isNaN(parsed) && parsed >= 0 && parsed <= total) {
+          setReplayCycle(parsed);
+          return;
+        }
+      }
+      // If cycle is uninitialized or 0, default to 1 if steps exist, else 0
+      setReplayCycle((prev) => (prev > 0 && prev <= total ? prev : total > 0 ? 1 : 0));
+    }
+  }, [isReplayMode, workspace, paramCycle]);
+
+  // Replay playback timer loop
+  useEffect(() => {
+    let timer: any = null;
+    if (isReplayMode && isPlaying && workspace) {
+      const total = workspace.orchestration_history.length;
+      timer = setInterval(() => {
+        setReplayCycle((prev) => {
+          if (prev >= total) {
+            setIsPlaying(false);
+            return prev;
+          }
+          const next = prev + 1;
+          setSearchParams({ mode: 'replay', cycle: String(next) });
+          return next;
+        });
+      }, replaySpeed);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isReplayMode, isPlaying, workspace, replaySpeed, setSearchParams]);
+
+  // Replay Controller Handlers
+  const handleSelectCycle = (cycle: number) => {
+    setReplayCycle(cycle);
+    setIsPlaying(false);
+    setSearchParams({ mode: 'replay', cycle: String(cycle) });
+  };
+
+  const handlePreviousCycle = () => {
+    if (replayCycle > 0) {
+      handleSelectCycle(replayCycle - 1);
+    }
+  };
+
+  const handleNextCycle = () => {
+    const total = workspace?.orchestration_history.length || 0;
+    if (replayCycle < total) {
+      handleSelectCycle(replayCycle + 1);
+    }
+  };
+
+  const handleTogglePlay = () => {
+    const total = workspace?.orchestration_history.length || 0;
+    if (replayCycle >= total && !isPlaying) {
+      // Loop back to cycle 0 on replay restart
+      setReplayCycle(0);
+      setSearchParams({ mode: 'replay', cycle: '0' });
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleExitReplay = () => {
+    setIsPlaying(false);
+    setSearchParams({});
+  };
+
+  const handleEnterReplay = () => {
+    const total = workspace?.orchestration_history.length || 0;
+    setSearchParams({ mode: 'replay', cycle: String(total > 0 ? 1 : 0) });
+  };
+
+  // Live execution handlers (Disabled in Replay Mode)
   const handleExecuteNextStep = async () => {
-    if (!workspace?.threat.investigation_id || isExecutingStep || isRunningAutonomous) return;
+    if (isReplayMode || !workspace?.threat.investigation_id || isExecutingStep || isRunningAutonomous) return;
     setIsExecutingStep(true);
     try {
       await workspaceClient.executeStep(workspace.threat.investigation_id);
@@ -103,9 +194,8 @@ export const InvestigatePage: React.FC = () => {
     }
   };
 
-  // Handle continuous autonomous loop run
   const handleRunAutonomous = async () => {
-    if (!workspace?.threat.investigation_id || isRunningAutonomous || isExecutingStep) return;
+    if (isReplayMode || !workspace?.threat.investigation_id || isRunningAutonomous || isExecutingStep) return;
     setIsRunningAutonomous(true);
     try {
       await workspaceClient.runAutonomous(workspace.threat.investigation_id, 6);
@@ -117,9 +207,8 @@ export const InvestigatePage: React.FC = () => {
     }
   };
 
-  // Handle human review approval or rejection
   const handleSubmitReviewDecision = async () => {
-    if (!workspace?.human_review?.review_id) return;
+    if (isReplayMode || !workspace?.human_review?.review_id) return;
     setIsSubmittingReview(true);
     try {
       await reviewClient.submitDecision(workspace.human_review.review_id, {
@@ -160,6 +249,103 @@ export const InvestigatePage: React.FC = () => {
     }
   };
 
+  // =========================================================================
+  // HISTORICAL RECONSTRUCTION: Deterministic projection slice at Cycle K
+  // =========================================================================
+  const displayedWorkspace = useMemo(() => {
+    if (!workspace) return null;
+    if (!isReplayMode) return workspace;
+
+    const totalSteps = workspace.orchestration_history.length;
+    const K = Math.min(replayCycle, totalSteps);
+
+    // 1. Sliced historical steps up to cycle K
+    const historicalSteps = workspace.orchestration_history.slice(0, K);
+
+    // 2. Sliced confidence at cycle K
+    let historicalConfidence = workspace.threat.confidence;
+    if (K === 0) {
+      historicalConfidence = workspace.orchestration_history[0]?.confidence_before ?? 0.15;
+    } else if (K > 0 && historicalSteps.length >= K) {
+      historicalConfidence = historicalSteps[K - 1]?.confidence_after ?? workspace.threat.confidence;
+    }
+
+    // 3. Historical Threat Summary
+    const historicalThreat: ThreatSummary = {
+      ...workspace.threat,
+      current_cycle: K,
+      confidence: historicalConfidence,
+      status: K < totalSteps ? 'investigating' : workspace.threat.status,
+    };
+
+    // 4. Decision mapping for findings discovered up to cycle K
+    const activeDecisions = decisions.filter((d) => d.cycle_number <= K);
+    const activeDecisionIds = new Set(activeDecisions.map((d) => d.decision_id));
+
+    // Findings available at or before cycle K
+    const historicalFindings = workspace.key_findings.filter((f) => {
+      if (!f.provenance.planner_decision_id) return true; // Initial baseline telemetry
+      return activeDecisionIds.has(f.provenance.planner_decision_id);
+    });
+
+    // 5. Planner state at cycle K
+    const activeStep = K > 0 ? historicalSteps[K - 1] : null;
+    const historicalPlanner: PlannerWorkspaceState = {
+      ...workspace.planner,
+      current_observation:
+        activeStep?.observation ||
+        'Initial benchmark baseline established. Autonomous Planner ready to evaluate evidence.',
+      decision_rationale: activeStep?.rationale || null,
+      is_replanning: activeStep ? Boolean(activeStep.is_replanning) : false,
+      active_capability: activeStep
+        ? {
+            name: activeStep.selected_capability || `${activeStep.selected_worker}.execute`,
+            worker_type: activeStep.selected_worker || 'system',
+            status: 'completed',
+          }
+        : null,
+    };
+
+    // 6. Recommendation: Only exposed if response worker executed at or before cycle K
+    const responseStepIndex = historicalSteps.findIndex((s) => s.selected_worker === 'response');
+    const hasReachedResponse = responseStepIndex !== -1;
+    const historicalRecommendation = hasReachedResponse ? workspace.recommendation : null;
+    const historicalHumanReview = hasReachedResponse ? workspace.human_review : null;
+
+    return {
+      ...workspace,
+      threat: historicalThreat,
+      planner: historicalPlanner,
+      orchestration_history: historicalSteps,
+      key_findings: historicalFindings,
+      recommendation: historicalRecommendation,
+      human_review: historicalHumanReview,
+    };
+  }, [workspace, isReplayMode, replayCycle, decisions]);
+
+  // Set of finding IDs discovered in cycle K specifically (for "New at this cycle" highlight)
+  const newFindingIdsAtCycle = useMemo(() => {
+    if (!workspace || !isReplayMode) return undefined;
+    const totalSteps = workspace.orchestration_history.length;
+    const K = Math.min(replayCycle, totalSteps);
+
+    if (K === 0) {
+      return new Set(
+        workspace.key_findings
+          .filter((f) => !f.provenance.planner_decision_id)
+          .map((f) => f.finding_id)
+      );
+    }
+
+    const cycleKDecision = decisions.find((d) => d.cycle_number === K);
+    if (!cycleKDecision) return undefined;
+
+    const newFindings = workspace.key_findings.filter(
+      (f) => f.provenance.planner_decision_id === cycleKDecision.decision_id
+    );
+    return new Set(newFindings.map((f) => f.finding_id));
+  }, [workspace, isReplayMode, replayCycle, decisions]);
+
   if (isLoading) {
     return <LoadingState message="Loading unified investigation workspace projection..." className="min-h-[500px]" />;
   }
@@ -176,7 +362,7 @@ export const InvestigatePage: React.FC = () => {
     );
   }
 
-  if (!workspace) {
+  if (!displayedWorkspace) {
     return (
       <div className="p-8 max-w-xl mx-auto">
         <EmptyState
@@ -192,12 +378,11 @@ export const InvestigatePage: React.FC = () => {
     );
   }
 
-  const { threat, planner, key_findings, orchestration_history, recommendation, human_review } = workspace;
+  const { threat, planner, key_findings, orchestration_history, recommendation, human_review } = displayedWorkspace;
 
   const severityBadgeVariant: BadgeVariant =
     threat.severity === 'critical' ? 'critical' : threat.severity === 'high' ? 'high' : 'medium';
 
-  // Find decision record matching selected step if inspecting step
   const matchedDecision = selectedStep
     ? decisions.find((d) => d.cycle_number === selectedStep.cycle)
     : null;
@@ -205,9 +390,32 @@ export const InvestigatePage: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col w-full bg-zinc-950 overflow-hidden">
       {/* ========================================================================= */}
+      {/* 0. IN-CONTEXT REPLAY CONTROLLER (ACTIVE IN REPLAY MODE)                   */}
+      {/* ========================================================================= */}
+      {isReplayMode && (
+        <ReplayController
+          currentCycle={replayCycle}
+          totalCycles={workspace?.orchestration_history.length || 0}
+          steps={workspace?.orchestration_history || []}
+          isPlaying={isPlaying}
+          replaySpeed={replaySpeed}
+          onPrevious={handlePreviousCycle}
+          onNext={handleNextCycle}
+          onTogglePlay={handleTogglePlay}
+          onSelectCycle={handleSelectCycle}
+          onChangeSpeed={setReplaySpeed}
+          onExitReplay={handleExitReplay}
+        />
+      )}
+
+      {/* ========================================================================= */}
       {/* 1. LEVEL 0 COMMAND ANCHOR (STICKY TOP BAR)                                */}
       {/* ========================================================================= */}
-      <section className="bg-zinc-950 border-b border-zinc-800 p-4 shrink-0 space-y-3 shadow-md z-20">
+      <section
+        className={`bg-zinc-950 border-b p-4 shrink-0 space-y-3 shadow-md z-20 ${
+          isReplayMode ? 'border-amber-600/30 bg-amber-950/10' : 'border-zinc-800'
+        }`}
+      >
         <div className="flex flex-wrap items-center justify-between gap-4">
           {/* Threat Title & Target Profile */}
           <div className="flex items-center gap-3">
@@ -238,6 +446,12 @@ export const InvestigatePage: React.FC = () => {
                     {threat.status}
                   </Badge>
                 )}
+
+                {isReplayMode && (
+                  <Badge variant="high" size="sm">
+                    REPLAY: C{replayCycle}
+                  </Badge>
+                )}
               </div>
               <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono mt-0.5">
                 <span>ID: {threat.investigation_id.slice(0, 8)}...</span>
@@ -254,16 +468,18 @@ export const InvestigatePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Calibrated Confidence & Single-Step / Autonomous Controls */}
+          {/* Calibrated Confidence & Single-Step / Autonomous / Replay Controls */}
           <div className="flex items-center gap-3">
             <div className="text-right">
               <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
-                Calibrated Confidence
+                {isReplayMode ? 'Historical Confidence' : 'Calibrated Confidence'}
               </div>
               <div className="flex items-center gap-2 justify-end">
                 <div className="w-24 bg-zinc-800 h-2 rounded-full overflow-hidden">
                   <div
-                    className="bg-blue-500 h-full rounded-full transition-all duration-300"
+                    className={`h-full rounded-full transition-all duration-300 ${
+                      isReplayMode ? 'bg-amber-400' : 'bg-blue-500'
+                    }`}
                     style={{ width: `${Math.round(threat.confidence * 100)}%` }}
                   />
                 </div>
@@ -273,54 +489,81 @@ export const InvestigatePage: React.FC = () => {
               </div>
             </div>
 
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<RotateCw className="w-3.5 h-3.5" />}
-              isLoading={isExecutingStep}
-              disabled={isRunningAutonomous || threat.status === 'completed' || threat.status === 'closed'}
-              onClick={handleExecuteNextStep}
-              title="Execute single autonomous planner cycle"
-            >
-              Step Planner
-            </Button>
+            {/* Mode Actions: Live Execution vs Replay Trigger */}
+            {!isReplayMode ? (
+              <>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon={<RotateCcw className="w-3.5 h-3.5" />}
+                  onClick={handleEnterReplay}
+                  title="Replay chronological evolution of this investigation"
+                >
+                  Replay
+                </Button>
 
-            <Button
-              variant="primary"
-              size="sm"
-              icon={<Play className="w-3.5 h-3.5 fill-current" />}
-              isLoading={isRunningAutonomous}
-              disabled={isExecutingStep || threat.status === 'completed' || threat.status === 'closed'}
-              onClick={handleRunAutonomous}
-              title="Execute continuous autonomous loop until completion or containment"
-            >
-              Run Autonomous
-            </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon={<RotateCw className="w-3.5 h-3.5" />}
+                  isLoading={isExecutingStep}
+                  disabled={isRunningAutonomous || threat.status === 'completed' || threat.status === 'closed'}
+                  onClick={handleExecuteNextStep}
+                  title="Execute single autonomous planner cycle"
+                >
+                  Step Planner
+                </Button>
 
-            <Button
-              variant="ghost"
-              size="sm"
-              icon={<RefreshCw className="w-3.5 h-3.5" />}
-              onClick={() => fetchWorkspace(threat.investigation_id, true)}
-              title="Refresh workspace projection"
-            />
+                <Button
+                  variant="primary"
+                  size="sm"
+                  icon={<Play className="w-3.5 h-3.5 fill-current" />}
+                  isLoading={isRunningAutonomous}
+                  disabled={isExecutingStep || threat.status === 'completed' || threat.status === 'closed'}
+                  onClick={handleRunAutonomous}
+                  title="Execute continuous autonomous loop until completion or containment"
+                >
+                  Run Autonomous
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  icon={<RefreshCw className="w-3.5 h-3.5" />}
+                  onClick={() => fetchWorkspace(threat.investigation_id, true)}
+                  title="Refresh workspace projection"
+                />
+              </>
+            ) : (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleExitReplay}
+                title="Return to live investigation mode"
+              >
+                Live Mode
+              </Button>
+            )}
           </div>
         </div>
 
-        {/* Level 0 Grounded Action Card (Rendered if recommendation exists) */}
+        {/* Level 0 Grounded Action Card (Rendered if recommendation exists at this historical point) */}
         {recommendation && (
           <GroundedActionCard
             recommendation={recommendation}
             humanReview={human_review}
             onApprove={() => {
+              if (isReplayMode) return;
               setSelectedReviewDecision('approved');
               setReviewModalOpen(true);
             }}
             onReject={() => {
+              if (isReplayMode) return;
               setSelectedReviewDecision('rejected');
               setReviewModalOpen(true);
             }}
             onSelectCitation={handleSelectCitation}
+            isReadOnly={isReplayMode}
           />
         )}
       </section>
@@ -353,8 +596,9 @@ export const InvestigatePage: React.FC = () => {
             planner={planner}
             keyFindings={key_findings}
             onInspectStep={handleInspectStep}
-            onStepPlanner={handleExecuteNextStep}
+            onStepPlanner={!isReplayMode ? handleExecuteNextStep : undefined}
             isExecutingStep={isExecutingStep}
+            currentReplayCycle={isReplayMode ? replayCycle : undefined}
           />
         )}
 
@@ -374,6 +618,7 @@ export const InvestigatePage: React.FC = () => {
             findings={key_findings}
             onSelectFinding={handleSelectFinding}
             selectedFindingId={selectedFinding?.finding_id}
+            newFindingIds={newFindingIdsAtCycle}
           />
         )}
 
@@ -382,17 +627,19 @@ export const InvestigatePage: React.FC = () => {
           <div className="space-y-4">
             <Card>
               <CardHeader
-                title="Forensic Diagnostic Metadata"
+                title={isReplayMode ? `Forensic Telemetry (Replay Cycle ${replayCycle})` : 'Forensic Diagnostic Metadata'}
                 description="Raw system records, immutable state versioning, and cryptographic provenance"
               />
               <pre className="bg-zinc-950 p-4 rounded border border-zinc-800 text-[11px] font-mono text-zinc-400 overflow-x-auto">
                 {JSON.stringify(
                   {
-                    workspace_metadata: workspace.workspace_metadata,
-                    decisions_audit_count: decisions.length,
+                    is_replay_mode: isReplayMode,
+                    replay_cycle: isReplayMode ? replayCycle : null,
+                    total_cycles: workspace?.orchestration_history?.length ?? 0,
                     threat_provenance: threat.data_provenance,
                     active_capability: planner.active_capability,
-                    rationale_source: planner.rationale_source,
+                    workspace_metadata: workspace?.workspace_metadata ?? {},
+                    decisions_audit_count: decisions.length,
                   },
                   null,
                   2
@@ -415,10 +662,10 @@ export const InvestigatePage: React.FC = () => {
       />
 
       {/* ========================================================================= */}
-      {/* 5. HUMAN REVIEW CONFIRMATION MODAL                                        */}
+      {/* 5. HUMAN REVIEW CONFIRMATION MODAL (ONLY ACCESSIBLE IN LIVE MODE)         */}
       {/* ========================================================================= */}
       <Modal
-        isOpen={reviewModalOpen}
+        isOpen={reviewModalOpen && !isReplayMode}
         onClose={() => setReviewModalOpen(false)}
         title="Human Authorization Sign-Off"
         footer={
