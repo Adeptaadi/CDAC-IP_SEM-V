@@ -10,9 +10,9 @@ export interface PendingReview {
 }
 
 export interface ReviewSubmission {
-  decision: 'approve' | 'reject' | 'modify';
-  analyst_id: string;
-  analyst_comments?: string;
+  decision: 'approved' | 'rejected' | 'request_changes';
+  analyst_id?: string;
+  analyst_comments: string;
   modified_action?: string;
 }
 

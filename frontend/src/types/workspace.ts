@@ -92,6 +92,8 @@ export interface OrchestrationStep {
   status: StepStatus;
   created_at: string;
   candidate_utilities?: Record<string, number> | null;
+  is_replanning?: boolean;
+  replan_reason?: string | null;
 }
 
 export interface SupportingFinding {
@@ -163,5 +165,38 @@ export interface InvestigationStateSnapshot {
   confidence: number;
   cycle_number: number;
   state_snapshot: Record<string, any>;
+  created_at: string;
+}
+
+export interface ConfidenceFactorTraceItem {
+  factor_name: string;
+  input_value: any;
+  raw_delta: number;
+  weight: number;
+  contribution: number;
+  source: string;
+}
+
+export interface PlannerDecisionRecord {
+  decision_id: string;
+  cycle_number: number;
+  decision_type: string;
+  is_replanning: boolean;
+  replan_reason?: string | null;
+  selected_worker: string;
+  selection_score?: number | null;
+  utility_scores?: Record<string, number>;
+  history_adjustments?: Record<string, number>;
+  factor_contributions?: Record<string, any>;
+  confidence_factor_trace?: ConfidenceFactorTraceItem[];
+  rag_citations?: string[];
+  confidence_delta?: number | null;
+  novel_evidence_count?: number | null;
+  duplicate_evidence_count?: number | null;
+  latency_ms?: number | null;
+  knowledge_need: string;
+  confidence_before: number;
+  confidence_after: number;
+  explanation_summary: string;
   created_at: string;
 }

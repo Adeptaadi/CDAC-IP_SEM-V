@@ -3,6 +3,7 @@ import {
   InvestigationWorkspaceProjection,
   InvestigationSummary,
   InvestigationStateSnapshot,
+  PlannerDecisionRecord,
 } from '../types/workspace';
 
 export const workspaceClient = {
@@ -51,6 +52,17 @@ export const workspaceClient = {
     return request<InvestigationStateSnapshot[]>({
       method: 'GET',
       url: `/api/investigations/${investigationId}/snapshots`,
+    });
+  },
+
+  /**
+   * Retrieves detailed planner decision audit trail (scores, utilities, factor traces)
+   * GET /api/planner/investigations/{id}/decisions
+   */
+  getDecisions: (investigationId: string): Promise<PlannerDecisionRecord[]> => {
+    return request<PlannerDecisionRecord[]>({
+      method: 'GET',
+      url: `/api/planner/investigations/${investigationId}/decisions`,
     });
   },
 
