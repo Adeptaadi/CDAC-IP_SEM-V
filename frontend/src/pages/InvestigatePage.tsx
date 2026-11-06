@@ -226,8 +226,9 @@ export const InvestigatePage: React.FC = () => {
     try {
       await reviewClient.submitDecision(workspace.human_review.review_id, {
         decision: selectedReviewDecision,
-        analyst_id: 'SOC-ANALYST-104',
-        analyst_comments: analystComment || 'Authorized via Sentinel Agentic Workspace',
+        analyst_comments: analystComment
+          ? `${analystComment} [Analyst: SOC-ANALYST-104]`
+          : 'Authorized by SOC-ANALYST-104 via Sentinel Agentic Workspace',
       });
       setReviewModalOpen(false);
       await fetchWorkspace(workspace.threat.investigation_id, true);
